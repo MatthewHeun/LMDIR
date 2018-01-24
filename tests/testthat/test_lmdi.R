@@ -13,18 +13,31 @@ library(testthat)
 
 
 ###########################################################
-context("additive")
+context("Additive")
 ###########################################################
 
+simple.factor.names <- c("factor 1", "factor 2", "factor 3")
+simple.subcat.names <- c("subcat 1", "subcat 2")
+# Create a tidy data frame of x values
+# which will be collapsed to matrices
+Simple_LMDI <- data.frame(Year = rep.int(1971, 6), x = c(1, 10, 2, 4, 5, 3)) %>%
+  rbind(data.frame(Year = rep.int(1972, 6), x = c(4, 5, 3, 5, 6, 4))) %>%
+  rbind(data.frame(Year = rep.int(1973, 6), x = c(8, 2, 4, 5, 7, 5))) %>%
+  rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
+  mutate(
+    matnames = "X",
+    rowtype = "subcat",
+    coltype = "factor",
+    rownames = rep.int(c(rep.int(simple.subcat.names[[1]], 3), rep.int(simple.subcat.names[[2]], 3)), 4),
+    colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4)
+  ) %>%
+  group_by(Year) %>%
+  collapse_to_matrices(matnames = "matnames", values = "x",
+                       rownames = "rownames", colnames = "colnames",
+                       rowtypes = "rowtype", coltypes = "coltype") %>%
+  rename(X = x)
+
 test_that("simple additive LMDI works as expected", {
-  # Create a simple example
-  DF <- data.frame(Year = c(1950, 2000, 2013),
-                   x11 = c(1, 4, 8),
-                   x21 = c(10, 5, 2),
-                   x31 = c(2, 3, 4),
-                   x12 = c(4, 5, 5),
-                   x22 = c(5, 6, 7),
-                   x32 = c(3, 4, 5))
-  result <- lmdi(DF, agg_structure = list(V1 = c("x11", "x21", "x31"), V2 = c("x12", "x22", "x32")))
+  result <- lmdi(Simple_LMDI)
 
 })
