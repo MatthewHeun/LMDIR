@@ -1,6 +1,10 @@
 #' Log-Mean Divisia Index (LMDI) decomposition analysis
 #'
-#' @param .data a grouped data frame
+#' Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame.
+#'
+#' @param .data a grouped data frame.
+#'        Group by columns of variables within which you want an LMDI analysis conducted.
+#'        \code{time_colname} should not be one of the grouping variables.
 #' @param time_colname the name of the column in \code{.data} that contains times at which
 #'        data are available (a string).
 #'        Default is "\code{Year}".
@@ -8,160 +12,88 @@
 #'        \strong{\code{X}} matrices with
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
+#' @param pad either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
+#'        respectively, should contain \code{pad.value}.
+#' @param pad.value the value to be used in the padding row.  Default is \code{NA}.
 #'
 #' @return a data frame containing several columns.
 #' @export
 #'
 #' @examples
-lmdi <- function(.data, time_colname = "Year", X_colname = "X",
+lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
+                 pad = c("tail", "head"), pad.value = NA,
                  # Output columns
                  v_colname = "v",
                  V_colname = "V"){
-  .data %>% mutate(
+  pad <- match.arg(pad)
+  # Ensure that time_colname is NOT a grouping variable.
+  if (time_colname %in% groups(.DF)) {
+    stop(paste0("'", time_colname, "'", " is a grouping variable, but you can't group on ",
+               "time_colname",
+               " in argument .DF of collapse_to_matrices."))
+  }
+
+  XvV <- .DF %>% mutate(
     !!as.name(v_colname) := rowprods_byname(!!as.name(X_colname)),
     !!as.name(V_colname) := colsums_byname(!!as.name(v_colname))
   )
+
+  zero_suffix <- "_0"
+  T_suffix <- "_T"
+  diffs <- create0Tcolumns(XvV, X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
+                           pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
+
 }
 
 
+create0Tcolumns <- function(XvV,
+                            X_colname = "X", v_colname = "v", V_colname = "V",
+                            pad = c("tail", "head"),
+                            zero_suffix = "_0",
+                            T_suffix = "_T"){
+  # In groups, time-shift the rows.
+  # Meta contains columns of metadata (the group_vars of .DF)
+  # and time_colname
+  Meta <- XvV %>%
+    select(!!as.name(time_colname), !!!as.name(group_vars(XvV))) %>%
+    do(
+      if (pad == "tail") {
+        head(.data, -1)
+      } else {
+        # pad == "head"
+        tail(.data, -1)
+      }
+    )
+  # Establish names for new columns.
+  X0_colname <- paste0(X_colname, zero_suffix)
+  v0_colname <- paste0(v_colname, zero_suffix)
+  V0_colname <- paste0(V_colname, zero_suffix)
+  XT_colname <- paste0(X_colname, T_suffix)
+  vT_colname <- paste0(v_colname, T_suffix)
+  VT_colname <- paste0(V_colname, T_suffix)
+  # Set up for aligning the rows for further calculations.
+  .DF0 <- XvV %>%
+    do(
+      # do works in groups, which is what we want.
+      head(.data, -1)
+    ) %>%
+    rename(
+      !!as.name(X0_colname) := !!as.name(X_colname),
+      !!as.name(v0_colname) := !!as.name(v_colname),
+      !!as.name(V0_colname) := !!as.name(V_colname))
+  .DFT <- XvV %>%
+    do(
+      # do works in groups, which is what we want.
+      tail(.data, -1)
+    ) %>%
+    rename(
+      !!as.name(XT_colname) := !!as.name(X_colname),
+      !!as.name(vT_colname) := !!as.name(v_colname),
+      !!as.name(VT_colname) := !!as.name(V_colname))
+  # Bind everything together and return it
+  cbind(Meta %>% ungroup(),
+        .DF0 %>% ungroup() %>% select(X0_colname, v0_colname, V0_colname),
+        .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname))
+}
 
-#' #' Log-Mean Divisia Index (LMDI) decomposition analysis
-#' #'
-#' #' @param .data a grouped data frame
-#' #' @param time_colname the name of the column in \code{.data} that contains times at which
-#' #'        data are available (a string).
-#' #'        Default is "\code{Year}".
-#' #' @param agg_structure a named list of vectors of column names (strings) in \code{.data}
-#' #'        that gives the aggregation structure of \code{.data}.
-#' #'        The names of \code{agg_structure} must be names of columns in \code{.data},
-#' #'        and they represent the names of sub-categories \code{V_i} of the aggregate \code{V}.
-#' #'        Each item in \code{agg_structure} must be a list or vector of strings.
-#' #'        Each item in \code{agg_structure} is interpreted as names of columns in \code{.data}
-#' #'        that comprise sub-aggregates.
-#' #'        The columns \code{.data} named in the items of \code{agg_structure}
-#' #'        must be names for each \code{x} in the LMDI decomposition analysis.
-#' #'
-#' #' @return a data frame containing several columns.
-#' #' @export
-#' #'
-#' #' @examples
-#' lmdi <- function(.data, time_colname = "Year", agg_structure,
-#'                  # Output columns
-#'                  V_colname = "V",
-#'                  L_colname = "L"){
-#'   groups_orig <- group_vars(.data)
-#'   if (length(groups_orig > 0)) {
-#'     # Ensure that .data is not grouped by the Vx_colnames.
-#'     if (grepl(paste(agg_structure, collapse = "|"), groups_orig)) {
-#'       # This is an error
-#'       stop("One of the agg_structure columns was also a grouping variable.")
-#'     }
-#'   }
-#'   # Create sub-aggregates
-#'   prodsumcol <- ".prodsumcol"
-#'   V_i <- DF %>%
-#'     # Be sure we are grouped by year (at least). .data may come in with other groups, too.
-#'     group_by(!!as.name(time_colname), add = TRUE) %>%
-#'     gather(key = "var", value = "val", -!!!as.name(c(time_colname, groups_orig))) %>%
-#'     # Add a column of variable names which are the V_i's
-#'     # associated with each x_ki.
-#'     mutate(
-#'       agg_var = lapply(1:length(agg_structure), FUN = function(i){
-#'         rep.int(names(agg_structure)[[i]], length(agg_structure[[i]]))
-#'       }) %>% unlist
-#'     ) %>%
-#'     group_by(agg_var, add = TRUE) %>%
-#'     summarise(!!as.name(prodsumcol) := prod(val))
-#'   # Create aggregate
-#'   V <- V_i %>%
-#'     group_by(!!!c(as.name(time_colname), groups_orig)) %>%
-#'     summarise(!!as.name(prodsumcol) := sum(!!as.name(prodsumcol))) %>%
-#'     rename(!!as.name(V_colname) := !!as.name(prodsumcol))
-#'
-#'   Aggregates <- full_join(V, V_i %>% spread(key = agg_var, value = !!as.name(prodsumcol)),
-#'     by = c(time_colname, groups_orig)) %>%
-#'     full_join(.data, by = c(time_colname, groups_orig)) %>%
-#'     ungroup()
-#'
-#'   out <- Aggregates %>%
-#'     # Calculate all the "L" values
-#'     do(Louterfun(., c(V_colname, names(agg_structure)))) %>%
-#'     # Calculate all w_i values where w_i = L(V_i)/L(V) values
-#'     do(wouterfun(., names(agg_structure), V_colname)) %>%
-#'     do(fouterfun(., unlist(agg_structure)))
-#' }
-#'
-#' wfouterfun <- function(.data, x_names)
-#'
-#' wfinnerfun <- function(.data, x_name){
-#'   w_col <- as.name(paste0("w(", x_name, ")"))
-#'   f_col <- as.name(paste0("f(", x_name, ")"))
-#'   .data <- mutate(
-#'
-#'   )
-#' }
-#'
-#' fouterfun <- function(.data, x_names){
-#'   lapply(x_names, FUN = function(xn){
-#'     finnerfun(.data, xn)
-#'   }) %>%
-#'     cbind(.data, .)
-#' }
-#'
-#' finnerfun <- function(.data, x_name, log.string = "ln"){
-#'   x_col <- as.name(x_name)
-#'   lnx_col <- as.name(paste0(log.string, "(", x_name, ")"))
-#'   f_col <- as.name(paste0("f(", x_name, ")"))
-#'   .data %>%
-#'     mutate(
-#'       # f is defined as ln(xT/x0).
-#'       # But that's same as ln(xT) - ln(x0).
-#'       # Choose second approach, as that is compatible with ediff
-#'       !!lnx_col := log(!!x_col),
-#'       !!f_col := ediff(!!lnx_col, pad = "tail")
-#'     ) %>%
-#'     select(!!f_col)
-#' }
-#'
-#' wouterfun <- function(.data, Vi_names, V_colname){
-#'   lapply(Vi_names, FUN = function(cn){
-#'     winnerfun(.data, Vi_colname = cn, V_colname = V_colname)
-#'   }) %>%
-#'     cbind(.data, .)
-#' }
-#'
-#' winnerfun <- function(.data, Vi_colname, V_colname){
-#'   w_col <- as.name(paste0("w(", Vi_colname, ")"))
-#'   LVi_col <- as.name(paste0("L(", Vi_colname, ")"))
-#'   LV_col <- as.name(paste0("L(", V_colname, ")"))
-#'   .data %>%
-#'     mutate(
-#'       !!w_col := (!!LVi_col) / !!LV_col
-#'     ) %>%
-#'     select(!!w_col)
-#' }
-#'
-#'
-#' Louterfun <- function(.data, V_names){
-#'   lapply(V_names, FUN = function(cn){
-#'     Linnerfun(.data, Vi_colname = cn)
-#'   }) %>%
-#'     cbind(.data, .)
-#' }
-#'
-#' Linnerfun <- function(.data, Vi_colname, delta.string = "∆", log.string = "ln"){
-#'   Vi_col <- as.name(Vi_colname)
-#'   L_col <- as.name(paste0("L(", Vi_colname, ")"))
-#'   deltaVi_col <- as.name(paste0(delta.string, Vi_colname))
-#'   logVi_col <- as.name(paste0(ln.string, "(", Vi_colname, ")"))
-#'   deltalogVi_col <- as.name(paste0(delta.string, logVi_col))
-#'
-#'   .data %>%
-#'     mutate(
-#'       !!logVi_col := log(!!Vi_col),
-#'       !!deltaVi_col := ediff(!!Vi_col, pad = "tail"),
-#'       !!deltalogVi_col := ediff(!!logVi_col, pad = "tail"),
-#'       !!L_col := (!!deltaVi_col) / !!deltalogVi_col
-#'     ) %>%
-#'     select(!!L_col)
-#' }
+
