@@ -23,9 +23,21 @@
 lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
                  pad = c("tail", "head"), pad.value = NA,
                  # Output columns
-                 v_colname = "v",
-                 V_colname = "V"){
+                 D_colname = "D", deltaV_colname = "∆V"){
+
   pad <- match.arg(pad)
+
+  # Establish names for some intermediate columns.
+  v_colname <- ".v"
+  V_colname <- ".V"
+  # Establish names for new columns.
+  X0_colname <- paste0(X_colname, zero_suffix)
+  v0_colname <- paste0(v_colname, zero_suffix)
+  V0_colname <- paste0(V_colname, zero_suffix)
+  XT_colname <- paste0(X_colname, T_suffix)
+  vT_colname <- paste0(v_colname, T_suffix)
+  VT_colname <- paste0(V_colname, T_suffix)
+
   # Ensure that time_colname is NOT a grouping variable.
   if (time_colname %in% groups(.DF)) {
     stop(paste0("'", time_colname, "'", " is a grouping variable, but you can't group on ",
@@ -38,19 +50,35 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
     !!as.name(V_colname) := colsums_byname(!!as.name(v_colname))
   )
 
+  # Create columns for "0" and "T" times.
   zero_suffix <- "_0"
   T_suffix <- "_T"
-  diffs <- create0Tcolumns(XvV, X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
-                           pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
+  aligned <- create0Tcolumns(XvV, time_colname = time_colname,
+                             X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
+                             pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
+  # Do year-by-year LMDI calcs.
+  aligned %>%
+    mutate(
+      !!as.name(D_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname))
+    )
 
 }
 
 
 create0Tcolumns <- function(XvV,
+                            time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
                             pad = c("tail", "head"),
                             zero_suffix = "_0",
                             T_suffix = "_T"){
+  # Establish names for new columns.
+  X0_colname <- paste0(X_colname, zero_suffix)
+  v0_colname <- paste0(v_colname, zero_suffix)
+  V0_colname <- paste0(V_colname, zero_suffix)
+  XT_colname <- paste0(X_colname, T_suffix)
+  vT_colname <- paste0(v_colname, T_suffix)
+  VT_colname <- paste0(V_colname, T_suffix)
   # In groups, time-shift the rows.
   # Meta contains columns of metadata (the group_vars of .DF)
   # and time_colname
@@ -64,13 +92,6 @@ create0Tcolumns <- function(XvV,
         tail(.data, -1)
       }
     )
-  # Establish names for new columns.
-  X0_colname <- paste0(X_colname, zero_suffix)
-  v0_colname <- paste0(v_colname, zero_suffix)
-  V0_colname <- paste0(V_colname, zero_suffix)
-  XT_colname <- paste0(X_colname, T_suffix)
-  vT_colname <- paste0(v_colname, T_suffix)
-  VT_colname <- paste0(V_colname, T_suffix)
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV %>%
     do(
