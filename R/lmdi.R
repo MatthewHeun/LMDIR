@@ -30,6 +30,8 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
   # Establish names for some intermediate columns.
   v_colname <- ".v"
   V_colname <- ".V"
+  L_name <- "L"
+  w_name <- "w"
   # Establish names for new columns.
   X0_colname <- paste0(X_colname, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
@@ -37,6 +39,9 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
   XT_colname <- paste0(X_colname, T_suffix)
   vT_colname <- paste0(v_colname, T_suffix)
   VT_colname <- paste0(V_colname, T_suffix)
+  LV_colname <- paste0(L_name, "(", V_colname, ")")
+  Lv_colname <- paste0(L_name, "(", v_colname, ")")
+  wv_colname <- paste0(w_name, "(", v_colname, ")")
 
   # Ensure that time_colname is NOT a grouping variable.
   if (time_colname %in% groups(.DF)) {
@@ -47,23 +52,27 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
 
   XvV <- .DF %>% mutate(
     !!as.name(v_colname) := rowprods_byname(!!as.name(X_colname)),
-    !!as.name(V_colname) := colsums_byname(!!as.name(v_colname))
+    # Add as.numeric() here to get a single number, not a 1x1 matrix.
+    !!as.name(V_colname) := colsums_byname(!!as.name(v_colname)) %>% as.numeric()
   )
 
   # Create columns for "0" and "T" times.
   zero_suffix <- "_0"
   T_suffix <- "_T"
-  aligned <- create0Tcolumns(XvV, time_colname = time_colname,
+  XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
                              X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
                              pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
-  aligned %>%
+  XvV0T %>%
     mutate(
       !!as.name(D_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-      !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname))
+      !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      # !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
+      # !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname))
     )
 
-}
+ }
 
 
 create0Tcolumns <- function(XvV,
