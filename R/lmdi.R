@@ -23,7 +23,7 @@
 lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
                  pad = c("tail", "head"), pad.value = NA,
                  # Output columns
-                 D_colname = "D", deltaV_colname = "∆V"){
+                 D_colname = "D", deltaV_colname = "dV"){
 
   pad <- match.arg(pad)
 
@@ -69,6 +69,7 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
       !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
+      # wv is not yet working.
       !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname))
     )
 

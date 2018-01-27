@@ -9,26 +9,18 @@
 \packageDescription{LMDIR}
 }
 \details{
-
-The DESCRIPTION file:
-\packageDESCRIPTION{LMDIR}
-\packageIndices{LMDIR}
-~~ An overview of how to use the package, including the most important functions ~~
+    This package implements log-mean divisia index decomposition analysis in R (LMDIR).
+    The calculations are based on a 2005 paper by B.W. Ang.
 }
 \author{
 \packageAuthor{LMDIR}
 
-Maintainer: \packageMaintainer{LMDIR}
+\strong{Maintainer}: \packageMaintainer{LMDIR}
 }
 \references{
-~~ Literature or other references for background information ~~
+B.W. Ang. The LMDI approach to decomposition analysis: A practical guide.
+    Energy Policy, 33:867-871, 2005.
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
-\keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
+\keyword{ manip, array, algebra }
 \examples{
-~~ simple examples of the most important functions ~~
 }

@@ -1,1 +1,4 @@
-exportPattern("^[[:alpha:]]+")
+importFrom(magrittr,"%>%")
+importFrom(magrittr,set_names)
+importFrom(parallel,mcMap)
+importFrom(rlang,.data)
