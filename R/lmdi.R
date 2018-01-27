@@ -32,7 +32,10 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
   V_colname <- ".V"
   L_name <- "L"
   w_name <- "w"
+
   # Establish names for new columns.
+  zero_suffix <- "_0"
+  T_suffix <- "_T"
   X0_colname <- paste0(X_colname, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
   V0_colname <- paste0(V_colname, zero_suffix)
@@ -56,9 +59,6 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
     !!as.name(V_colname) := colsums_byname(!!as.name(v_colname)) %>% as.numeric()
   )
 
-  # Create columns for "0" and "T" times.
-  zero_suffix <- "_0"
-  T_suffix <- "_T"
   XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
                              X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
                              pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
@@ -68,13 +68,29 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
       !!as.name(D_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-      # !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
-      # !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname))
+      !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
+      !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname))
     )
 
  }
 
 
+#' Make columns for time 0 and time T
+#'
+#' @param XvV a data frame containing \code{X}, \code{v}, and \code{V} columns.
+#' @param time_colname the name of the time column (a string)
+#' @param X_colname the name of the \code{X} column (default is "\code{X}")
+#' @param v_colname the name of the \code{v} column (default is "\code{v}")
+#' @param V_colname the name of the \code{V} column (default is "\code{V}")
+#' @param pad one of
+#'        "\code{tail}" (for an empty last time) or
+#'        "\code{head}" (for an empty first time).
+#' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
+#' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
+#'
+#' @return
+#'
+#' @examples
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",

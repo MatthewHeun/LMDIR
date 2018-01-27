@@ -9,6 +9,8 @@ library(tidyr)
 library(rlang)
 library(magrittr)
 library(mosaic)
+library(byname)
+library(matsindf)
 library(testthat)
 
 
@@ -48,6 +50,6 @@ test_that("simple additive LMDI works as expected", {
                "'Year' is a grouping variable, but you can't group on time_colname in argument .DF of collapse_to_matrices.")
   create_simple_LMDI() %>%
     group_by(Country) %>%
-    lmdi(Simple_LMDI)
+    lmdi()
 
 })
