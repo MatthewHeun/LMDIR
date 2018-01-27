@@ -51,5 +51,4 @@ test_that("simple additive LMDI works as expected", {
   create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi()
-
 })
