@@ -21,6 +21,7 @@
 B.W. Ang. The LMDI approach to decomposition analysis: A practical guide.
     Energy Policy, 33:867-871, 2005.
 }
-\keyword{ manip, array, algebra }
+\keyword{ algebra, array, manip }
 \examples{
+# Add examples here
 }

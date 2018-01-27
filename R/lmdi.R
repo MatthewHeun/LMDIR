@@ -2,24 +2,38 @@
 #'
 #' Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame.
 #'
-#' @param .data a grouped data frame.
+#' @param .DF a grouped data frame.
 #'        Group by columns of variables within which you want an LMDI analysis conducted.
 #'        \code{time_colname} should not be one of the grouping variables.
 #' @param time_colname the name of the column in \code{.data} that contains times at which
 #'        data are available (a string).
 #'        Default is "\code{Year}".
-#' @param X the name (as a string) of a column in \code{.data} containing
+#' @param X_colname the name (as a string) of a column in \code{.DF} containing
 #'        \strong{\code{X}} matrices with
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
 #' @param pad either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
 #'        respectively, should contain \code{pad.value}.
 #' @param pad.value the value to be used in the padding row.  Default is \code{NA}.
+#' @param D_colname the name for the \code{D} column (a string).
+#' @param deltaV_colname the name for the \code{deltaV} column (a string).
 #'
 #' @return a data frame containing several columns.
+#'
+#' @importFrom byname elementquotient_byname
+#' @importFrom byname difference_byname
+#' @importFrom byname logarithmicmean_byname
+#' @importFrom byname rowprods_byname
+#' @importFrom byname colsums_byname
+#' @importFrom dplyr groups
+#' @importFrom dplyr ungroup
+#' @importFrom dplyr mutate
+#' @importFrom rlang .data
+#' @importFrom rlang :=
+#' @importFrom magrittr %>%
+#'
 #' @export
 #'
-#' @examples
 lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
                  pad = c("tail", "head"), pad.value = NA,
                  # Output columns
@@ -89,9 +103,16 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
 #' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
 #' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
 #'
-#' @return
+#' @importFrom dplyr do
+#' @importFrom dplyr group_vars
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom utils head
+#' @importFrom utils tail
 #'
-#' @examples
+#' @return a data frame containing metadata (\code{time_colname} and grouping variables)
+#'         and columns for X0, v0, V0, XT, vT, and VT.
+#'
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
