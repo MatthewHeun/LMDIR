@@ -83,8 +83,8 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
       !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
-      # wv is not yet working.
-      !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname))
+      !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
+      !!as.name(F_colname) := elementquotient_byname(!!as.name(XT_colname), !!as.name(X0_colname))
     )
 
  }
