@@ -2,7 +2,7 @@
 #'
 #' Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame.
 #'
-#' @param .DF a grouped data frame.
+#' @param .lmdidata a grouped data frame.
 #'        Group by columns of variables within which you want an LMDI analysis conducted.
 #'        \code{time_colname} should not be one of the grouping variables.
 #' @param time_colname the name of the column in \code{.data} that contains times at which
@@ -17,6 +17,7 @@
 #' @param pad.value the value to be used in the padding row.  Default is \code{NA}.
 #' @param D_colname the name for the \code{D} column (a string).
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
+#' @param F_colname the name for the \code{F} column (a string).
 #'
 #' @return a data frame containing several columns.
 #'
@@ -34,10 +35,10 @@
 #'
 #' @export
 #'
-lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
+lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
                  pad = c("tail", "head"), pad.value = NA,
                  # Output columns
-                 D_colname = "D", deltaV_colname = "dV"){
+                 D_colname = "D", deltaV_colname = "dV", F_colname = "F"){
 
   pad <- match.arg(pad)
 
@@ -61,13 +62,13 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
   wv_colname <- paste0(w_name, "(", v_colname, ")")
 
   # Ensure that time_colname is NOT a grouping variable.
-  if (time_colname %in% groups(.DF)) {
+  if (time_colname %in% groups(.lmdidata)) {
     stop(paste0("'", time_colname, "'", " is a grouping variable, but you can't group on ",
                "time_colname",
                " in argument .DF of collapse_to_matrices."))
   }
 
-  XvV <- .DF %>% mutate(
+  XvV <- .lmdidata %>% mutate(
     !!as.name(v_colname) := rowprods_byname(!!as.name(X_colname)),
     # Add as.numeric() here to get a single number, not a 1x1 matrix.
     !!as.name(V_colname) := colsums_byname(!!as.name(v_colname)) %>% as.numeric()
@@ -84,7 +85,9 @@ lmdi <- function(.DF, time_colname = "Year", X_colname = "X",
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
       !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
+      # Need to take the natural log of the ratio
       !!as.name(F_colname) := elementquotient_byname(!!as.name(XT_colname), !!as.name(X0_colname))
+
     )
 
  }

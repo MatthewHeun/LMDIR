@@ -4,11 +4,12 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.DF, time_colname = "Year", X_colname = "X", pad = c("tail", "head"),
-  pad.value = NA, D_colname = "D", deltaV_colname = "dV")
+lmdi(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail",
+  "head"), pad.value = NA, D_colname = "D", deltaV_colname = "dV",
+  F_colname = "F")
 }
 \arguments{
-\item{.DF}{a grouped data frame.
+\item{.lmdidata}{a grouped data frame.
 Group by columns of variables within which you want an LMDI analysis conducted.
 \code{time_colname} should not be one of the grouping variables.}
 
@@ -29,6 +30,8 @@ respectively, should contain \code{pad.value}.}
 \item{D_colname}{the name for the \code{D} column (a string).}
 
 \item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
+
+\item{F_colname}{the name for the \code{F} column (a string).}
 }
 \value{
 a data frame containing several columns.
