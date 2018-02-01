@@ -93,82 +93,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
         colsums_byname() %>% transpose_byname(),
       !!as.name(D_vec_colname) := matrixproduct_byname(hatize_byname(!!as.name(wv_colname)), !!as.name(F_colname)) %>%
         colsums_byname() %>% elementexp_byname() %>% transpose_byname()
-      )
-}
-
-
-#' Make columns for time 0 and time T
-#'
-#' @param XvV a data frame containing \code{X}, \code{v}, and \code{V} columns.
-#' @param time_colname the name of the time column (a string)
-#' @param X_colname the name of the \code{X} column (default is "\code{X}")
-#' @param v_colname the name of the \code{v} column (default is "\code{v}")
-#' @param V_colname the name of the \code{V} column (default is "\code{V}")
-#' @param pad one of
-#'        "\code{tail}" (for an empty last time) or
-#'        "\code{head}" (for an empty first time).
-#' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
-#' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
-#'
-#' @importFrom dplyr do
-#' @importFrom dplyr group_vars
-#' @importFrom dplyr rename
-#' @importFrom dplyr select
-#' @importFrom utils head
-#' @importFrom utils tail
-#'
-#' @return a data frame containing metadata (\code{time_colname} and grouping variables)
-#'         and columns for X0, v0, V0, XT, vT, and VT.
-#'
-create0Tcolumns <- function(XvV,
-                            time_colname,
-                            X_colname = "X", v_colname = "v", V_colname = "V",
-                            pad = c("tail", "head"),
-                            zero_suffix = "_0",
-                            T_suffix = "_T"){
-  # Establish names for new columns.
-  X0_colname <- paste0(X_colname, zero_suffix)
-  v0_colname <- paste0(v_colname, zero_suffix)
-  V0_colname <- paste0(V_colname, zero_suffix)
-  XT_colname <- paste0(X_colname, T_suffix)
-  vT_colname <- paste0(v_colname, T_suffix)
-  VT_colname <- paste0(V_colname, T_suffix)
-  # In groups, time-shift the rows.
-  # Meta contains columns of metadata (the group_vars of .DF)
-  # and time_colname
-  Meta <- XvV %>%
-    select(!!as.name(time_colname), !!!as.name(group_vars(XvV))) %>%
-    do(
-      if (pad == "tail") {
-        head(.data, -1)
-      } else {
-        # pad == "head"
-        tail(.data, -1)
-      }
     )
-  # Set up for aligning the rows for further calculations.
-  .DF0 <- XvV %>%
-    do(
-      # do works in groups, which is what we want.
-      head(.data, -1)
-    ) %>%
-    rename(
-      !!as.name(X0_colname) := !!as.name(X_colname),
-      !!as.name(v0_colname) := !!as.name(v_colname),
-      !!as.name(V0_colname) := !!as.name(V_colname))
-  .DFT <- XvV %>%
-    do(
-      # do works in groups, which is what we want.
-      tail(.data, -1)
-    ) %>%
-    rename(
-      !!as.name(XT_colname) := !!as.name(X_colname),
-      !!as.name(vT_colname) := !!as.name(v_colname),
-      !!as.name(VT_colname) := !!as.name(V_colname))
-  # Bind everything together and return it
-  cbind(Meta %>% ungroup(),
-        .DF0 %>% ungroup() %>% select(X0_colname, v0_colname, V0_colname),
-        .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname))
 }
+
 
 

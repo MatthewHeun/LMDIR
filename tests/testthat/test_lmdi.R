@@ -14,10 +14,6 @@ library(matsindf)
 library(testthat)
 
 
-###########################################################
-context("Additive")
-###########################################################
-
 create_simple_LMDI <- function(){
   simple.factor.names <- c("factor 1", "factor 2", "factor 3")
   simple.subcat.names <- c("subcat 1", "subcat 2")
@@ -42,6 +38,50 @@ create_simple_LMDI <- function(){
     rename(X = x)
   rbind(AB, AB %>% mutate(Country = "YZ"))
 }
+
+
+###########################################################
+context("Utilities")
+###########################################################
+
+test_that("Zij works as expected", {
+  # Test degenerate cases.
+  PN <- 9999 # Positive Number
+  ANS <- 42 # the answer (modulo the sign)
+  # Case 1
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = ANS, X_0ij = 0, X_Tij = PN), ANS)
+  # Case 2
+  expect_equal(LMDIR:::Zij(v_0i1 = ANS, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), -ANS)
+  # Case 3
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = PN, X_0ij = PN, X_Tij = PN), 0)
+  # Case 4
+  expect_equal(LMDIR:::Zij(v_0i1 = PN, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
+  # Case 5
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
+  # Case 6
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = 0), 0)
+  # Case 7
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), 0)
+  # Case 8
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = PN), 0)
+
+  simple <- create_simple_LMDI() %>%
+    group_by(Country) %>%
+    lmdi()
+  X_T <- simple$X_T[[1]]
+  X_0 <- simple$X_0[[1]]
+  expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
+  expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
+  expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
+  expect_equal(LMDIR:::Zij(2, 1, X_0 = X_0, X_T = X_T), 19.31568569)
+  expect_equal(LMDIR:::Zij(2, 2, X_0 = X_0, X_T = X_T), 15.78206435)
+  expect_equal(LMDIR:::Zij(2, 3, X_0 = X_0, X_T = X_T), 24.90224996)
+})
+
+###########################################################
+context("Additive")
+###########################################################
+
 
 
 test_that("simple additive LMDI works as expected", {
