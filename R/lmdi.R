@@ -51,6 +51,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # Establish names for new columns.
   zero_suffix <- "_0"
   T_suffix <- "_T"
+  vec_suffix <- "_vec"
   X0_colname <- paste0(X_colname, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
   V0_colname <- paste0(V_colname, zero_suffix)
@@ -60,6 +61,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   LV_colname <- paste0(L_name, "(", V_colname, ")")
   Lv_colname <- paste0(L_name, "(", v_colname, ")")
   wv_colname <- paste0(w_name, "(", v_colname, ")")
+  deltaV_vec_colname <- paste0(deltaV_colname, vec_suffix)
+  D_vec_colname <- paste0(D_colname, vec_suffix)
 
   # Ensure that time_colname is NOT a grouping variable.
   if (time_colname %in% groups(.lmdidata)) {
@@ -85,12 +88,13 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
       !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
-      # Need to take the natural log of the ratio
-      !!as.name(F_colname) := elementquotient_byname(!!as.name(XT_colname), !!as.name(X0_colname))
-
-    )
-
- }
+      !!as.name(F_colname) := elementquotient_byname(X_T, X_0) %>% elementlog_byname(),
+      !!as.name(deltaV_vec_colname) := matrixproduct_byname(hatize_byname(!!as.name(Lv_colname)), !!as.name(F_colname)) %>%
+        colsums_byname() %>% transpose_byname(),
+      !!as.name(D_vec_colname) := matrixproduct_byname(hatize_byname(!!as.name(wv_colname)), !!as.name(F_colname)) %>%
+        colsums_byname() %>% elementexp_byname() %>% transpose_byname()
+      )
+}
 
 
 #' Make columns for time 0 and time T
