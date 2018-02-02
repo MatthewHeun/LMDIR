@@ -1,19 +1,22 @@
 
 
-#' Calculates a Z matrix from \code{X_0} and \code{X_T} matrices
+#' Z matrix from \code{X_0} and \code{X_T} matrices
 #'
-#' This function fully accounts for all degenerate cases
+#' The formula for Z is \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
+#' where \code{v} is a column vector formed by row products of \code{X}.
+#' The \code{T} and \code{0} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
+#' and a final time (\code{T}).
+#'
+#' The nomenclature for this function comes from
+#' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
+#' This function fully accounts for the degenerate cases
 #' found in Table 2, p. 492 of
-#' B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
-#' Factorizing changes in energy and environmental indicators through decomposition,
-#' Energy, Volume 23, Number 6, pp. 489-495.
+#' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
 #' We're employing the method suggested by
-#' R. Wood and M. Lenzen. 2006.
-#' Zero-value problems of the logarithmic mean divisia index decomposition method.
-#' Energy Policy, volume 34, number 12, pp. 1326–1331.
+#' \href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
 #'
-#' @param X_0 an \code{X} matrix for time \code{0}
-#' @param X_T an \code{X} matrix for time \code{T}
+#' @param X_0 an \code{X} matrix for initial time \code{0}
+#' @param X_T an \code{X} matrix for final time \code{T}
 #'
 #' @return a \code{Z} matrix
 #'
@@ -39,12 +42,12 @@ Z_byname <- function(X_0, X_T){
 }
 
 
-
 #' Calculate element \code{Z_i,j}
 #'
 #' There are many special cases for calculating the \code{i,j}th term in \code{Z}.
 #' These special cases must be handled on a term-by term basis.
 #' This function handles all those cases.
+#' See \code{\link{Z_byname}} for details.
 #' The \strong{\code{X}} matrices must be same size, must have same row and column names, and
 #' must have same row and column types.
 #' Note that \code{i} and \code{j} must be positive and less than
@@ -133,8 +136,7 @@ Zij <- function(i, j, X_0, X_T,
 #' @importFrom utils tail
 #'
 #' @return a data frame containing metadata (\code{time_colname} and grouping variables)
-#'         and columns for X0, v0, V0, XT, vT, and VT.
-#'
+#'         and columns for X_0, v_0, V_0, X_T, v_T, and V_T.
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
@@ -186,3 +188,44 @@ create0Tcolumns <- function(XvV,
         .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname))
 }
 
+# create0Tcolumns <- function(.lmdidata, time_colname, X_colname = "X",
+#                             pad = c("tail", "head"),
+#                             zero_suffix = "_0", T_suffix = "_T"){
+#   # Establish names for new columns.
+#   X0_colname <- paste0(X_colname, zero_suffix)
+#   XT_colname <- paste0(X_colname, T_suffix)
+#   # In groups, time-shift the rows.
+#   # Meta contains columns of metadata (the group_vars of .DF)
+#   # and time_colname
+#   Meta <- .lmdidata %>%
+#     select(!!as.name(time_colname), !!!as.name(group_vars(.lmdidata))) %>%
+#     do(
+#       if (pad == "tail") {
+#         head(.data, -1)
+#       } else {
+#         # pad == "head"
+#         tail(.data, -1)
+#       }
+#     )
+#   # Set up for aligning the rows for further calculations.
+#   .DF0 <- .lmdidata %>%
+#     do(
+#       # do works in groups, which is what we want.
+#       head(.data, -1)
+#     ) %>%
+#     rename(
+#       !!as.name(X0_colname) := !!as.name(X_colname)
+#     )
+#   .DFT <- .lmdidata %>%
+#     do(
+#       # do works in groups, which is what we want.
+#       tail(.data, -1)
+#     ) %>%
+#     rename(
+#       !!as.name(XT_colname) := !!as.name(X_colname)
+#     )
+#   # Bind everything together and return it
+#   cbind(Meta %>% ungroup(),
+#         .DF0 %>% ungroup() %>% select(X0_colname),
+#         .DFT %>% ungroup() %>% select(XT_colname))
+# }

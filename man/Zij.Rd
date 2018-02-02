@@ -32,6 +32,7 @@ the Z value corresponding to the \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \
 There are many special cases for calculating the \code{i,j}th term in \code{Z}.
 These special cases must be handled on a term-by term basis.
 This function handles all those cases.
+See \code{\link{Z_byname}} for details.
 The \strong{\code{X}} matrices must be same size, must have same row and column names, and
 must have same row and column types.
 Note that \code{i} and \code{j} must be positive and less than

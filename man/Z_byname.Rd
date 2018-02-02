@@ -7,21 +7,23 @@
 Z_byname(X_0, X_T)
 }
 \arguments{
-\item{X_0}{an \code{X} matrix for time \code{0}}
+\item{X_0}{an \code{X} matrix for initial time \code{0}}
 
-\item{X_T}{an \code{X} matrix for time \code{T}}
+\item{X_T}{an \code{X} matrix for final time \code{T}}
 }
 \value{
 a \code{Z} matrix
 }
 \description{
-This function fully accounts for all degenerate cases
+The formula for Z is \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
+where \code{v} is a column vector formed by row products of \code{X}.
+The \code{T} and \code{0} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
+and a final time (\code{T}).
+}
+\details{
+This function fully accounts for the degenerate cases
 found in Table 2, p. 492 of
-B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
-Factorizing changes in energy and environmental indicators through decomposition,
-Energy, Volume 23, Number 6, pp. 489-495.
+\href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
 We're employing the method suggested by
-R. Wood and M. Lenzen. 2006.
-Zero-value problems of the logarithmic mean divisia index decomposition method.
-Energy Policy, volume 34, number 12, pp. 1326–1331.
+\href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
 }
