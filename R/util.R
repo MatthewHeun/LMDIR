@@ -7,6 +7,10 @@
 #' B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
 #' Factorizing changes in energy and environmental indicators through decomposition,
 #' Energy, Volume 23, Number 6, pp. 489-495.
+#' We're employing the method suggested by
+#' R. Wood and M. Lenzen. 2006.
+#' Zero-value problems of the logarithmic mean divisia index decomposition method.
+#' Energy Policy, volume 34, number 12, pp. 1326–1331.
 #'
 #' @param X_0 an \code{X} matrix for time \code{0}
 #' @param X_T an \code{X} matrix for time \code{T}
