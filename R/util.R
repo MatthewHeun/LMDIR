@@ -65,23 +65,23 @@ Zij <- function(i, j, X_0, X_T,
   # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
   # Factorizing changes in energy and environmental indicators through decomposition,
   # Energy, Volume 23, Number 6, pp. 489-495.
-  if (v_0i1 == 0 & X_0ij == 0) {
+  if (v_0i1 == 0 & v_Ti1 > 0 & X_0ij == 0 & X_Tij > 0) {
     # Case 1
     return(v_Ti1)
 
-  } else if (v_Ti1 == 0 & X_Tij == 0) {
+  } else if (v_0i1 > 0 & v_Ti1 == 0 & X_0ij > 0 & X_Tij == 0) {
     # Case 2
     return(-v_0i1)
 
-  } else if (v_0i1 == 0) {
+  } else if (v_0i1 == 0 & v_Ti1 > 0 & X_0ij > 0 & X_Tij > 0) {
     # Case 3
     return(0)
 
-  } else if (v_Ti1 == 0) {
+  } else if (v_0i1 > 0 & v_Ti1 == 0 & X_0ij > 0 & X_Tij > 0) {
     # Case 4
     return(0)
 
-  } else if (v_0i1 == 0 & v_Ti1 == 0) {
+  } else if (v_0i1 == 0 & v_Ti1 == 0 & X_0ij > 0 & X_Tij > 0) {
     # Case 5
     return(0)
 
@@ -89,15 +89,15 @@ Zij <- function(i, j, X_0, X_T,
     # Case 6
     return(0)
 
-  } else if (v_0i1 == 0 & v_Ti1 == 0 & X_Tij == 0) {
+  } else if (v_0i1 == 0 & v_Ti1 == 0 & X_0ij > 0 & X_Tij == 0) {
     # Case 7
     return(0)
 
-  } else if (v_0i1 == 0 & v_Ti1 == 0 & X_0ij == 0) {
+  } else if (v_0i1 == 0 & v_Ti1 == 0 & X_0ij == 0 & X_Tij > 0) {
     # Case 8
     return(0)
 
-  } else if (v_0i1 != 0 & v_Ti1 != 0 & X_0ij != 0 & X_Tij != 0) {
+  } else if (v_0i1 > 0 & v_Ti1 > 0 & X_0ij > 0 & X_Tij > 0) {
     # This is the non-degenerate case
     return(logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
   }
