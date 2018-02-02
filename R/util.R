@@ -22,6 +22,7 @@ Z_byname <- function(X_0, X_T){
         Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0, X_T = X_T)
       }
     }
+    return(Z %>% setrownames_byname(rownames(X_0)) %>% setcolnames_byname(colnames(X_0)))
   }
   binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }

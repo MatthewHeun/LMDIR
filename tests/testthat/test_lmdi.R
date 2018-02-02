@@ -50,8 +50,28 @@ test_that("Z_byname works as expected", {
     lmdi()
   X_0 <- simple$X_0[[1]]
   X_T <- simple$X_T[[1]]
-  Z <- Z_byname(X_0 = X_0, X_T = X_T)
+  Z_1 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
+                  19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
+                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subcat") %>% setcoltype("factor")
+  Z_2 <- matrix(c(42.96021467, -56.79031473, 17.83010006,
+                  0, 22.47128816, 32.52871184), byrow = TRUE, nrow = 2, ncol = 3,
+                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subcat") %>% setcoltype("factor")
+  Z_3 <- matrix(c(12.6549815, -39.30996299, 12.6549815,
+                  41.35566084, 30.28867832, 41.35566084), byrow = TRUE, nrow = 2, ncol = 3,
+                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subcat") %>% setcoltype("factor")
 
+  expect_equal(Z_byname(X_0 = X_0, X_T = X_T), Z_1)
+  expect_equal(Z_byname(X_0 = simple$X_0, X_T = simple$X_T),
+               list(Z_1, Z_2, Z_3, Z_1, Z_2, Z_3))
+  # Now try in the context of a data frame.
+  simple2 <- simple %>%
+    mutate(
+      Z = Z_byname(X_0 = X_0, X_T = X_T)
+    )
+  expect_equal(simple2$Z, list(Z_1, Z_2, Z_3, Z_1, Z_2, Z_3))
 })
 
 
