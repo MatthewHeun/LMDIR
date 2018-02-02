@@ -72,6 +72,29 @@ test_that("Z_byname works as expected", {
       Z = Z_byname(X_0 = X_0, X_T = X_T)
     )
   expect_equal(simple2$Z, list(Z_1, Z_2, Z_3, Z_1, Z_2, Z_3))
+
+  # Try with some degenerate values in the X matrix.
+  # When a 0 is present, the row product is zero, making the logarithms blow up.
+  # These are the conditions under which we need to refer to
+  # Table 2, p. 492 of
+  # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
+  # Factorizing changes in energy and environmental indicators through decomposition,
+  # Energy, Volume 23, Number 6, pp. 489-495.
+  # We employ the method suggested by
+  # R. Wood and M. Lenzen. 2006.
+  # Zero-value problems of the logarithmic mean divisia index decomposition method.
+  # Energy Policy, volume 34, number 12, pp. 1326–1331.
+
+  # First, set one of the values in X_0 to 0.
+  X_0_2 <- X_0
+  X_0_2[[1, 1]] <- 0
+  Z_expected <- matrix(c(0, 0, 0,
+                         19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
+                       dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subcat") %>% setcoltype("factor")
+
+  expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected)
+
 })
 
 
