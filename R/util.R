@@ -1,3 +1,33 @@
+
+
+#' Calculates a Z matrix from \code{X_0} and \code{X_T} matrices
+#'
+#' This function fully accounts for all degenerate cases
+#' found in Table 2, p. 492 of
+#' B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
+#' Factorizing changes in energy and environmental indicators through decomposition,
+#' Energy, Volume 23, Number 6, pp. 489-495.
+#'
+#' @param X_0 an \code{X} matrix for time \code{0}
+#' @param X_T an \code{X} matrix for time \code{T}
+#'
+#' @return a \code{Z} matrix
+#'
+#' @export
+Z_byname <- function(X_0, X_T){
+  Z.func <- function(X_0, X_T){
+    Z <- matrix(nrow = nrow(X_0), ncol = ncol(X_0))
+    for (i in 1:nrow(X_0)) {
+      for (j in 1:ncol(X_0)) {
+        Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0, X_T = X_T)
+      }
+    }
+  }
+  binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
+}
+
+
+
 #' Calculate element \code{Z_i,j}
 #'
 #' There are many special cases for calculating the \code{i,j}th term in \code{Z}.

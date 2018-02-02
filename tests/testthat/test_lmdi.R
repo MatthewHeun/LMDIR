@@ -44,6 +44,17 @@ create_simple_LMDI <- function(){
 context("Utilities")
 ###########################################################
 
+test_that("Z_byname works as expected", {
+  simple <- create_simple_LMDI() %>%
+    group_by(Country) %>%
+    lmdi()
+  X_0 <- simple$X_0[[1]]
+  X_T <- simple$X_T[[1]]
+  Z <- Z_byname(X_0 = X_0, X_T = X_T)
+
+})
+
+
 test_that("Zij works as expected", {
   # Test degenerate cases.
   PN <- 9999 # Positive Number
