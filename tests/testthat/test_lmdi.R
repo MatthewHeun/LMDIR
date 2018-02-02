@@ -88,6 +88,10 @@ test_that("Z_byname works as expected", {
   # First, set one of the values in X_0 to 0.
   X_0_2 <- X_0
   X_0_2[[1, 1]] <- 0
+  # In this situation, the second row of Z remains same as Z_1 above.
+  # However, with X_0_11 = 0, we also get v_0_11 = 0.
+  # For Z_11, we have Case 0, and Z_11 = v_T_11 = 60.
+  # For Z_12 and Z_13, we have Case 3, and both are 0.
   Z_expected_1 <- matrix(c(60, 0, 0,
                          19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
                        dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
@@ -96,6 +100,10 @@ test_that("Z_byname works as expected", {
 
   X_T_2 <- X_T
   X_T_2[[2, 3]] <- 0
+  # In this situation, the first row of Z remains same as Z_1 above.
+  # However, with X_T_23 = 0, we also get v_T_21 = 0.
+  # For Z_21 and Z_22, we have Case 4, and both are 0.
+  # For Z_23, we have Case 2, and we obtain Z_23 = -v_0_21 = -60.
   Z_expected_2 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                   0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
                 dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
