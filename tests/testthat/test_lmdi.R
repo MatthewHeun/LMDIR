@@ -44,6 +44,40 @@ create_simple_LMDI <- function(){
 context("Utilities")
 ###########################################################
 
+test_that("Zij works as expected", {
+  # Test degenerate cases.
+  PN <- 9999 # Positive Number
+  ANS <- 42 # the answer (modulo the sign)
+  # Case 1
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = ANS, X_0ij = 0, X_Tij = PN), ANS)
+  # Case 2
+  expect_equal(LMDIR:::Zij(v_0i1 = ANS, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), -ANS)
+  # Case 3
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = PN, X_0ij = PN, X_Tij = PN), 0)
+  # Case 4
+  expect_equal(LMDIR:::Zij(v_0i1 = PN, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
+  # Case 5
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
+  # Case 6
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = 0), 0)
+  # Case 7
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), 0)
+  # Case 8
+  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = PN), 0)
+
+  simple <- create_simple_LMDI() %>%
+    group_by(Country) %>%
+    lmdi()
+  X_T <- simple$X_T[[1]]
+  X_0 <- simple$X_0[[1]]
+  expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
+  expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
+  expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
+  expect_equal(LMDIR:::Zij(2, 1, X_0 = X_0, X_T = X_T), 19.31568569)
+  expect_equal(LMDIR:::Zij(2, 2, X_0 = X_0, X_T = X_T), 15.78206435)
+  expect_equal(LMDIR:::Zij(2, 3, X_0 = X_0, X_T = X_T), 24.90224996)
+})
+
 test_that("Z_byname works as expected", {
   simple <- create_simple_LMDI() %>%
     group_by(Country) %>%
@@ -93,8 +127,8 @@ test_that("Z_byname works as expected", {
   # For Z_11, we have Case 0, and Z_11 = v_T_11 = 60.
   # For Z_12 and Z_13, we have Case 3, and both are 0.
   Z_expected_1 <- matrix(c(60, 0, 0,
-                         19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
-                       dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+                           19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
+                         dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
     setrowtype("subcat") %>% setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected_1)
 
@@ -105,53 +139,17 @@ test_that("Z_byname works as expected", {
   # For Z_21 and Z_22, we have Case 4, and both are 0.
   # For Z_23, we have Case 2, and we obtain Z_23 = -v_0_21 = -60.
   Z_expected_2 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
-                  0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
-                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+                           0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
+                         dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
     setrowtype("subcat") %>% setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T_2), Z_expected_2)
 
 })
 
 
-test_that("Zij works as expected", {
-  # Test degenerate cases.
-  PN <- 9999 # Positive Number
-  ANS <- 42 # the answer (modulo the sign)
-  # Case 1
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = ANS, X_0ij = 0, X_Tij = PN), ANS)
-  # Case 2
-  expect_equal(LMDIR:::Zij(v_0i1 = ANS, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), -ANS)
-  # Case 3
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = PN, X_0ij = PN, X_Tij = PN), 0)
-  # Case 4
-  expect_equal(LMDIR:::Zij(v_0i1 = PN, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
-  # Case 5
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = PN), 0)
-  # Case 6
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = 0), 0)
-  # Case 7
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = PN, X_Tij = 0), 0)
-  # Case 8
-  expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = PN), 0)
-
-  simple <- create_simple_LMDI() %>%
-    group_by(Country) %>%
-    lmdi()
-  X_T <- simple$X_T[[1]]
-  X_0 <- simple$X_0[[1]]
-  expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
-  expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
-  expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
-  expect_equal(LMDIR:::Zij(2, 1, X_0 = X_0, X_T = X_T), 19.31568569)
-  expect_equal(LMDIR:::Zij(2, 2, X_0 = X_0, X_T = X_T), 15.78206435)
-  expect_equal(LMDIR:::Zij(2, 3, X_0 = X_0, X_T = X_T), 24.90224996)
-})
-
 ###########################################################
 context("Additive")
 ###########################################################
-
-
 
 test_that("simple additive LMDI works as expected", {
   # Verify that grouping on time_colname fails.
