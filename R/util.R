@@ -20,13 +20,20 @@
 #' @export
 Z_byname <- function(X_0, X_T){
   Z.func <- function(X_0, X_T){
-    Z <- matrix(nrow = nrow(X_0), ncol = ncol(X_0))
-    for (i in 1:nrow(X_0)) {
-      for (j in 1:ncol(X_0)) {
+    # Ensure that X_0 and X_T are same type of matrices.
+    # I.e., they have the same row and column names.
+    # And they have the same row and column types.
+    stopifnot(samestructure_byname(X_0, X_T))
+    # Create an empty z matrix.  This will be filled with default value (NA) entires.
+    Z <- matrix(nrow = nrow(X_0), ncol = ncol(X_0)) %>%
+      setrownames_byname(rownames(X_0)) %>% setcolnames_byname(colnames(X_0))
+    # Use an old-fashioned for loop to fill all elements ofthe Z matrix
+    for (i in 1:nrow(Z)) {
+      for (j in 1:ncol(Z)) {
         Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0, X_T = X_T)
       }
     }
-    return(Z %>% setrownames_byname(rownames(X_0)) %>% setcolnames_byname(colnames(X_0)))
+    return(Z)
   }
   binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
