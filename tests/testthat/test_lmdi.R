@@ -88,12 +88,19 @@ test_that("Z_byname works as expected", {
   # First, set one of the values in X_0 to 0.
   X_0_2 <- X_0
   X_0_2[[1, 1]] <- 0
-  Z_expected <- matrix(c(0, 0, 0,
+  Z_expected_1 <- matrix(c(60, 0, 0,
                          19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
                        dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
     setrowtype("subcat") %>% setcoltype("factor")
+  expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected_1)
 
-  expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected)
+  X_T_2 <- X_T
+  X_T_2[[2, 3]] <- 0
+  Z_expected_2 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
+                  0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
+                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subcat") %>% setcoltype("factor")
+  expect_equal(Z_byname(X_0 = X_0, X_T = X_T_2), Z_expected_2)
 
 })
 
