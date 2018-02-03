@@ -47,7 +47,6 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   v_colname <- ".v"
   V_colname <- ".V"
   L_name <- "L"
-  # w_name <- "w"
 
   # Establish names for new columns.
   zero_suffix <- "_0"
@@ -60,10 +59,6 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   vT_colname <- paste0(v_colname, T_suffix)
   VT_colname <- paste0(V_colname, T_suffix)
   LV_colname <- paste0(L_name, "(", V_colname, ")")
-  # Lv_colname <- paste0(L_name, "(", v_colname, ")")
-  # wv_colname <- paste0(w_name, "(", v_colname, ")")
-  # deltaV_vec_colname <- paste0(deltaV_colname, vec_suffix)
-  # D_vec_colname <- paste0(D_colname, vec_suffix)
 
   # Ensure that time_colname is NOT a grouping variable.
   if (time_colname %in% groups(.lmdidata)) {
@@ -102,11 +97,17 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # We make these calculations here.
   raw_suffix <- "_raw"
   dc_suffix <- "_dc"
+  agg_suffix <- "_agg"
+  cum_suffix <- "_cum"
   dV_raw_colname <- paste0(deltaV_colname, raw_suffix)
   dV_dc_colname <- paste0(deltaV_colname, dc_suffix)
+  dV_agg_colname <- paste0(deltaV_colname, agg_suffix)
+  dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
   D_raw_colname <- paste0(D_colname, raw_suffix)
   D_dc_colname <- paste0(D_colname, dc_suffix)
-  test <- dVD %>%
+  D_agg_colname <- paste0(D_colname, agg_suffix)
+  D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
+  chk <- dVD %>%
     mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
       !!as.name(dV_raw_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
@@ -119,12 +120,24 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       # The "raw" and "dc" methods of calculating D should be identical.
       !!as.name(D_dc_colname) := prodall_byname(!!as.name(D_colname))
     )
-  # The following test
-  stopifnot(all(Map(f = all.equal, test[[dV_raw_colname]], test[[dV_dc_colname]]) %>% as.logical))
-  stopifnot(all(Map(f = all.equal, test[[D_raw_colname]], test[[D_dc_colname]]) %>% as.logical))
+  # If these tests pass, the calculations are internally consistent.
+  stopifnot(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_dc_colname]]) %>% as.logical))
+  stopifnot(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_dc_colname]]) %>% as.logical))
 
-  out <- dVD %>%
-    select(!!as.name(deltaV_colname), !!as.name(D_colname))
+  out <- chk %>%
+    select(!!!group_vars(chk), !!as.name(time_colname),
+           !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
+           !!as.name(deltaV_colname), !!as.name(D_colname)) %>%
+    rename(
+      !!as.name(dV_agg_colname) := !!as.name(dV_raw_colname),
+      !!as.name(D_agg_colname) := !!as.name(D_raw_colname)
+    ) %>%
+    mutate(
+      !!as.name(dV_agg_cum_colname) := cumsum(!!as.name(dV_agg_colname)),
+      !!as.name(D_agg_cum_colname) := cumprod(!!as.name(D_agg_colname))
+    )
+
+
 }
 
 

@@ -154,7 +154,7 @@ create0Tcolumns <- function(XvV,
   # Meta contains columns of metadata (the group_vars of .DF)
   # and time_colname
   Meta <- XvV %>%
-    select(!!as.name(time_colname), !!!as.name(group_vars(XvV))) %>%
+    select(!!!as.name(group_vars(XvV)), !!as.name(time_colname)) %>%
     do(
       if (pad == "tail") {
         head(.data, -1)
@@ -185,6 +185,7 @@ create0Tcolumns <- function(XvV,
   # Bind everything together and return it
   cbind(Meta %>% ungroup(),
         .DF0 %>% ungroup() %>% select(X0_colname, v0_colname, V0_colname),
-        .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname))
+        .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname)) %>%
+    group_by(!!!as.name(group_vars(XvV)))
 }
 
