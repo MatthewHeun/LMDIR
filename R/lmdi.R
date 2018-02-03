@@ -77,32 +77,54 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
     !!as.name(V_colname) := sumall_byname(!!as.name(v_colname))
   )
 
+  # Create a data frame of metadata and X matrices, v column vectors, and V values
+  # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
                              X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
                              pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
-  # XvV0T %>%
-  #   mutate(
-  #     !!as.name(D_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-  #     !!as.name(deltaV_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-  #     !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-  #     !!as.name(Lv_colname) := logarithmicmean_byname(!!as.name(vT_colname), !!as.name(v0_colname)),
-  #     !!as.name(wv_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
-  #     !!as.name(F_colname) := elementquotient_byname(X_T, X_0) %>% elementlog_byname(),
-  #     !!as.name(deltaV_vec_colname) := matrixproduct_byname(hatize_byname(!!as.name(Lv_colname)), !!as.name(F_colname)) %>%
-  #       colsums_byname() %>% transpose_byname(),
-  #     !!as.name(D_vec_colname) := matrixproduct_byname(hatize_byname(!!as.name(wv_colname)), !!as.name(F_colname)) %>%
-  #       colsums_byname() %>% elementexp_byname() %>% transpose_byname()
-  #   )
-
-  XvV0T %>%
+  dVD <- XvV0T %>%
     mutate(
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname)),
       !!as.name(deltaV_colname) := colsums_byname(!!as.name(.Z_colname)) %>% transpose_byname(),
       !!as.name(D_colname) := elementquotient_byname(!!as.name(.Z_colname), !!as.name(LV_colname)) %>%
-        colsums_byname() %>% elementexp_byname()
+        colsums_byname() %>% transpose_byname() %>% elementexp_byname()
     )
+
+  # Test to ensure that everything works as expected.
+  # We can calculate deltaV and D in two ways.
+  # The first way is called "raw" and is calculated with the
+  # X data prior to any of the LMDI calculations.
+  # The second way is called "dc" (decomposed) and is calculated with the
+  # LMDI-decomposed results.
+  # If all calculations have gone well, the "raw" and "dc" versions must be exactly the same.
+  # We make these calculations here.
+  raw_suffix <- "_raw"
+  dc_suffix <- "_dc"
+  dV_raw_colname <- paste0(deltaV_colname, raw_suffix)
+  dV_dc_colname <- paste0(deltaV_colname, dc_suffix)
+  D_raw_colname <- paste0(D_colname, raw_suffix)
+  D_dc_colname <- paste0(D_colname, dc_suffix)
+  test <- dVD %>%
+    mutate(
+      # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
+      !!as.name(dV_raw_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      # The "dc" way of calculating deltaV at each time comes after we calculate all deltaV's for all factors
+      # The "raw" and "dc" methods of calculating deltaV should be identical.
+      !!as.name(dV_dc_colname) := sumall_byname(!!as.name(deltaV_colname)),
+      # The "raw" way of calaculating D at each time comes from the "raw" data in X.
+      !!as.name(D_raw_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      # The "dc" way of calculating D at each time comes after we calculate all D's for all factors
+      # The "raw" and "dc" methods of calculating D should be identical.
+      !!as.name(D_dc_colname) := prodall_byname(!!as.name(D_colname))
+    )
+  # The following test
+  stopifnot(all(Map(f = all.equal, test[[dV_raw_colname]], test[[dV_dc_colname]]) %>% as.logical))
+  stopifnot(all(Map(f = all.equal, test[[D_raw_colname]], test[[D_dc_colname]]) %>% as.logical))
+
+  out <- dVD %>%
+    select(!!as.name(deltaV_colname), !!as.name(D_colname))
 }
 
 
