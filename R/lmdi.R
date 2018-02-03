@@ -133,6 +133,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       !!as.name(D_agg_colname) := !!as.name(D_raw_colname)
     ) %>%
     mutate(
+      # These cululative sums and products are performed by group,
+      # which is exactly what we want!
       !!as.name(dV_agg_cum_colname) := cumsum(!!as.name(dV_agg_colname)),
       !!as.name(D_agg_cum_colname) := cumprod(!!as.name(D_agg_colname))
     )
