@@ -65,11 +65,10 @@ test_that("Zij works as expected", {
   # Case 8
   expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = 0, X_0ij = 0, X_Tij = PN), 0)
 
-  simple <- create_simple_LMDI() %>%
-    group_by(Country) %>%
-    lmdi()
-  X_T <- simple$X_T[[1]]
-  X_0 <- simple$X_0[[1]]
+  simple <- create_simple_LMDI()
+
+  X_T <- simple$X[[2]]
+  X_0 <- simple$X[[1]]
   expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
   expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
   expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
@@ -79,11 +78,11 @@ test_that("Zij works as expected", {
 })
 
 test_that("Z_byname works as expected", {
-  simple <- create_simple_LMDI() %>%
-    group_by(Country) %>%
-    lmdi()
-  X_0 <- simple$X_0[[1]]
-  X_T <- simple$X_T[[1]]
+  simple <- create_simple_LMDI()
+
+  X_T <- simple$X[[2]]
+  X_0 <- simple$X[[1]]
+
   Z_1 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                   19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
                 dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
@@ -98,10 +97,17 @@ test_that("Z_byname works as expected", {
     setrowtype("subcat") %>% setcoltype("factor")
 
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T), Z_1)
-  expect_equal(Z_byname(X_0 = simple$X_0, X_T = simple$X_T),
-               list(Z_1, Z_2, Z_3, Z_1, Z_2, Z_3))
+  expect_equal(Z_byname(X_0 = simple$X[1:3], X_T = simple$X[2:4]),
+               list(Z_1, Z_2, Z_3))
   # Now try in the context of a data frame.
   simple2 <- simple %>%
+    mutate(
+      X_0 = list(simple$X[[1]], simple$X[[2]], simple$X[[3]], NULL,
+                 simple$X[[5]], simple$X[[6]], simple$X[[7]], NULL),
+      X_T = list(simple$X[[2]], simple$X[[3]], simple$X[[4]], NULL,
+                 simple$X[[6]], simple$X[[7]], simple$X[[8]], NULL)
+    ) %>%
+    filter(Year != 1974) %>%
     mutate(
       Z = Z_byname(X_0 = X_0, X_T = X_T)
     )

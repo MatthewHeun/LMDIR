@@ -103,12 +103,12 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   dV_dc_colname <- paste0(deltaV_colname, dc_suffix)
   dV_agg_colname <- paste0(deltaV_colname, agg_suffix)
   dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
-  dVi_agg_cum_colname <- paste0(deltaV_colname, "i", agg_suffix, cum_suffix)
+  dV_cum_colname <- paste0(deltaV_colname, cum_suffix)
   D_raw_colname <- paste0(D_colname, raw_suffix)
   D_dc_colname <- paste0(D_colname, dc_suffix)
   D_agg_colname <- paste0(D_colname, agg_suffix)
   D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
-  Di_agg_cum_colname <- paste0(D_colname, "i", agg_suffix, cum_suffix)
+  D_cum_colname <- paste0(D_colname, cum_suffix)
   chk <- dVD %>%
     mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
@@ -139,11 +139,9 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       # which is exactly what we want!
       !!as.name(dV_agg_cum_colname) := cumsum_byname(!!as.name(dV_agg_colname)),
       !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
-      !!as.name(dVi_agg_cum_colname) := cumsum_byname(!!as.name(deltaV_colname)),
-      !!as.name(Di_agg_cum_colname) := cumprod_byname(!!as.name(D_colname))
+      !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV_colname)),
+      !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D_colname))
     )
-
-
 }
 
 
