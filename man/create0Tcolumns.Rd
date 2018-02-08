@@ -29,7 +29,7 @@ create0Tcolumns(XvV, time_colname, X_colname = "X", v_colname = "v",
 }
 \value{
 a data frame containing metadata (\code{time_colname} and grouping variables)
-        and columns for X0, v0, V0, XT, vT, and VT.
+        and columns for X_0, v_0, V_0, X_T, v_T, and V_T.
 }
 \description{
 Make columns for time 0 and time T

@@ -2,7 +2,7 @@
 % Please edit documentation in R/util.R
 \name{Z_byname}
 \alias{Z_byname}
-\title{Calculates a Z matrix from \code{X_0} and \code{X_T} matrices}
+\title{Z matrix from \code{X_0} and \code{X_T} matrices}
 \usage{
 Z_byname(X_0, X_T)
 }
@@ -21,6 +21,8 @@ The \code{T} and \code{0} subscripts on \code{X} and \code{v} indicate an initia
 and a final time (\code{T}).
 }
 \details{
+The nomenclature for this function comes from
+\href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
 This function fully accounts for the degenerate cases
 found in Table 2, p. 492 of
 \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.

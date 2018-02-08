@@ -5,8 +5,7 @@
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
 lmdi(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail",
-  "head"), pad.value = NA, D_colname = "D", deltaV_colname = "dV",
-  F_colname = "F")
+  "head"), pad.value = NA, deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
@@ -27,9 +26,9 @@ respectively, should contain \code{pad.value}.}
 
 \item{pad.value}{the value to be used in the padding row.  Default is \code{NA}.}
 
-\item{D_colname}{the name for the \code{D} column (a string).}
-
 \item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
+
+\item{D_colname}{the name for the \code{D} column (a string).}
 
 \item{F_colname}{the name for the \code{F} column (a string).}
 }
