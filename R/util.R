@@ -125,7 +125,6 @@ Zij <- function(i, j, X_0, X_T,
 #' @param pad one of
 #'        "\code{tail}" (for an empty last time) or
 #'        "\code{head}" (for an empty first time).
-#' @param pad.value the value used for padding the outgoing data frame (default is \code{NA})
 #' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
 #' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
 #'
@@ -141,7 +140,7 @@ Zij <- function(i, j, X_0, X_T,
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
-                            pad = c("tail", "head"), pad.value = NA,
+                            pad = c("tail", "head"),
                             zero_suffix = "_0",
                             T_suffix = "_T"){
 

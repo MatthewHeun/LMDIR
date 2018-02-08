@@ -174,11 +174,32 @@ test_that("tail padding works as expected", {
     lmdi()
   tailpad_filtered <- tailpad %>% filter(!is.na(Year))
   expect_equal(tailpad_filtered$Year %>% unique(), c(1971:1973))
+  expect_true(is.na(tailpad$Year[[4]]))
+  expect_true(is.na(tailpad$Year[[8]]))
+})
 
+test_that("head padding works as expected", {
   headpad <- create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi(pad = "head")
   headpad_filtered <- headpad %>% filter(!is.na(Year))
   expect_equal(headpad_filtered$Year %>% unique(), c(1972:1974))
-
+  expect_true(is.na(headpad$Year[[1]]))
+  expect_true(is.na(headpad$Year[[5]]))
 })
+
+
+###########################################################
+context("Linear LMDI")
+###########################################################
+
+
+
+
+
+
+
+
+###########################################################
+context("Multiplicative LMDI")
+###########################################################

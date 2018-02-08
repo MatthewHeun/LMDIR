@@ -76,8 +76,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
                            X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
-                           pad = pad, pad.value = pad.value,
-                           zero_suffix = zero_suffix, T_suffix = T_suffix)
+                           pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
     mutate(
