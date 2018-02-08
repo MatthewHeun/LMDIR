@@ -154,14 +154,31 @@ test_that("Z_byname works as expected", {
 
 
 ###########################################################
-context("Additive")
+context("Group error")
 ###########################################################
 
 test_that("simple additive LMDI works as expected", {
   # Verify that grouping on time_colname fails.
   expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
                "'Year' is a grouping variable, but you can't group on time_colname in argument .lmdidata of collapse_to_matrices.")
-  create_simple_LMDI() %>%
+})
+
+
+###########################################################
+context("Padding")
+###########################################################
+
+test_that("tail padding works as expected", {
+  tailpad <- create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi()
+  tailpad_filtered <- tailpad %>% filter(!is.na(Year))
+  expect_equal(tailpad_filtered$Year %>% unique(), c(1971:1973))
+
+  headpad <- create_simple_LMDI() %>%
+    group_by(Country) %>%
+    lmdi(pad = "head")
+  headpad_filtered <- headpad %>% filter(!is.na(Year))
+  expect_equal(headpad_filtered$Year %>% unique(), c(1972:1974))
+
 })
