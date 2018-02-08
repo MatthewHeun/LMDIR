@@ -29,8 +29,6 @@ respectively, should contain \code{pad.value}.}
 \item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
 
 \item{D_colname}{the name for the \code{D} column (a string).}
-
-\item{F_colname}{the name for the \code{F} column (a string).}
 }
 \value{
 a data frame containing several columns.

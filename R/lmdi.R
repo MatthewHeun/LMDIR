@@ -17,7 +17,6 @@
 #' @param pad.value the value to be used in the padding row.  Default is \code{NA}.
 #' @param D_colname the name for the \code{D} column (a string).
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
-#' @param F_colname the name for the \code{F} column (a string).
 #'
 #' @return a data frame containing several columns.
 #'
