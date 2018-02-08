@@ -82,8 +82,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
     mutate(
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname)),
-      !!as.name(deltaV_colname) := colsums_byname(!!as.name(.Z_colname)) %>% transpose_byname(),
-      !!as.name(D_colname) := elementquotient_byname(!!as.name(.Z_colname), !!as.name(LV_colname)) %>%
+      !!as.name(deltaV_colname) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
+      !!as.name(D_colname) := elementquotient_byname(!!as.name(Z_colname), !!as.name(LV_colname)) %>%
         colsums_byname() %>% transpose_byname() %>% elementexp_byname()
     )
 
@@ -96,17 +96,19 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # If all calculations have gone well, the "raw" and "dc" versions must be exactly the same.
   # We make these calculations here.
   raw_suffix <- "_raw"
-  dc_suffix <- "_dc"
+  dc_suffix <- "_decomp"
   agg_suffix <- "_agg"
   cum_suffix <- "_cum"
   dV_raw_colname <- paste0(deltaV_colname, raw_suffix)
   dV_dc_colname <- paste0(deltaV_colname, dc_suffix)
   dV_agg_colname <- paste0(deltaV_colname, agg_suffix)
   dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
+  dVi_agg_cum_colname <- paste0(deltaV_colname, "i", agg_suffix, cum_suffix)
   D_raw_colname <- paste0(D_colname, raw_suffix)
   D_dc_colname <- paste0(D_colname, dc_suffix)
   D_agg_colname <- paste0(D_colname, agg_suffix)
   D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
+  Di_agg_cum_colname <- paste0(D_colname, "i", agg_suffix, cum_suffix)
   chk <- dVD %>%
     mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
@@ -135,8 +137,10 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
     mutate(
       # These cululative sums and products are performed by group,
       # which is exactly what we want!
-      !!as.name(dV_agg_cum_colname) := cumsum(!!as.name(dV_agg_colname)),
-      !!as.name(D_agg_cum_colname) := cumprod(!!as.name(D_agg_colname))
+      !!as.name(dV_agg_cum_colname) := cumsum_byname(!!as.name(dV_agg_colname)),
+      !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
+      !!as.name(dVi_agg_cum_colname) := cumsum_byname(!!as.name(deltaV_colname)),
+      !!as.name(Di_agg_cum_colname) := cumprod_byname(!!as.name(D_colname))
     )
 
 

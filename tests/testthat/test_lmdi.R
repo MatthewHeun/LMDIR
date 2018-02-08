@@ -154,7 +154,7 @@ context("Additive")
 test_that("simple additive LMDI works as expected", {
   # Verify that grouping on time_colname fails.
   expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
-               "'Year' is a grouping variable, but you can't group on time_colname in argument .DF of collapse_to_matrices.")
+               "'Year' is a grouping variable, but you can't group on time_colname in argument .lmdidata of collapse_to_matrices.")
   create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi()
