@@ -46,7 +46,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   Z_colname <- ".Z"
   v_colname <- ".v"
   V_colname <- ".V"
-  L_name <- "L"
+  L_name <- ".L"
 
   # Establish names for new columns.
   zero_suffix <- "_0"
@@ -75,8 +75,9 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # Create a data frame of metadata and X matrices, v column vectors, and V values
   # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
-                             X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
-                             pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
+                           X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
+                           pad = pad, pad.value = pad.value,
+                           zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
     mutate(
@@ -141,6 +142,19 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
       !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV_colname)),
       !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D_colname))
+    )
+
+  # Add padding by groups.
+  out %>%
+    do(
+      if (pad == "tail") {
+        .data %>%
+          rbind(matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))))
+      } else {
+        # pad == "head"
+        matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))) %>%
+          rbind(.data)
+      }
     )
 }
 

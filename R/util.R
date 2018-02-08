@@ -125,6 +125,7 @@ Zij <- function(i, j, X_0, X_T,
 #' @param pad one of
 #'        "\code{tail}" (for an empty last time) or
 #'        "\code{head}" (for an empty first time).
+#' @param pad.value the value used for padding the outgoing data frame (default is \code{NA})
 #' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
 #' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
 #'
@@ -140,9 +141,12 @@ Zij <- function(i, j, X_0, X_T,
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
-                            pad = c("tail", "head"),
+                            pad = c("tail", "head"), pad.value = NA,
                             zero_suffix = "_0",
                             T_suffix = "_T"){
+
+  pad <- match.arg(pad)
+
   # Establish names for new columns.
   X0_colname <- paste0(X_colname, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
@@ -150,19 +154,7 @@ create0Tcolumns <- function(XvV,
   XT_colname <- paste0(X_colname, T_suffix)
   vT_colname <- paste0(v_colname, T_suffix)
   VT_colname <- paste0(V_colname, T_suffix)
-  # In groups, time-shift the rows.
-  # Meta contains columns of metadata (the group_vars of .DF)
-  # and time_colname
-  Meta <- XvV %>%
-    select(!!!as.name(group_vars(XvV)), !!as.name(time_colname)) %>%
-    do(
-      if (pad == "tail") {
-        head(.data, -1)
-      } else {
-        # pad == "head"
-        tail(.data, -1)
-      }
-    )
+
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV %>%
     do(
@@ -173,6 +165,14 @@ create0Tcolumns <- function(XvV,
       !!as.name(X0_colname) := !!as.name(X_colname),
       !!as.name(v0_colname) := !!as.name(v_colname),
       !!as.name(V0_colname) := !!as.name(V_colname))
+  if (pad == "head") {
+    # Don't need grouping variables or time variable here.
+    # We'll pick them up from .DFT.
+    .DF0 <- .DF0 %>%
+      ungroup() %>%
+      select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
+  }
+
   .DFT <- XvV %>%
     do(
       # do works in groups, which is what we want.
@@ -182,10 +182,17 @@ create0Tcolumns <- function(XvV,
       !!as.name(XT_colname) := !!as.name(X_colname),
       !!as.name(vT_colname) := !!as.name(v_colname),
       !!as.name(VT_colname) := !!as.name(V_colname))
+  if (pad == "tail") {
+    # Don't need grouping variable sor time variable here.
+    # We'll pick them up from .DF0.
+    .DFT <- .DFT %>%
+      ungroup() %>%
+      select(!!as.name(XT_colname), !!as.name(vT_colname), !!as.name(VT_colname))
+  }
+
   # Bind everything together and return it
-  cbind(Meta %>% ungroup(),
-        .DF0 %>% ungroup() %>% select(X0_colname, v0_colname, V0_colname),
-        .DFT %>% ungroup() %>% select(XT_colname, vT_colname, VT_colname)) %>%
+  cbind(.DF0 %>% ungroup(), .DFT %>% ungroup()) %>%
+    select(group_vars(XvV), time_colname, everything()) %>%
     group_by(!!!as.name(group_vars(XvV)))
 }
 
