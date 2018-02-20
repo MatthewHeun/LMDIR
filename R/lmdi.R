@@ -13,8 +13,7 @@
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
 #' @param pad either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
-#'        respectively, should contain \code{pad.value}.
-#' @param pad.value the value to be used in the padding row.  Default is \code{NA}.
+#'        respectively, should contain \code{NULL} values.
 #' @param D_colname the name for the \code{D} column (a string).
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
 #'
@@ -34,8 +33,7 @@
 #'
 #' @export
 #'
-lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
-                 pad = c("tail", "head"), pad.value = NA,
+lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail", "head"),
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
 
@@ -142,18 +140,25 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D_colname))
     )
 
+  # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
+  .lmdidata %>%
+    select(group_vars(.lmdidata), time_colname) %>%
+    left_join(out, by = c(group_vars(.lmdidata), time_colname))
+
+
+
   # Add padding by groups.
-  out %>%
-    do(
-      if (pad == "tail") {
-        .data %>%
-          rbind(matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))))
-      } else {
-        # pad == "head"
-        matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))) %>%
-          rbind(.data)
-      }
-    )
+  # out %>%
+  #   do(
+  #     if (pad == "tail") {
+  #       .data %>%
+  #         rbind(matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))))
+  #     } else {
+  #       # pad == "head"
+  #       matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))) %>%
+  #         rbind(.data)
+  #     }
+  #   )
 }
 
 

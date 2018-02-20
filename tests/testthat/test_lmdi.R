@@ -171,20 +171,22 @@ test_that("tail padding works as expected", {
   tailpad <- create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi()
-  tailpad_filtered <- tailpad %>% filter(!is.na(Year))
-  expect_equal(tailpad_filtered$Year %>% unique(), c(1971:1973))
-  expect_true(is.na(tailpad$Year[[4]]))
-  expect_true(is.na(tailpad$Year[[8]]))
+  expect_equal(tailpad$Year %>% unique(), c(1971:1974))
+  expect_true(is.null(tailpad$dV_agg[[4]]))
+  expect_true(is.null(tailpad$dV_agg[[8]]))
+  expect_true(is.null(tailpad$D_cum[[4]]))
+  expect_true(is.null(tailpad$D_cum[[8]]))
 })
 
 test_that("head padding works as expected", {
   headpad <- create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi(pad = "head")
-  headpad_filtered <- headpad %>% filter(!is.na(Year))
-  expect_equal(headpad_filtered$Year %>% unique(), c(1972:1974))
-  expect_true(is.na(headpad$Year[[1]]))
-  expect_true(is.na(headpad$Year[[5]]))
+  expect_equal(headpad$Year %>% unique(), c(1971:1974))
+  expect_true(is.null(headpad$dV_agg[[1]]))
+  expect_true(is.null(headpad$dV_agg[[5]]))
+  expect_true(is.null(headpad$D_cum[[1]]))
+  expect_true(is.null(headpad$D_cum[[5]]))
 })
 
 
@@ -195,10 +197,9 @@ context("Linear LMDI")
 test_that("linear LMDI works as expected", {
   res <- create_simple_LMDI() %>%
     group_by(Country) %>%
-    lmdi() %>%
-    filter(!is.na(Year))
-  expect_equal(res$dV_agg, list(100, 59, 99, 100, 59, 99))
-  expect_equal(res$dV_agg_cum, list(100, 159, 258, 100, 159, 258))
+    lmdi()
+  expect_equal(res$dV_agg, list(100, 59, 99, NULL, 100, 59, 99, NULL))
+  expect_equal(res$dV_agg_cum, list(100, 159, 258, NULL, 100, 159, 258, NULL))
   expect_equal(res$dV[[1]], matrix(c(69.79006598, -9.455125793, 39.66505981),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
                                                                        c("subcat"))) %>%
@@ -212,9 +213,9 @@ test_that("linear LMDI works as expected", {
                                                                        c("subcat"))) %>%
                  setrowtype("factor") %>% setcoltype("subcat"))
 
-  expect_equal(res$dV[[1]], res$dV[[4]])
-  expect_equal(res$dV[[2]], res$dV[[5]])
-  expect_equal(res$dV[[3]], res$dV[[6]])
+  expect_equal(res$dV[[1]], res$dV[[5]])
+  expect_equal(res$dV[[2]], res$dV[[6]])
+  expect_equal(res$dV[[3]], res$dV[[7]])
 
   expect_equal(res$dV_cum[[1]], res$dV[[1]])
   expect_equal(res$dV_cum[[2]], sum_byname(res$dV[[1]], res$dV[[2]]))
@@ -231,9 +232,9 @@ test_that("multiplicative LMDI works as expected", {
     group_by(Country) %>%
     lmdi() %>%
     filter(!is.na(Year))
-  expect_equal(res$D_agg, list(2.25, 1.327777778, 1.414225941, 2.25, 1.327777778, 1.414225941))
-  expect_equal(res$D_agg_cum, list(2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941,
-                                   2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941))
+  expect_equal(res$D_agg, list(2.25, 1.327777778, 1.414225941, NULL, 2.25, 1.327777778, 1.414225941, NULL))
+  expect_equal(res$D_agg_cum, list(2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NULL,
+                                   2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NULL))
   expect_equal(res$D[[1]], matrix(c(1.761117821, 0.926191306, 1.379410116),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
                                                                        c("subcat"))) %>%
@@ -247,9 +248,9 @@ test_that("multiplicative LMDI works as expected", {
                                                                        c("subcat"))) %>%
                  setrowtype("factor") %>% setcoltype("subcat"))
 
-  expect_equal(res$D[[1]], res$D[[4]])
-  expect_equal(res$D[[2]], res$D[[5]])
-  expect_equal(res$D[[3]], res$D[[6]])
+  expect_equal(res$D[[1]], res$D[[5]])
+  expect_equal(res$D[[2]], res$D[[6]])
+  expect_equal(res$D[[3]], res$D[[7]])
 
   expect_equal(res$D_cum[[1]], res$D[[1]])
   expect_equal(res$D_cum[[2]], elementproduct_byname(res$D[[1]], res$D[[2]]))
