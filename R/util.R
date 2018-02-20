@@ -1,5 +1,3 @@
-
-
 #' Z matrix from \code{X_0} and \code{X_T} matrices
 #'
 #' The formula for Z is \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
