@@ -194,7 +194,7 @@ create0Tcolumns <- function(XvV,
       !!as.name(vT_colname) := !!as.name(v_colname),
       !!as.name(VT_colname) := !!as.name(V_colname))
   if (pad == "tail") {
-    # Don't need grouping variable sor time variable here.
+    # Don't need grouping variables or time variable here.
     # We'll pick them up from .DF0.
     .DFT <- .DFT %>%
       ungroup() %>%
@@ -204,6 +204,6 @@ create0Tcolumns <- function(XvV,
   # Bind everything together and return it
   cbind(.DF0 %>% ungroup(), .DFT %>% ungroup()) %>%
     select(group_vars(XvV), time_colname, everything()) %>%
-    group_by(!!!as.name(group_vars(XvV)))
+    group_by(!!!groups(XvV))
 }
 

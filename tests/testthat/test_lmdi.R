@@ -256,3 +256,19 @@ test_that("multiplicative LMDI works as expected", {
   expect_equal(res$D_cum[[2]], elementproduct_byname(res$D[[1]], res$D[[2]]))
   expect_equal(res$D_cum[[3]], elementproduct_byname(res$D_cum[[2]], res$D[[3]]))
 })
+
+
+###########################################################
+context("Preserve grouping")
+###########################################################
+
+test_that("Preserving grouping works as expected", {
+  res <- create_simple_LMDI() %>%
+    mutate(
+      groupingcol = paste(Country, "group")
+    ) %>%
+    group_by(Country, groupingcol) %>%
+    lmdi()
+  expect_equal(group_vars(res), c("Country", "groupingcol"))
+})
+
