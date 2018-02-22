@@ -5,7 +5,7 @@
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
 lmdi(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail",
-  "head"), deltaV_colname = "dV", D_colname = "D")
+  "head"), fill = NA, deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
@@ -22,7 +22,9 @@ named rows representing subcategories of the energy aggregate (\code{V}) and
 named columns representing factors contributing to changes in \code{V} over time.}
 
 \item{pad}{either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
-respectively, should contain \code{NULL} values.}
+respectively, should contain \code{fill} values.}
+
+\item{fill}{the value used for padding (default is \code{NA}).}
 
 \item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
 
