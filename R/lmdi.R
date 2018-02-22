@@ -13,7 +13,8 @@
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
 #' @param pad either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
-#'        respectively, should contain \code{NULL} values.
+#'        respectively, should contain \code{fill} values.
+#' @param fill the value used for padding (default is \code{NA}).
 #' @param D_colname the name for the \code{D} column (a string).
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
 #'
@@ -34,7 +35,8 @@
 #'
 #' @export
 #'
-lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail", "head"),
+lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
+                 pad = c("tail", "head"), fill = NA,
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
 
@@ -150,7 +152,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tai
   for (i in 1:nrow(out)) {
     for (j in 1:ncol(out)) {
       if (is.null(out[[i, j]])) {
-        out[[i, j]] <- NA
+        out[[i, j]] <- fill
       }
     }
   }
