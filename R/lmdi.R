@@ -25,6 +25,7 @@
 #' @importFrom byname rowprods_byname
 #' @importFrom byname colsums_byname
 #' @importFrom dplyr groups
+#' @importFrom dplyr left_join
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr mutate
 #' @importFrom rlang .data
@@ -144,22 +145,4 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tai
   .lmdidata %>%
     select(group_vars(.lmdidata), time_colname) %>%
     left_join(out, by = c(group_vars(.lmdidata), time_colname))
-
-
-
-  # Add padding by groups.
-  # out %>%
-  #   do(
-  #     if (pad == "tail") {
-  #       .data %>%
-  #         rbind(matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))))
-  #     } else {
-  #       # pad == "head"
-  #       matrix(pad.value, nrow = 1, ncol = ncol(.data), dimnames = list(NULL, names(.data))) %>%
-  #         rbind(.data)
-  #     }
-  #   )
 }
-
-
-
