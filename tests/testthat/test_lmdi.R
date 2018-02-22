@@ -172,10 +172,10 @@ test_that("tail padding works as expected", {
     group_by(Country) %>%
     lmdi()
   expect_equal(tailpad$Year %>% unique(), c(1971:1974))
-  expect_true(is.null(tailpad$dV_agg[[4]]))
-  expect_true(is.null(tailpad$dV_agg[[8]]))
-  expect_true(is.null(tailpad$D_cum[[4]]))
-  expect_true(is.null(tailpad$D_cum[[8]]))
+  expect_true(is.na(tailpad$dV_agg[[4]]))
+  expect_true(is.na(tailpad$dV_agg[[8]]))
+  expect_true(is.na(tailpad$D_cum[[4]]))
+  expect_true(is.na(tailpad$D_cum[[8]]))
 })
 
 test_that("head padding works as expected", {
@@ -183,10 +183,10 @@ test_that("head padding works as expected", {
     group_by(Country) %>%
     lmdi(pad = "head")
   expect_equal(headpad$Year %>% unique(), c(1971:1974))
-  expect_true(is.null(headpad$dV_agg[[1]]))
-  expect_true(is.null(headpad$dV_agg[[5]]))
-  expect_true(is.null(headpad$D_cum[[1]]))
-  expect_true(is.null(headpad$D_cum[[5]]))
+  expect_true(is.na(headpad$dV_agg[[1]]))
+  expect_true(is.na(headpad$dV_agg[[5]]))
+  expect_true(is.na(headpad$D_cum[[1]]))
+  expect_true(is.na(headpad$D_cum[[5]]))
 })
 
 
@@ -198,8 +198,8 @@ test_that("linear LMDI works as expected", {
   res <- create_simple_LMDI() %>%
     group_by(Country) %>%
     lmdi()
-  expect_equal(res$dV_agg, list(100, 59, 99, NULL, 100, 59, 99, NULL))
-  expect_equal(res$dV_agg_cum, list(100, 159, 258, NULL, 100, 159, 258, NULL))
+  expect_equal(res$dV_agg, list(100, 59, 99, NA, 100, 59, 99, NA))
+  expect_equal(res$dV_agg_cum, list(100, 159, 258, NA, 100, 159, 258, NA))
   expect_equal(res$dV[[1]], matrix(c(69.79006598, -9.455125793, 39.66505981),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
                                                                        c("subcat"))) %>%
@@ -232,9 +232,9 @@ test_that("multiplicative LMDI works as expected", {
     group_by(Country) %>%
     lmdi() %>%
     filter(!is.na(Year))
-  expect_equal(res$D_agg, list(2.25, 1.327777778, 1.414225941, NULL, 2.25, 1.327777778, 1.414225941, NULL))
-  expect_equal(res$D_agg_cum, list(2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NULL,
-                                   2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NULL))
+  expect_equal(res$D_agg, list(2.25, 1.327777778, 1.414225941, NA, 2.25, 1.327777778, 1.414225941, NA))
+  expect_equal(res$D_agg_cum, list(2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NA,
+                                   2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941, NA))
   expect_equal(res$D[[1]], matrix(c(1.761117821, 0.926191306, 1.379410116),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
                                                                        c("subcat"))) %>%

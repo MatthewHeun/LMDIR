@@ -124,7 +124,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tai
   stopifnot(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_dc_colname]]) %>% as.logical))
   stopifnot(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_dc_colname]]) %>% as.logical))
 
-  out <- chk %>%
+  cumulatives <- chk %>%
     select(!!!group_vars(chk), !!as.name(time_colname),
            !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
            !!as.name(deltaV_colname), !!as.name(D_colname)) %>%
@@ -142,7 +142,17 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tai
     )
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
-  .lmdidata %>%
+  out <- .lmdidata %>%
     select(group_vars(.lmdidata), time_colname) %>%
-    left_join(out, by = c(group_vars(.lmdidata), time_colname))
+    left_join(cumulatives, by = c(group_vars(.lmdidata), time_colname))
+
+  # The left_join produces NULL values in places, but we really want NA values.
+  for (i in 1:nrow(out)) {
+    for (j in 1:ncol(out)) {
+      if (is.null(out[[i, j]])) {
+        out[[i, j]] <- NA
+      }
+    }
+  }
+  return(out)
 }
