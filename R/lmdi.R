@@ -141,14 +141,4 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   .lmdidata %>%
     select(group_vars(.lmdidata), time_colname) %>%
     left_join(cumulatives, by = c(group_vars(.lmdidata), time_colname))
-
-  # # The left_join produces NULL values in places, but we really want NA values.
-  # for (i in 1:nrow(out)) {
-  #   for (j in 1:ncol(out)) {
-  #     if (is.null(out[[i, j]])) {
-  #       out[[i, j]] <- fill
-  #     }
-  #   }
-  # }
-  # return(out)
 }
