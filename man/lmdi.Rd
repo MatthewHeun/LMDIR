@@ -4,8 +4,8 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time_colname = "Year", X_colname = "X", pad = c("tail",
-  "head"), fill = NA, deltaV_colname = "dV", D_colname = "D")
+lmdi(.lmdidata, time_colname = "Year", X_colname = "X",
+  deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
@@ -20,11 +20,6 @@ Default is "\code{Year}".}
 \strong{\code{X}} matrices with
 named rows representing subcategories of the energy aggregate (\code{V}) and
 named columns representing factors contributing to changes in \code{V} over time.}
-
-\item{pad}{either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
-respectively, should contain \code{fill} values.}
-
-\item{fill}{the value used for padding (default is \code{NA}).}
 
 \item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
 
