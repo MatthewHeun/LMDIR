@@ -12,9 +12,6 @@
 #'        \strong{\code{X}} matrices with
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
-#' @param pad either "\code{tail}" or "\code{head}" to indicate whether the first or last row,
-#'        respectively, should contain \code{fill} values.
-#' @param fill the value used for padding (default is \code{NA}).
 #' @param D_colname the name for the \code{D} column (a string).
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
 #'
@@ -36,11 +33,8 @@
 #' @export
 #'
 lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
-                 pad = c("tail", "head"), fill = NA,
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
-
-  pad <- match.arg(pad)
 
   # Establish names for some intermediate columns.
   Z_colname <- ".Z"
@@ -76,7 +70,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
                            X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
-                           pad = pad, zero_suffix = zero_suffix, T_suffix = T_suffix)
+                           zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
     mutate(
@@ -100,12 +94,12 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
   agg_suffix <- "_agg"
   cum_suffix <- "_cum"
   dV_raw_colname <- paste0(deltaV_colname, raw_suffix)
-  dV_dc_colname <- paste0(deltaV_colname, dc_suffix)
+  dV_decomp_colname <- paste0(deltaV_colname, dc_suffix)
   dV_agg_colname <- paste0(deltaV_colname, agg_suffix)
   dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
   dV_cum_colname <- paste0(deltaV_colname, cum_suffix)
   D_raw_colname <- paste0(D_colname, raw_suffix)
-  D_dc_colname <- paste0(D_colname, dc_suffix)
+  D_decomp_colname <- paste0(D_colname, dc_suffix)
   D_agg_colname <- paste0(D_colname, agg_suffix)
   D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
   D_cum_colname <- paste0(D_colname, cum_suffix)
@@ -115,16 +109,16 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
       !!as.name(dV_raw_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "dc" way of calculating deltaV at each time comes after we calculate all deltaV's for all factors
       # The "raw" and "dc" methods of calculating deltaV should be identical.
-      !!as.name(dV_dc_colname) := sumall_byname(!!as.name(deltaV_colname)),
+      !!as.name(dV_decomp_colname) := sumall_byname(!!as.name(deltaV_colname)),
       # The "raw" way of calaculating D at each time comes from the "raw" data in X.
       !!as.name(D_raw_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "dc" way of calculating D at each time comes after we calculate all D's for all factors
       # The "raw" and "dc" methods of calculating D should be identical.
-      !!as.name(D_dc_colname) := prodall_byname(!!as.name(D_colname))
+      !!as.name(D_decomp_colname) := prodall_byname(!!as.name(D_colname))
     )
   # If these tests pass, the calculations are internally consistent.
-  stopifnot(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_dc_colname]]) %>% as.logical))
-  stopifnot(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_dc_colname]]) %>% as.logical))
+  stopifnot(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_decomp_colname]]) %>% as.logical))
+  stopifnot(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_decomp_colname]]) %>% as.logical))
 
   cumulatives <- chk %>%
     select(!!!group_vars(chk), !!as.name(time_colname),
@@ -144,17 +138,17 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X",
     )
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
-  out <- .lmdidata %>%
+  .lmdidata %>%
     select(group_vars(.lmdidata), time_colname) %>%
     left_join(cumulatives, by = c(group_vars(.lmdidata), time_colname))
 
-  # The left_join produces NULL values in places, but we really want NA values.
-  for (i in 1:nrow(out)) {
-    for (j in 1:ncol(out)) {
-      if (is.null(out[[i, j]])) {
-        out[[i, j]] <- fill
-      }
-    }
-  }
-  return(out)
+  # # The left_join produces NULL values in places, but we really want NA values.
+  # for (i in 1:nrow(out)) {
+  #   for (j in 1:ncol(out)) {
+  #     if (is.null(out[[i, j]])) {
+  #       out[[i, j]] <- fill
+  #     }
+  #   }
+  # }
+  # return(out)
 }
