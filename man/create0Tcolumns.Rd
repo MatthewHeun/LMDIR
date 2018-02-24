@@ -5,8 +5,7 @@
 \title{Make columns for time 0 and time T}
 \usage{
 create0Tcolumns(XvV, time_colname, X_colname = "X", v_colname = "v",
-  V_colname = "V", pad = c("tail", "head"), zero_suffix = "_0",
-  T_suffix = "_T")
+  V_colname = "V", zero_suffix = "_0", T_suffix = "_T")
 }
 \arguments{
 \item{XvV}{a data frame containing \code{X}, \code{v}, and \code{V} columns.}
@@ -18,10 +17,6 @@ create0Tcolumns(XvV, time_colname, X_colname = "X", v_colname = "v",
 \item{v_colname}{the name of the \code{v} column (default is "\code{v}")}
 
 \item{V_colname}{the name of the \code{V} column (default is "\code{V}")}
-
-\item{pad}{one of
-"\code{tail}" (for an empty last time) or
-"\code{head}" (for an empty first time).}
 
 \item{zero_suffix}{suffix for "\code{0}" variables (default is "\code{_0}")}
 

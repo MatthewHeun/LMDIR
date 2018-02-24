@@ -134,9 +134,6 @@ Zij <- function(i, j, X_0, X_T,
 #' @param X_colname the name of the \code{X} column (default is "\code{X}")
 #' @param v_colname the name of the \code{v} column (default is "\code{v}")
 #' @param V_colname the name of the \code{V} column (default is "\code{V}")
-#' @param pad one of
-#'        "\code{tail}" (for an empty last time) or
-#'        "\code{head}" (for an empty first time).
 #' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
 #' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
 #'
@@ -152,11 +149,8 @@ Zij <- function(i, j, X_0, X_T,
 create0Tcolumns <- function(XvV,
                             time_colname,
                             X_colname = "X", v_colname = "v", V_colname = "V",
-                            pad = c("tail", "head"),
                             zero_suffix = "_0",
                             T_suffix = "_T"){
-
-  pad <- match.arg(pad)
 
   # Establish names for new columns.
   X0_colname <- paste0(X_colname, zero_suffix)
@@ -166,8 +160,17 @@ create0Tcolumns <- function(XvV,
   vT_colname <- paste0(v_colname, T_suffix)
   VT_colname <- paste0(V_colname, T_suffix)
 
+  # Add a repeat of the first row at the top.
+  # Doing so ensures that
+  # the calculation of the first row deltaV values gives 0 and
+  # the calculation of the first row D values gives 1, as it should.
+  XvV_repeat1strow <- XvV %>%
+    do(
+      rbind(.data[1, ], .data)
+    )
+
   # Set up for aligning the rows for further calculations.
-  .DF0 <- XvV %>%
+  .DF0 <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
       head(.data, -1)
@@ -175,16 +178,14 @@ create0Tcolumns <- function(XvV,
     rename(
       !!as.name(X0_colname) := !!as.name(X_colname),
       !!as.name(v0_colname) := !!as.name(v_colname),
-      !!as.name(V0_colname) := !!as.name(V_colname))
-  if (pad == "head") {
+      !!as.name(V0_colname) := !!as.name(V_colname)
+    ) %>%
     # Don't need grouping variables or time variable here.
     # We'll pick them up from .DFT.
-    .DF0 <- .DF0 %>%
-      ungroup() %>%
-      select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
-  }
+    ungroup() %>%
+    select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
 
-  .DFT <- XvV %>%
+  .DFT <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
       tail(.data, -1)
@@ -193,13 +194,6 @@ create0Tcolumns <- function(XvV,
       !!as.name(XT_colname) := !!as.name(X_colname),
       !!as.name(vT_colname) := !!as.name(v_colname),
       !!as.name(VT_colname) := !!as.name(V_colname))
-  if (pad == "tail") {
-    # Don't need grouping variables or time variable here.
-    # We'll pick them up from .DF0.
-    .DFT <- .DFT %>%
-      ungroup() %>%
-      select(!!as.name(XT_colname), !!as.name(vT_colname), !!as.name(VT_colname))
-  }
 
   # Bind everything together and return it
   cbind(.DF0 %>% ungroup(), .DFT %>% ungroup()) %>%
