@@ -18,17 +18,17 @@
 #'
 #' @return a \code{Z} matrix
 #'
-#' @importFrom byname samestructure_byname
-#' @importFrom byname setrownames_byname
-#' @importFrom byname setcolnames_byname
-#' @importFrom byname binaryapply_byname
-#' @importFrom byname logmean
-#' @importFrom byname sumall_byname
-#' @importFrom byname transpose_byname
-#' @importFrom byname elementexp_byname
-#' @importFrom byname prodall_byname
-#' @importFrom byname cumsum_byname
-#' @importFrom byname cumprod_byname
+#' @importFrom matsbyname samestructure_byname
+#' @importFrom matsbyname setrownames_byname
+#' @importFrom matsbyname setcolnames_byname
+#' @importFrom matsbyname binaryapply_byname
+#' @importFrom matsbyname logmean
+#' @importFrom matsbyname sumall_byname
+#' @importFrom matsbyname transpose_byname
+#' @importFrom matsbyname elementexp_byname
+#' @importFrom matsbyname prodall_byname
+#' @importFrom matsbyname cumsum_byname
+#' @importFrom matsbyname cumprod_byname
 #' @importFrom dplyr everything
 #' @importFrom dplyr group_by
 #'

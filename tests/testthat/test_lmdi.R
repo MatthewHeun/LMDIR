@@ -8,7 +8,7 @@ library(dplyr)
 library(tidyr)
 library(rlang)
 library(magrittr)
-library(byname)
+library(matsbyname)
 library(matsindf)
 library(testthat)
 

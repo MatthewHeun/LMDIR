@@ -17,11 +17,11 @@
 #'
 #' @return a data frame containing several columns.
 #'
-#' @importFrom byname elementquotient_byname
-#' @importFrom byname difference_byname
-#' @importFrom byname logarithmicmean_byname
-#' @importFrom byname rowprods_byname
-#' @importFrom byname colsums_byname
+#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname difference_byname
+#' @importFrom matsbyname logarithmicmean_byname
+#' @importFrom matsbyname rowprods_byname
+#' @importFrom matsbyname colsums_byname
 #' @importFrom dplyr groups
 #' @importFrom dplyr left_join
 #' @importFrom dplyr ungroup

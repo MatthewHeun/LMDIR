@@ -16,7 +16,7 @@ Imports:
     rlang,
     dplyr,
     magrittr,
-    byname
+    matsbyname
 Suggests:
     testthat,
     knitr, 
