@@ -12,18 +12,21 @@ lmdi(.lmdidata, time_colname = "Year", X_colname = "X",
 Group by columns of variables within which you want an LMDI analysis conducted.
 \code{time_colname} should not be one of the grouping variables.}
 
-\item{time_colname}{the name of the column in \code{.data} that contains times at which
+\item{time_colname}{the name of the column in \code{.lmdidata} that contains times at which
 data are available (a string).
 Default is "\code{Year}".}
 
-\item{X_colname}{the name (as a string) of a column in \code{.DF} containing
+\item{X_colname}{the name (as a string) of a column in \code{.lmdidata} containing
 \strong{\code{X}} matrices with
 named rows representing subcategories of the energy aggregate (\code{V}) and
-named columns representing factors contributing to changes in \code{V} over time.}
+named columns representing factors contributing to changes in \code{V} over time.
+Default is "\code{X}".}
 
-\item{deltaV_colname}{the name for the \code{deltaV} column (a string).}
+\item{deltaV_colname}{the name for the \code{deltaV} column (a string).
+Default is "\code{dV}".}
 
-\item{D_colname}{the name for the \code{D} column (a string).}
+\item{D_colname}{the name for the \code{D} column (a string).
+Default is "\code{D}".}
 }
 \value{
 a data frame containing several columns.
