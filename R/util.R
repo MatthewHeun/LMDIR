@@ -78,10 +78,10 @@ Z_byname <- function(X_0, X_T){
 #'
 #' @export
 Zij <- function(i, j, X_0, X_T,
-                v_0i1 = rowprods_byname(X_0)[[i, 1]],
-                v_Ti1 = rowprods_byname(X_T)[[i, 1]],
-                X_0ij = X_0[[i, j]],
-                X_Tij = X_T[[i, j]]){
+                v_0i1 = rowprods_byname(X_0)[i, 1],
+                v_Ti1 = rowprods_byname(X_T)[i, 1],
+                X_0ij = X_0[i, j],
+                X_Tij = X_T[i, j]){
 
   # Check the conditions, found in Table 2, p. 492 of
   # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
