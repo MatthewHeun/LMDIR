@@ -50,6 +50,12 @@ Z_byname <- function(X_0, X_T){
     }
     return(Z)
   }
+  # Take control of completing and sorting matrices here, because
+  # we have a more-complex situation than simply filling the missing rows with 0s.
+  # temp <- complete_and_sort(X_0, X_T, rowfill = c(E.ktoe = 1, eta_ij = 1, phi_i = 1, phi_ij = 0))
+  # X_0_completed <- temp$m1
+  # X_T_completed <- temp$m2
+  # binaryapply_byname(Z.func, a = X_0_completed, b = X_T_completed, match_type = "all")
   binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
 
@@ -164,6 +170,7 @@ create0Tcolumns <- function(XvV,
   # Doing so ensures that
   # the calculation of the first row deltaV values gives 0 and
   # the calculation of the first row D values gives 1, as it should.
+  # Performing this action with "do" ensures that each group has a repeated first row.
   XvV_repeat1strow <- XvV %>%
     do(
       rbind(.data[1, ], .data)
