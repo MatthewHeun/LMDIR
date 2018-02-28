@@ -50,13 +50,45 @@ Z_byname <- function(X_0, X_T){
     }
     return(Z)
   }
+
+  # Need to move this out of here and into some outer functions.
+  # Need to decide the API here.
+  # Probably can have a vector of column names that need to be set to zero
+  # in the case where a row is missing.
+  # Also, maybe set a non-zero value.
+
   # Take control of completing and sorting matrices here, because
   # we have a more-complex situation than simply filling the missing rows with 0s.
-  # temp <- complete_and_sort(X_0, X_T, rowfill = c(E.ktoe = 1, eta_ij = 1, phi_i = 1, phi_ij = 0))
-  # X_0_completed <- temp$m1
-  # X_T_completed <- temp$m2
-  # binaryapply_byname(Z.func, a = X_0_completed, b = X_T_completed, match_type = "all")
-  binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
+  # If we are missing a row in X_0 or X_T compared to the other,
+  # it is because that particular type subsubcategory of useful exergy is present in one year
+  # but absent in the other.
+  # In this situation, we want to set the fill missing row with non-zero numbers (42) for
+  # * primary exergy (E.ktoe),
+  # * allocation from primary exergy to subcategory (phi_i), and
+  # * primary-to-useful efficiency (eta_ij).
+  # Then, we set the allocation from subcategory to subsubcategory (phi_ij) to 0.
+  # This approach correctly models the fact that
+  # despite the fact that we have no useful exergy of this type being produced in
+  # one of the years, we still have
+  # total primary en/xergy (E.ktoe),
+  # there is still an allocation of primary exergy to the subcategory (phi_i), and
+  # if there were machines making this subsubcategory of useful exergy
+  # in this time period, it would have a certain primary-to-useful efficiency (eta_ij).
+  # It turns out that we don't need to know the exact values of
+  # primary exergy (E.ktoe),
+  # allocation to subcategory (phi_i), or
+  # primary-to-useful efficiency (eta_ij).
+  # These values must simply be non-zero so long as
+  # allocation from subcategory to subsubcategory (phi_ij) is zero.
+  fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
+               dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
+    setrowtype("category") %>% setcoltype("factor")
+  X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fr, margin = 1)
+  X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fr, margin = 1)
+  X_0_comp_sort <- sort_rows_cols(X_0_comp)
+  X_T_comp_sort <- sort_rows_cols(X_T_comp)
+  binaryapply_byname(Z.func, a = X_0_comp_sort, b = X_T_comp_sort, match_type = "all")
+  # binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
 
 
