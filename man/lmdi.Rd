@@ -4,7 +4,7 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time_colname = "Year", X_colname = "X", emptyrow = NULL,
+lmdi(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NULL,
   deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{

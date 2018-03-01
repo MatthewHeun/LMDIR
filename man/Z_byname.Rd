@@ -4,14 +4,14 @@
 \alias{Z_byname}
 \title{Z matrix from \code{X_0} and \code{X_T} matrices}
 \usage{
-Z_byname(X_0, X_T, emptyrow = NULL)
+Z_byname(X_0, X_T, fillrow = NULL)
 }
 \arguments{
 \item{X_0}{an \code{X} matrix for initial time \code{0}}
 
 \item{X_T}{an \code{X} matrix for final time \code{T}}
 
-\item{emptyrow}{a row vector of type \code{matrix} with column names identical
+\item{fillrow}{a row vector of type \code{matrix} with column names identical
 to \code{X_0} and \code{X_T} (see details)}
 }
 \value{

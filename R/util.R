@@ -43,8 +43,8 @@
 #'
 #' @param X_0 an \code{X} matrix for initial time \code{0}
 #' @param X_T an \code{X} matrix for final time \code{T}
-#' @param emptyrow a row vector of type \code{matrix} with column names identical
-#'                 to \code{X_0} and \code{X_T} (see details)
+#' @param fillrow a row vector of type \code{matrix} with column names identical
+#'                to \code{X_0} and \code{X_T} (see details)
 #'
 #' @return a \code{Z} matrix
 #'
@@ -63,17 +63,17 @@
 #' @importFrom dplyr group_by
 #'
 #' @export
-Z_byname <- function(X_0, X_T, emptyrow = NULL){
-  Z.func <- function(X_0, X_T, emptyrow = NULL){
+Z_byname <- function(X_0, X_T, fillrow = NULL){
+  Z.func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
     # we have a more-complex situation than simply filling the missing rows with 0s.
-    if (is.null(emptyrow)) {
+    if (is.null(fillrow)) {
       emptyrow <- matrix(1e-100, nrow = 1, ncol = ncol(X_0),
                          dimnames = list("row", colnames(X_0)))
     }
-    X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = emptyrow, margin = 1)
-    X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = emptyrow, margin = 1)
+    X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
+    X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
     X_0_comp_sort <- sort_rows_cols(X_0_comp)
     X_T_comp_sort <- sort_rows_cols(X_T_comp)
     # At this point, X_0 and X_T should be the same type of matrices.
@@ -123,7 +123,7 @@ Z_byname <- function(X_0, X_T, emptyrow = NULL){
   #   setrowtype("category") %>% setcoltype("factor")
 
   binaryapply_byname(Z.func, a = X_0, b = X_T,
-                     .FUNdots = list(emptyrow = emptyrow), match_type = "all")
+                     .FUNdots = list(fillrow = fillrow), match_type = "all")
   # binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
 

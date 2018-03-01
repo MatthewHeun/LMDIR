@@ -35,7 +35,7 @@
 #'
 #' @export
 #'
-lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", emptyrow = NULL,
+lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NULL,
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
 
@@ -80,7 +80,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", emptyrow = N
     mutate(
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
-                                       emptyrow = emptyrow),
+                                       fillrow = fillrow),
       !!as.name(deltaV_colname) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
       # !!as.name(w_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
       !!as.name(D_colname) := elementquotient_byname(!!as.name(Z_colname), !!as.name(LV_colname)) %>%
