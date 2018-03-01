@@ -280,3 +280,29 @@ test_that("First row contains 0s and 1s", {
   expect_equal(res$dV_cum[[1]], dV0)
   expect_equal(res$D_cum[[1]], D0)
 })
+
+
+###########################################################
+context("fillrow")
+###########################################################
+
+test_that("fillrow option works as expected", {
+  # Create X_0 and X_T matrices that have different rows.
+  X_0 <- matrix(c(1, 2,
+                  3, 4,
+                  5, 6), byrow = TRUE, nrow = 3, ncol = 2,
+                dimnames = list(c("cat1", "cat2", "cat3"), c("fac1", "fac2")))
+  X_T <- X_0 + 10
+  dimnames(X_T) <- list(c("cat1", "cat2", "cat4"), c("fac1", "fac2"))
+  # Z should be a 4-row matrix
+  Z1 <- Z_byname(X_0 = X_0, X_T = X_T)
+  expect_equal(nrow(Z1), 4)
+  expect_equal(rownames(Z1), c("cat1", "cat2", "cat3", "cat4"))
+
+  fillrow <- matrix(c(42, 0), nrow = 1, ncol = 2, dimnames = list("row", c("fac1", "fac2")))
+  Z2 <- Z_byname(X_0 = X_0, X_T = X_T, fillrow = fillrow)
+  matrix(c(1, 2,
+                  3, 4,
+                  5, 6), byrow = TRUE, nrow = 3, ncol = 2,
+                dimnames = list(c("cat1", "cat2", "cat3"), c("fac1", "fac2")))
+})

@@ -76,11 +76,11 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
     X_0_comp_sort <- sort_rows_cols(X_0_comp)
     X_T_comp_sort <- sort_rows_cols(X_T_comp)
-    # At this point, X_0 and X_T should be the same type of matrices.
+    # At this point, X_0_comp_sort and X_T_comp_sort should be the same type of matrices.
     # I.e., they have the same row and column names.
     # And they have the same row and column types.
     # Ensure that this is so!
-    stopifnot(samestructure_byname(X_0, X_T))
+    stopifnot(samestructure_byname(X_0_comp_sort, X_T_comp_sort))
 
     # Create an empty Z matrix.  Z will be filled with default entries (NA).
     Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
@@ -123,7 +123,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
   #   setrowtype("category") %>% setcoltype("factor")
 
   binaryapply_byname(Z.func, a = X_0, b = X_T,
-                     .FUNdots = list(fillrow = fillrow), match_type = "all")
+                     .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
   # binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
 
