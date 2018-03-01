@@ -1,20 +1,50 @@
 #' Z matrix from \code{X_0} and \code{X_T} matrices
 #'
-#' The formula for Z is \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
+#' The formula for \code{Z} is
+#' \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
 #' where \code{v} is a column vector formed by row products of \code{X}.
-#' The \code{T} and \code{0} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
+#' The \code{0} and \code{T} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
 #' and a final time (\code{T}).
+#' The \code{i} and \code{j} subscripts on \code{Z}, \code{v}, and \code{X} are
+#' matrix indices.
+#'
+#' \code{Z} and \code{X} are category-by-factor matrices, and
+#' \code{v} is a category-by-1 column vector.
+#'
+#' When a category comes and goes through time,
+#' the category row can be absent from the \code{X} matrix at one time
+#' but present in the \code{X} matrix at an adjacent time.
+#' If the missing category row is replaced by \code{0}s,
+#' the LMDI algorithm fails due to \code{log(0)} errors.
+#' The usual advice is to insert a row consisting not of \code{0}s
+#' but rather filled with small numbers (e.g., \code{1e-100}).
+#'
+#' But the usual advice doesn't represent reality for some LMDI decomposition analyses.
+#' To provide greater flexibility, this function provides the \code{emptyrow} argument.
+#' Callers can supply their own \code{emptyrow},
+#' a single-row \code{matrix} with column names identical
+#' to \code{X_0} and \code{X_T}.
+#' If \code{emptyrow} is not specified,
+#' the usual advice will be followed, and
+#' a row vector consisting of very small values (\code{1e-100}) will be inserted into
+#' \code{X_0} or \code{X_T}, as appropriate.
+#'
+#' Note that the \code{lmdi} function passes its \code{emptyrow} argument, if present,
+#' to \code{Z_byname}.
 #'
 #' The nomenclature for this function comes from
 #' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
 #' This function fully accounts for the degenerate cases
 #' found in Table 2, p. 492 of
 #' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
-#' We're employing the method suggested by
+#' When \code{0}s are encountered in \code{emptyrow},
+#' this function employs the method for dealing with the \code{log(0)} problem suggested by
 #' \href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
 #'
 #' @param X_0 an \code{X} matrix for initial time \code{0}
 #' @param X_T an \code{X} matrix for final time \code{T}
+#' @param emptyrow a row vector of type \code{matrix} with column names identical
+#'                 to \code{X_0} and \code{X_T} (see details)
 #'
 #' @return a \code{Z} matrix
 #'
@@ -33,36 +63,42 @@
 #' @importFrom dplyr group_by
 #'
 #' @export
-Z_byname <- function(X_0, X_T){
-  Z.func <- function(X_0, X_T){
-    # Ensure that X_0 and X_T are same type of matrices.
+Z_byname <- function(X_0, X_T, emptyrow = NULL){
+  Z.func <- function(X_0, X_T, emptyrow = NULL){
+    # At this point, X_0 and X_T are single matrices.
+    # We need to take control of completing and sorting X_0 and X_T matrices here, because
+    # we have a more-complex situation than simply filling the missing rows with 0s.
+    if (is.null(emptyrow)) {
+      emptyrow <- matrix(1e-100, nrow = 1, ncol = ncol(X_0),
+                         dimnames = list("row", colnames(X_0)))
+    }
+    X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = emptyrow, margin = 1)
+    X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = emptyrow, margin = 1)
+    X_0_comp_sort <- sort_rows_cols(X_0_comp)
+    X_T_comp_sort <- sort_rows_cols(X_T_comp)
+    # At this point, X_0 and X_T should be the same type of matrices.
     # I.e., they have the same row and column names.
     # And they have the same row and column types.
+    # Ensure that this is so!
     stopifnot(samestructure_byname(X_0, X_T))
-    # Create an empty z matrix.  This will be filled with default value (NA) entires.
-    Z <- matrix(nrow = nrow(X_0), ncol = ncol(X_0)) %>%
-      setrownames_byname(rownames(X_0)) %>% setcolnames_byname(colnames(X_0))
+
+    # Create an empty Z matrix.  Z will be filled with default entries (NA).
+    Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
+      setrownames_byname(rownames(X_0_comp_sort)) %>% setcolnames_byname(colnames(X_0_comp_sort)) %>%
+      setrowtype(rowtype(X_0_comp_sort)) %>% setcoltype(coltype(X_0_comp_sort))
     # Use an old-fashioned for loop to fill all elements ofthe Z matrix
     for (i in 1:nrow(Z)) {
       for (j in 1:ncol(Z)) {
-        Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0, X_T = X_T)
+        Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0_comp_sort, X_T = X_T_comp_sort)
       }
     }
     return(Z)
   }
 
-  # Need to move this out of here and into some outer functions.
-  # Need to decide the API here.
-  # Probably can have a vector of column names that need to be set to zero
-  # in the case where a row is missing.
-  # Also, maybe set a non-zero value.
-
-  # Take control of completing and sorting matrices here, because
-  # we have a more-complex situation than simply filling the missing rows with 0s.
   # If we are missing a row in X_0 or X_T compared to the other,
   # it is because that particular type subsubcategory of useful exergy is present in one year
   # but absent in the other.
-  # In this situation, we want to set the fill missing row with non-zero numbers (42) for
+  # In this situation, we want to fill values in the missing row with non-zero numbers (42) for
   # * primary exergy (E.ktoe),
   # * allocation from primary exergy to subcategory (phi_i), and
   # * primary-to-useful efficiency (eta_ij).
@@ -80,17 +116,16 @@ Z_byname <- function(X_0, X_T){
   # primary-to-useful efficiency (eta_ij).
   # These values must simply be non-zero so long as
   # allocation from subcategory to subsubcategory (phi_ij) is zero.
-  fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
-               dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
-    setrowtype("category") %>% setcoltype("factor")
-  X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fr, margin = 1)
-  X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fr, margin = 1)
-  X_0_comp_sort <- sort_rows_cols(X_0_comp)
-  X_T_comp_sort <- sort_rows_cols(X_T_comp)
-  binaryapply_byname(Z.func, a = X_0_comp_sort, b = X_T_comp_sort, match_type = "all")
+  #
+  #
+  # fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
+  #              dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
+  #   setrowtype("category") %>% setcoltype("factor")
+
+  binaryapply_byname(Z.func, a = X_0, b = X_T,
+                     .FUNdots = list(emptyrow = emptyrow), match_type = "all")
   # binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
-
 
 #' Calculate element \code{Z_i,j}
 #'
