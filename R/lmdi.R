@@ -9,10 +9,12 @@
 #'        data are available (a string).
 #'        Default is "\code{Year}".
 #' @param X_colname the name (as a string) of a column in \code{.lmdidata} containing
-#'        \strong{\code{X}} matrices with
+#'        \code{X} matrices with
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
 #'        Default is "\code{X}".
+#' @param fillrow a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
+#'        (See \code{\link{Z_byname}} for details.)
 #' @param deltaV_colname the name for the \code{deltaV} column (a string).
 #'        Default is "\code{dV}".
 #' @param D_colname the name for the \code{D} column (a string).

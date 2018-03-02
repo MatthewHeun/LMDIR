@@ -283,26 +283,96 @@ test_that("First row contains 0s and 1s", {
 
 
 ###########################################################
-context("fillrow")
+context("Fillrow")
 ###########################################################
 
-test_that("fillrow option works as expected", {
+test_that("fillrow option works as expected on Z_byname", {
   # Create X_0 and X_T matrices that have different rows.
-  X_0 <- matrix(c(1, 2,
-                  3, 4,
-                  5, 6), byrow = TRUE, nrow = 3, ncol = 2,
-                dimnames = list(c("cat1", "cat2", "cat3"), c("fac1", "fac2")))
-  X_T <- X_0 + 10
-  dimnames(X_T) <- list(c("cat1", "cat2", "cat4"), c("fac1", "fac2"))
-  # Z should be a 4-row matrix
+  # This example comes from Ghana's energy LMDI in the years 2003 and 2004.
+  dn <- list(c("HTH.600.C - Electric heaters", "KE - Fans"),
+             c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))
+  X_0 <- matrix(c(7909.898576, 0.168054745, 0.521283202, 0.009258785,
+                  7909.898576, 0.072489945, 0.078700891, 0.036152202), byrow = TRUE, nrow = 2, ncol = 4,
+                dimnames = dn) %>%
+    setrowtype("categories") %>% setcoltype("factors")
+  X_T <- matrix(c(7962.921168, 0.101321321, 0.059104816, 0.036042366), byrow = TRUE, nrow = 1, ncol = 4,
+                dimnames = list("KE - Fans", dn[[2]])) %>%
+    setrowtype("categories") %>% setcoltype("factors")
+  # Z1 should be a 2-row matrix formed by assuming small numbers for all of the missing values.
   Z1 <- Z_byname(X_0 = X_0, X_T = X_T)
-  expect_equal(nrow(Z1), 4)
-  expect_equal(rownames(Z1), c("cat1", "cat2", "cat3", "cat4"))
+  expect_equal(nrow(Z1), 2)
+  expect_equal(rownames(Z1), c("HTH.600.C - Electric heaters", "KE - Fans"))
+  expect_equal(Z1, matrix(c(-2.185092, -1.450439688, -1.527733412, -1.252513979,
+                            0.011188553, 0.56076961, -0.479535332, -0.005095744),
+                          byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
+                 setrowtype("categories") %>% setcoltype("factors"),
+               tolerance = 1e-6)
+  # Now try with a fillrow argument.
+  # The following fillrow value sets ONLY the allocation from subcategory to subsubcategory to 0.
+  # Doing so kicks the algorithm into another state compared to the previous example.
+  # In this one, we go to case 2 of Table 2, p. 492 in Ang et al. 1998.
+  # These conditions are what you find when an energy type disappears at a later year.
+  # In GH, HTH.600.C was present in 2003 but disappeared in 2004 due to
+  # shutdown of the VALCO smelters.
+  fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
+                    dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
+    setrowtype("categories") %>% setcoltype("factors")
+  Z2 <- Z_byname(X_0 = X_0, X_T = X_T, fillrow = fr)
+  expect_equal(Z2, matrix(c(0, 0, 0, -6.415779079,
+                            0.011188553, 0.56076961, -0.479535332, -0.005095744),
+                          byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
+                 setrowtype("categories") %>% setcoltype("factors"),
+               tolerance = 1e-6)
+  # If we switch the order of X_0 and X_T, we kick to case 1 of of Table 2, p. 492 in Ang et al. 1998.
+  # These conditions are what you find when an energy type turns appears in a subsequent year.
+  Z3 <- Z_byname(X_0 = X_T, X_T = X_0, fillrow = fr)
+  expect_equal(Z3, matrix(c(0, 0, 0, 6.415779079,
+                            -0.011188553, -0.56076961, 0.479535332, 0.005095744),
+                          byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
+                 setrowtype("categories") %>% setcoltype("factors"),
+               tolerance = 1e-6)
 
-  fillrow <- matrix(c(42, 0), nrow = 1, ncol = 2, dimnames = list("row", c("fac1", "fac2")))
-  Z2 <- Z_byname(X_0 = X_0, X_T = X_T, fillrow = fillrow)
-  matrix(c(1, 2,
-                  3, 4,
-                  5, 6), byrow = TRUE, nrow = 3, ncol = 2,
-                dimnames = list(c("cat1", "cat2", "cat3"), c("fac1", "fac2")))
+  # Ensure that fillrow works properly from the lmdi method.
+  # First using the small values approach.
+  DF1 <- data.frame(Year = c(2003, 2004))
+  DF1$X <- list(X_0, X_T)
+  res1 <- lmdi(DF1, time_colname = "Year", X_colname = "X")
+  expect_equal(res1$dV_agg[[1]], 0)
+  expect_equal(res1$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
+  expect_equal(res1$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
+  expect_equal(res1$dV[[2]], matrix(c(-2.173903446, -0.889670079, -2.007268743, -1.257609724),
+                                   nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"),
+               tolerance = 1e-6)
+
+  expect_equal(res1$D_agg[[1]], 1)
+  expect_equal(res1$D_agg[[2]], 0.213582281)
+  expect_equal(res1$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
+  expect_equal(res1$D[[2]], matrix(c(0.588433187, 0.804912278, 0.612844653, 0.7358158),
+                                  nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
+
+  # Now using a fillrow.
+  DF2 <- data.frame(Year = c(2003, 2004))
+  DF2$X <- list(X_0, X_T)
+  res2 <- lmdi(DF2, time_colname = "Year", X_colname = "X", fillrow = fr)
+  expect_equal(res2$dV_agg[[1]], 0)
+  expect_equal(res2$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
+  expect_equal(res2$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
+  expect_equal(res2$dV[[2]], matrix(c(0.011188553, 0.56076961, -0.479535332, -6.420874823),
+                                   nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"),
+               tolerance = 1e-6)
+
+  expect_equal(res2$D_agg[[1]], 1)
+  expect_equal(res2$D_agg[[2]], 0.213582281)
+  expect_equal(res2$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
+  expect_equal(res2$D[[2]], matrix(c(0.588433187, 0.804912278, 0.612844653, 0.7358158),
+                                  nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
+                 setrowtype("factors") %>% setcoltype("categories"))
 })
+

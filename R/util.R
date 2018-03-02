@@ -17,19 +17,22 @@
 #' If the missing category row is replaced by \code{0}s,
 #' the LMDI algorithm fails due to \code{log(0)} errors.
 #' The usual advice is to insert a row consisting not of \code{0}s
-#' but rather filled with small numbers (e.g., \code{1e-100}).
+#' but rather filled with small numbers (e.g., \code{1e-10}).
 #'
 #' But the usual advice doesn't represent reality for some LMDI decomposition analyses.
-#' To provide greater flexibility, this function provides the \code{emptyrow} argument.
-#' Callers can supply their own \code{emptyrow},
+#' For example, the missing row may be caused by only one of the many factors being zero,
+#' the other factors being non-zero.
+#' To provide greater flexibility, this function provides the \code{fillrow} argument.
+#' Callers can supply their own \code{fillrow},
 #' a single-row \code{matrix} with column names identical
 #' to \code{X_0} and \code{X_T}.
-#' If \code{emptyrow} is not specified,
+#' If \code{fillrow} is not specified,
 #' the usual advice will be followed, and
-#' a row vector consisting of very small values (\code{1e-100}) will be inserted into
+#' a row vector consisting of very small values (\code{1e-10})
+#' for each factor will be inserted into
 #' \code{X_0} or \code{X_T}, as appropriate.
 #'
-#' Note that the \code{lmdi} function passes its \code{emptyrow} argument, if present,
+#' Note that the \code{\link{lmdi}} function passes its \code{fillrow} argument, if present,
 #' to \code{Z_byname}.
 #'
 #' The nomenclature for this function comes from
@@ -44,7 +47,7 @@
 #' @param X_0 an \code{X} matrix for initial time \code{0}
 #' @param X_T an \code{X} matrix for final time \code{T}
 #' @param fillrow a row vector of type \code{matrix} with column names identical
-#'                to \code{X_0} and \code{X_T} (see details)
+#'                to \code{X_0} and \code{X_T}. (See details.)
 #'
 #' @return a \code{Z} matrix
 #'
@@ -69,8 +72,9 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
     # we have a more-complex situation than simply filling the missing rows with 0s.
     if (is.null(fillrow)) {
-      emptyrow <- matrix(1e-100, nrow = 1, ncol = ncol(X_0),
-                         dimnames = list("row", colnames(X_0)))
+      fillrow <- matrix(1e-10, nrow = 1, ncol = ncol(X_0),
+                         dimnames = list("row", colnames(X_0))) %>%
+        setrowtype(rowtype(X_0)) %>% setcoltype(coltype(X_0))
     }
     X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
     X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
