@@ -91,8 +91,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
       !!as.name(deltaV_colname) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
-      !!as.name(D_colname) := elementexp_byname(!!as.name(deltaV_colname)) %>%
-        elementpow_byname(elementquotient_byname(1, !!as.name(LV_colname)))
+      !!as.name(D_colname) := elementquotient_byname(!!as.name(deltaV_colname), !!as.name(LV_colname)) %>%
+        elementexp_byname()
     )
 
   # Test to ensure that everything works as expected.
