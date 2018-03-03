@@ -4,28 +4,62 @@
 \alias{Z_byname}
 \title{Z matrix from \code{X_0} and \code{X_T} matrices}
 \usage{
-Z_byname(X_0, X_T)
+Z_byname(X_0, X_T, fillrow = NULL)
 }
 \arguments{
 \item{X_0}{an \code{X} matrix for initial time \code{0}}
 
 \item{X_T}{an \code{X} matrix for final time \code{T}}
+
+\item{fillrow}{a row vector of type \code{matrix} with column names identical
+to \code{X_0} and \code{X_T}. (See details.)}
 }
 \value{
 a \code{Z} matrix
 }
 \description{
-The formula for Z is \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
+The formula for \code{Z} is
+\deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
 where \code{v} is a column vector formed by row products of \code{X}.
-The \code{T} and \code{0} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
+The \code{0} and \code{T} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
 and a final time (\code{T}).
+The \code{i} and \code{j} subscripts on \code{Z}, \code{v}, and \code{X} are
+matrix indices.
 }
 \details{
+\code{Z} and \code{X} are category-by-factor matrices, and
+\code{v} is a category-by-1 column vector.
+
+When a category comes and goes through time,
+the category row can be absent from the \code{X} matrix at one time
+but present in the \code{X} matrix at an adjacent time.
+If the missing category row is replaced by \code{0}s,
+the LMDI algorithm fails due to \code{log(0)} errors.
+The usual advice is to insert a row consisting not of \code{0}s
+but rather filled with small numbers (e.g., \code{1e-10}).
+
+But the usual advice doesn't represent reality for some LMDI decomposition analyses.
+For example, the missing row may be caused by only one of the many factors being zero,
+the other factors being non-zero.
+To provide greater flexibility, this function provides the \code{fillrow} argument.
+Callers can supply their own \code{fillrow},
+a single-row \code{matrix} with column names identical
+to \code{X_0} and \code{X_T}.
+If \code{fillrow} is not specified,
+the usual advice will be followed, and
+a row vector consisting of very small values (\code{1e-10})
+for each factor will be inserted into
+\code{X_0} or \code{X_T}, as appropriate.
+
+Note that the \code{\link{lmdi}} function passes its \code{fillrow} argument, if present,
+to \code{Z_byname}.
+
 The nomenclature for this function comes from
 \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
 This function fully accounts for the degenerate cases
 found in Table 2, p. 492 of
 \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
-We're employing the method suggested by
+When \code{0}s are encountered in \code{emptyrow},
+this function employs the method for dealing with the \code{log(0)} problem suggested by
 \href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
 }
