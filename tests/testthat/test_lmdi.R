@@ -371,7 +371,7 @@ test_that("fillrow option works as expected on Z_byname", {
   expect_equal(res2$D_agg[[2]], 0.213582281)
   expect_equal(res2$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
                  setrowtype("factors") %>% setcoltype("categories"))
-  expect_equal(res2$D[[2]], matrix(c(0.588433187, 0.804912278, 0.612844653, 0.7358158),
+  expect_equal(res2$D[[2]], matrix(c(1.002733012, 1.146589093, 0.889606884, 0.208820902),
                                   nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
                  setrowtype("factors") %>% setcoltype("categories"))
 })

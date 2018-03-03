@@ -23,10 +23,17 @@
 #' @return a data frame containing several columns.
 #'
 #' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname elementpow_byname
 #' @importFrom matsbyname difference_byname
 #' @importFrom matsbyname logarithmicmean_byname
 #' @importFrom matsbyname rowprods_byname
 #' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname rowtype
+#' @importFrom matsbyname setrowtype
+#' @importFrom matsbyname coltype
+#' @importFrom matsbyname setcoltype
+#' @importFrom matsbyname complete_rows_cols
+#' @importFrom matsbyname sort_rows_cols
 #' @importFrom dplyr groups
 #' @importFrom dplyr left_join
 #' @importFrom dplyr ungroup
@@ -84,9 +91,8 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
       !!as.name(deltaV_colname) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
-      # !!as.name(w_colname) := elementquotient_byname(!!as.name(Lv_colname), !!as.name(LV_colname)),
-      !!as.name(D_colname) := elementquotient_byname(!!as.name(Z_colname), !!as.name(LV_colname)) %>%
-        colsums_byname() %>% transpose_byname() %>% elementexp_byname()
+      !!as.name(D_colname) := elementexp_byname(!!as.name(deltaV_colname)) %>%
+        elementpow_byname(elementquotient_byname(1, !!as.name(LV_colname)))
     )
 
   # Test to ensure that everything works as expected.
