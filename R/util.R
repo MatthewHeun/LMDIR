@@ -72,6 +72,11 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
     # we have a more-complex situation than simply filling the missing rows with 0s.
     if (is.null(fillrow)) {
+      # If the caller didn't supply a value for fillrow, we default to the
+      # "small value" approximation suggested by
+      # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
+      # Factorizing changes in energy and environmental indicators through decomposition,
+      # Energy, Volume 23, Number 6, pp. 489-495.
       fillrow <- matrix(1e-10, nrow = 1, ncol = ncol(X_0),
                          dimnames = list("row", colnames(X_0))) %>%
         setrowtype(rowtype(X_0)) %>% setcoltype(coltype(X_0))
@@ -86,49 +91,22 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     # Ensure that this is so!
     stopifnot(samestructure_byname(X_0_comp_sort, X_T_comp_sort))
 
-    # Create an empty Z matrix.  Z will be filled with default entries (NA).
+    # Create an empty Z matrix.
+    # The empty Z is filled with default entries (NA).
     Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
       setrownames_byname(rownames(X_0_comp_sort)) %>% setcolnames_byname(colnames(X_0_comp_sort)) %>%
       setrowtype(rowtype(X_0_comp_sort)) %>% setcoltype(coltype(X_0_comp_sort))
-    # Use an old-fashioned for loop to fill all elements ofthe Z matrix
+    # Use an old-fashioned for loop to fill all elements of the Z matrix
     for (i in 1:nrow(Z)) {
       for (j in 1:ncol(Z)) {
-        Z[[i, j]] <- Zij(i = i, j = j, X_0 = X_0_comp_sort, X_T = X_T_comp_sort)
+        Z[i, j] <- Zij(i = i, j = j, X_0 = X_0_comp_sort, X_T = X_T_comp_sort)
       }
     }
     return(Z)
   }
 
-  # If we are missing a row in X_0 or X_T compared to the other,
-  # it is because that particular type subsubcategory of useful exergy is present in one year
-  # but absent in the other.
-  # In this situation, we want to fill values in the missing row with non-zero numbers (42) for
-  # * primary exergy (E.ktoe),
-  # * allocation from primary exergy to subcategory (phi_i), and
-  # * primary-to-useful efficiency (eta_ij).
-  # Then, we set the allocation from subcategory to subsubcategory (phi_ij) to 0.
-  # This approach correctly models the fact that
-  # despite the fact that we have no useful exergy of this type being produced in
-  # one of the years, we still have
-  # total primary en/xergy (E.ktoe),
-  # there is still an allocation of primary exergy to the subcategory (phi_i), and
-  # if there were machines making this subsubcategory of useful exergy
-  # in this time period, it would have a certain primary-to-useful efficiency (eta_ij).
-  # It turns out that we don't need to know the exact values of
-  # primary exergy (E.ktoe),
-  # allocation to subcategory (phi_i), or
-  # primary-to-useful efficiency (eta_ij).
-  # These values must simply be non-zero so long as
-  # allocation from subcategory to subsubcategory (phi_ij) is zero.
-  #
-  #
-  # fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
-  #              dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
-  #   setrowtype("category") %>% setcoltype("factor")
-
   binaryapply_byname(Z.func, a = X_0, b = X_T,
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
-  # binaryapply_byname(Z.func, a = X_0, b = X_T, match_type = "all")
 }
 
 #' Calculate element \code{Z_i,j}
