@@ -47,6 +47,12 @@ test_that("Zij works as expected", {
   # Test degenerate cases.
   PN <- 9999 # Positive Number
   ANS <- 42 # the answer (modulo the sign)
+  #
+  # The cases below are taken from Table 2, p. 492 in
+  # B. Ang, F. Zhang, and K.-H. Choi.
+  # Factorizing changes in energy and environmental indicators through decomposition.
+  # Energy, 23(6):489–495, Jun 1998.
+  #
   # Case 1
   expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = ANS, X_0ij = 0, X_Tij = PN), ANS)
   # Case 2
@@ -66,8 +72,8 @@ test_that("Zij works as expected", {
 
   simple <- create_simple_LMDI()
 
-  X_T <- simple$X[[2]]
   X_0 <- simple$X[[1]]
+  X_T <- simple$X[[2]]
   expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
   expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
   expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
@@ -156,7 +162,7 @@ test_that("Z_byname works as expected", {
 context("Group error")
 ###########################################################
 
-test_that("simple additive LMDI works as expected", {
+test_that("errors are given when grouping errors are present", {
   # Verify that grouping on time_colname fails.
   expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
                "'Year' is a grouping variable, but you can't group on time_colname in argument .lmdidata of collapse_to_matrices.")
@@ -376,3 +382,13 @@ test_that("fillrow option works as expected on Z_byname", {
                  setrowtype("factors") %>% setcoltype("categories"))
 })
 
+
+test_that("all columns are kept", {
+  res <- create_simple_LMDI() %>%
+    mutate(
+      extra.col = 42
+    ) %>%
+    group_by(Country) %>%
+    lmdi()
+  expect_true("extra.col" %in% names(res))
+})
