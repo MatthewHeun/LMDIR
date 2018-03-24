@@ -382,13 +382,3 @@ test_that("fillrow option works as expected on Z_byname", {
                  setrowtype("factors") %>% setcoltype("categories"))
 })
 
-
-test_that("all columns are kept", {
-  res <- create_simple_LMDI() %>%
-    mutate(
-      extra.col = 42
-    ) %>%
-    group_by(Country) %>%
-    lmdi()
-  expect_true("extra.col" %in% names(res))
-})
