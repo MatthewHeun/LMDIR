@@ -384,12 +384,12 @@ test_that("fillrow option works as expected on Z_byname", {
 
 
 ###########################################################
-context("Interactive")
+# context("Interactive")
 ###########################################################
 
-test_that("interactive programming works, too", {
-  res <- create_simple_LMDI() %>%
-    group_by(Country) %>%
-    lmdi(time_colname = Year)
-
-})
+# test_that("interactive programming works, too", {
+#   res <- create_simple_LMDI() %>%
+#     group_by(Country) %>%
+#     lmdi(time_colname = Year)
+#
+# })
