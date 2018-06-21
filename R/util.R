@@ -51,6 +51,8 @@
 #'
 #' @return a \code{Z} matrix
 #'
+#' @importFrom dplyr everything
+#' @importFrom dplyr group_by
 #' @importFrom matsbyname samestructure_byname
 #' @importFrom matsbyname setrownames_byname
 #' @importFrom matsbyname setcolnames_byname
@@ -62,8 +64,6 @@
 #' @importFrom matsbyname prodall_byname
 #' @importFrom matsbyname cumsum_byname
 #' @importFrom matsbyname cumprod_byname
-#' @importFrom dplyr everything
-#' @importFrom dplyr group_by
 #'
 #' @export
 Z_byname <- function(X_0, X_T, fillrow = NULL){
@@ -196,6 +196,7 @@ Zij <- function(i, j, X_0, X_T,
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
+#' @importFrom rlang .data
 #' @importFrom utils head
 #' @importFrom utils tail
 #'
@@ -220,16 +221,18 @@ create0Tcolumns <- function(XvV,
   # the calculation of the first row deltaV values gives 0 and
   # the calculation of the first row D values gives 1, as it should.
   # Performing this action with "do" ensures that each group has a repeated first row.
+  # . refers to the current group.
   XvV_repeat1strow <- XvV %>%
     do(
-      rbind(.data[1, ], .data)
+      rbind(head(., n = 1), .)
     )
 
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
-      head(.data, -1)
+      # . refers to the current group.
+      head(., -1)
     ) %>%
     rename(
       !!as.name(X0_colname) := !!as.name(X_colname),
@@ -244,7 +247,8 @@ create0Tcolumns <- function(XvV,
   .DFT <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
-      tail(.data, -1)
+      # . refers to the current group.
+      tail(., -1)
     ) %>%
     rename(
       !!as.name(XT_colname) := !!as.name(X_colname),
