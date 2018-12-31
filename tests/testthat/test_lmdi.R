@@ -31,7 +31,7 @@ create_simple_LMDI <- function(){
       Country = "AB"
     ) %>%
     group_by(Country, Year) %>%
-    collapse_to_matrices(matnames = "matnames", values = "x",
+    collapse_to_matrices(matnames = "matnames", matvals = "x",
                          rownames = "rownames", colnames = "colnames",
                          rowtypes = "rowtypes", coltypes = "coltypes") %>%
     rename(X = x)
