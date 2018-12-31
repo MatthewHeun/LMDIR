@@ -67,7 +67,7 @@
 #'
 #' @export
 Z_byname <- function(X_0, X_T, fillrow = NULL){
-  Z.func <- function(X_0, X_T, fillrow = NULL){
+  Z_func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
     # we have a more-complex situation than simply filling the missing rows with 0s.
@@ -105,7 +105,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     return(Z)
   }
 
-  binaryapply_byname(Z.func, a = X_0, b = X_T,
+  binaryapply_byname(Z_func, a = X_0, b = X_T,
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
