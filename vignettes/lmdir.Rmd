@@ -19,6 +19,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
+
+
 ## Introduction
 
 Log-mean divisia index (LMDI) decomposition analysis is an important technique 
@@ -36,14 +47,32 @@ We begin with a general description of the matrix method for LMDI analysis.
 Thereafter, we illustrate the method by application to Ghana
 in years 2003--2004.
 
+
 ## Description of the matrix method for LMDI decomposition analysis
 
 The LMDI approach pioneered by [Ang [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
-and described in detail by Liu~\cite{Liu:2003}
+and described in detail by [Liu and Ang [-@Liu:2003]](https://doi.org/10.1016/s0306-2619(03)00043-6)
 decomposes an energy aggregate~($V$) by factors~($x$)
 that cause $V$ to change over time. 
-(In this appendix, we adopt the notation of a later paper \cite{Ang:2005}.)
+(In this vignette, we adopt the notation of [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).)
 
+Noting that at a given time every combination of energy category~($i$) and decomposition factor~($j$)
+has an associated numerical value for the decomposition factor~($x_{ij}$),
+the matrix approach to LMDI decomposition analysis begins with formation of an $\mat{X}$ matrix
+for each time of interest.
+Rows of $\mat{X}$ contain energy categories (indexed by $i$) and 
+columns of $\mat{X}$ contain decomposition factors (indexed by $j$).
+
+Column vector $\colvec{v}$ contains 
+the value of each energy category ($v_i$)
+and is formed from row products of $\mat{X}$. 
+
+$$v_i = \prod_j x_{ij}$$
+
+At any given time, the energy aggregate ($V$) is obtained by 
+the column sum of elements in the $\colvec{v}$ vector
+
+$$V = \rowvec{i} \colvec{v}$$,
 
 
 
