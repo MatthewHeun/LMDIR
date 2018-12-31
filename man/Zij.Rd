@@ -5,8 +5,8 @@
 \title{Calculate element \code{Z_i,j}}
 \usage{
 Zij(i, j, X_0, X_T, v_0i1 = rowprods_byname(X_0)[i, 1],
-  v_Ti1 = rowprods_byname(X_T)[i, 1], X_0ij = X_0[i, j], X_Tij = X_T[i,
-  j])
+  v_Ti1 = rowprods_byname(X_T)[i, 1], X_0ij = X_0[i, j],
+  X_Tij = X_T[i, j])
 }
 \arguments{
 \item{i}{row index}
