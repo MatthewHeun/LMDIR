@@ -67,6 +67,12 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   VT_colname <- paste0(V_colname, T_suffix)
   LV_colname <- paste0(L_name, "(", V_colname, ")")
 
+  # Ensure that all of these intermediate columns are missing.
+  .lmdidata %>%
+    verify_cols_missing(c(deltaV, D, Z_colname, v_colname, V_colname, L_name, w_colname,
+                          X0_colname, v0_colname, V0_colname,
+                          XT_colname, vT_colname, VT_colname, LV_colname))
+
   # Ensure that time is NOT a grouping variable.
   if (time %in% groups(.lmdidata)) {
     stop(paste0("'", time, "'", " is a grouping variable, but you can't group on ",
@@ -119,6 +125,10 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
   D_cum_colname <- paste0(D, cum_suffix)
   D_err_colname <- paste0(D, err_suffix)
+  # Verify that these columns are missing.
+  dVD %>%
+    verify_cols_missing(c(dV_raw_colname, dV_decomp_colname, dV_agg_colname, dV_agg_cum_colname, dV_cum_colname, dV_err_colname,
+                          D_raw_colname, D_decomp_colname, D_agg_colname, D_agg_cum_colname, D_cum_colname, D_err_colname))
   chk <- dVD %>%
     mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
