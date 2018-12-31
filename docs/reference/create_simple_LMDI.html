@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Z matrix from <code>X_0</code> and <code>X_T</code> matrices — Z_byname • LMDIR</title>
+<title>Create a simple LMDI data frame — create_simple_LMDI • LMDIR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,15 +30,11 @@
 
 
 
-<meta property="og:title" content="Z matrix from <code>X_0</code> and <code>X_T</code> matrices — Z_byname" />
+<meta property="og:title" content="Create a simple LMDI data frame — create_simple_LMDI" />
 
-<meta property="og:description" content="The formula for Z is
-$$Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)$$
-where v is a column vector formed by row products of X.
-The 0 and T subscripts on X and v indicate an initial time (0)
-and a final time (T).
-The i and j subscripts on Z, v, and X are
-matrix indices." />
+<meta property="og:description" content="This function creates a simple LMDI data frame that can be used for testing or examples.
+It contains X matrices for two fictitious countries (AB and XY)
+and four years (1971-1974)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,92 +116,53 @@ matrix indices." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Z matrix from <code>X_0</code> and <code>X_T</code> matrices</h1>
+    <h1>Create a simple LMDI data frame</h1>
     <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/LMDIR/blob/master/R/util.R'><code>R/util.R</code></a></small>
-    <div class="hidden name"><code>Z_byname.Rd</code></div>
+    <div class="hidden name"><code>create_simple_LMDI.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The formula for <code>Z</code> is
-$$Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)$$
-where <code>v</code> is a column vector formed by row products of <code>X</code>.
-The <code>0</code> and <code>T</code> subscripts on <code>X</code> and <code>v</code> indicate an initial time (<code>0</code>)
-and a final time (<code>T</code>).
-The <code>i</code> and <code>j</code> subscripts on <code>Z</code>, <code>v</code>, and <code>X</code> are
-matrix indices.</p>
+    <p>This function creates a simple LMDI data frame that can be used for testing or examples.
+It contains <code>X</code> matrices for two fictitious countries (<code>AB</code> and <code>XY</code>)
+and four years (<code>1971-1974</code>).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>Z_byname</span>(<span class='no'>X_0</span>, <span class='no'>X_T</span>, <span class='kw'>fillrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>X_0</th>
-      <td><p>an <code>X</code> matrix for initial time <code>0</code></p></td>
-    </tr>
-    <tr>
-      <th>X_T</th>
-      <td><p>an <code>X</code> matrix for final time <code>T</code></p></td>
-    </tr>
-    <tr>
-      <th>fillrow</th>
-      <td><p>a row vector of type <code>matrix</code> with column names identical
-to <code>X_0</code> and <code>X_T</code>. (See details.)</p></td>
-    </tr>
-    </table>
-    
+    <pre class="usage"><span class='fu'>create_simple_LMDI</span>()</pre>
+        
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>Z</code> matrix</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p><code>Z</code> and <code>X</code> are category-by-factor matrices, and
-<code>v</code> is a category-by-1 column vector.</p>
-<p>When a category comes and goes through time,
-the category row can be absent from the <code>X</code> matrix at one time
-but present in the <code>X</code> matrix at an adjacent time.
-If the missing category row is replaced by <code>0</code>s,
-the LMDI algorithm fails due to <code><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log(0)</a></code> errors.
-The usual advice is to insert a row consisting not of <code>0</code>s
-but rather filled with small numbers (e.g., <code>1e-10</code>).</p>
-<p>But the usual advice doesn't represent reality for some LMDI decomposition analyses.
-For example, the missing row may be caused by only one of the many factors being zero,
-the other factors being non-zero.
-To provide greater flexibility, this function provides the <code>fillrow</code> argument.
-Callers can supply their own <code>fillrow</code>,
-a single-row <code>matrix</code> with column names identical
-to <code>X_0</code> and <code>X_T</code>.
-If <code>fillrow</code> is not specified,
-the usual advice will be followed, and
-a row vector consisting of very small values (<code>1e-10</code>)
-for each factor will be inserted into
-<code>X_0</code> or <code>X_T</code>, as appropriate.</p>
-<p>Note that the <code><a href='lmdi.html'>lmdi</a></code> function passes its <code>fillrow</code> argument, if present,
-to <code>Z_byname</code>.</p>
-<p>The nomenclature for this function comes from
-<a href='https://doi.org/10.1016/s0360-5442(98)00016-4'>Ang, Zhang, and Choi (1998)</a>.
-This function fully accounts for the degenerate cases
-found in Table 2, p. 492 of
-<a href='https://doi.org/10.1016/s0360-5442(98)00016-4'>Ang, Zhang, and Choi (1998)</a>.
-When <code>0</code>s are encountered in <code>emptyrow</code>,
-this function employs the method for dealing with the <code><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log(0)</a></code> problem suggested by
-<a href='https://doi.org/10.1016/j.enpol.2004.11.010'>Wood and Lenzen (2006)</a>.</p>
+    <p>a data frame of example LMDI data</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>matsindf</span>)
+<span class='no'>DF</span> <span class='kw'>&lt;-</span> <span class='fu'>create_simple_LMDI</span>()
+<span class='no'>DF</span></div><div class='output co'>#&gt;   Country Year                 X
+#&gt; 1      AB 1971 1, 4, 10, 5, 2, 3
+#&gt; 2      AB 1972  4, 5, 5, 6, 3, 4
+#&gt; 3      AB 1973  8, 5, 2, 7, 4, 5
+#&gt; 4      AB 1974 10, 6, 1, 8, 5, 6
+#&gt; 5      YZ 1971 1, 4, 10, 5, 2, 3
+#&gt; 6      YZ 1972  4, 5, 5, 6, 3, 4
+#&gt; 7      YZ 1973  8, 5, 2, 7, 4, 5
+#&gt; 8      YZ 1974 10, 6, 1, 8, 5, 6</div><div class='input'><span class='no'>DF</span>$<span class='no'>X</span><span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;          factor 1 factor 2 factor 3
+#&gt; subcat 1        1       10        2
+#&gt; subcat 2        4        5        3
+#&gt; attr(,"rowtype")
+#&gt; [1] "subcat"
+#&gt; attr(,"coltype")
+#&gt; [1] "factor"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

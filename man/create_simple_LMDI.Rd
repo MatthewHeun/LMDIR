@@ -7,8 +7,16 @@
 create_simple_LMDI()
 }
 \value{
-
+a data frame of example LMDI data
 }
 \description{
 This function creates a simple LMDI data frame that can be used for testing or examples.
+It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
+and four years (\code{1971-1974}).
+}
+\examples{
+library(matsindf)
+DF <- create_simple_LMDI()
+DF
+DF$X[[1]]
 }

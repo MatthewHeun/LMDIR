@@ -277,13 +277,17 @@ create0Tcolumns <- function(XvV,
 #' This function creates a simple LMDI data frame that can be used for testing or examples.
 #' It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
 #' and four years (\code{1971-1974}).
+#' Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
 #'
 #' @return a data frame of example LMDI data
 #'
 #' @export
 #'
 #' @examples
-#' create_simple_LMDI()
+#' library(matsindf)
+#' DF <- create_simple_LMDI()
+#' DF
+#' DF$X[[1]]
 create_simple_LMDI <- function(){
   simple.factor.names <- c("factor 1", "factor 2", "factor 3")
   simple.subcat.names <- c("subcat 1", "subcat 2")

@@ -5,8 +5,11 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{LMDIR use cases and examples}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: References.bib
 ---
 
 ```{r setup, include = FALSE}
@@ -18,50 +21,32 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+Log-mean divisia index (LMDI) decomposition analysis is an important technique 
+for understanding changes in an energy composite variable over time.
+The technique was pioneered by B.W. Ang and is described in detail in
+[Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).
+LMDI decomposes an energy aggregate by factors and subcategories.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+[Heun and Brockway [-@Heun:2019]](https://doi.org/) developed a matrix representation
+of the LMDI mathematics that works well with the 
+Physical Supply Use Table (PSUT) framework, 
+developed by [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
-## Vignette Info
+We begin with a general description of the matrix method for LMDI analysis.
+Thereafter, we illustrate the method by application to Ghana
+in years 2003--2004.
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+## Description of the matrix method for LMDI decomposition analysis
 
-## Styles
+The LMDI approach pioneered by [Ang [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
+and described in detail by Liu~\cite{Liu:2003}
+decomposes an energy aggregate~($V$) by factors~($x$)
+that cause $V$ to change over time. 
+(In this appendix, we adopt the notation of a later paper \cite{Ang:2005}.)
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
 
-## Figures
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
 
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
+## References
 
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
