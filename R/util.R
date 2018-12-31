@@ -51,6 +51,8 @@
 #'
 #' @return a \code{Z} matrix
 #'
+#' @importFrom dplyr everything
+#' @importFrom dplyr group_by
 #' @importFrom matsbyname samestructure_byname
 #' @importFrom matsbyname setrownames_byname
 #' @importFrom matsbyname setcolnames_byname
@@ -62,12 +64,11 @@
 #' @importFrom matsbyname prodall_byname
 #' @importFrom matsbyname cumsum_byname
 #' @importFrom matsbyname cumprod_byname
-#' @importFrom dplyr everything
-#' @importFrom dplyr group_by
 #'
 #' @export
+#'
 Z_byname <- function(X_0, X_T, fillrow = NULL){
-  Z.func <- function(X_0, X_T, fillrow = NULL){
+  Z_func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
     # we have a more-complex situation than simply filling the missing rows with 0s.
@@ -105,7 +106,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     return(Z)
   }
 
-  binaryapply_byname(Z.func, a = X_0, b = X_T,
+  binaryapply_byname(Z_func, a = X_0, b = X_T,
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
@@ -120,10 +121,18 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #' Note that \code{i} and \code{j} must be positive and less than
 #' \code{nrow(X)} and \code{ncol(X)}, respectively.
 #'
-#' @param i row index
-#' @param j column index
-#' @param X_0 the sub-sector by factor matrix for time 0
-#' @param X_T the sub-sector by factor matrix for time T
+#' @param i optional row index for \code{X_0} and \code{X_T}.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param j optional column index for \code{X_0} and \code{X_T}.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param X_0 optional sub-sector by factor matrix for time 0.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param X_T optional sub-sector by factor matrix for time T.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
 #' @param v_0i1 the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)
 #' @param v_Ti1 the i,1th element of the \code{v_T} column vector. (v_T is formed from the row products of the \code{X_T} matrix.)
 #' @param X_0ij the i,jth element of the \code{X_0} matrix
@@ -132,7 +141,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #' @return the Z value corresponding to the \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij} values
 #'
 #' @export
-Zij <- function(i, j, X_0, X_T,
+Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
                 v_0i1 = rowprods_byname(X_0)[i, 1],
                 v_Ti1 = rowprods_byname(X_T)[i, 1],
                 X_0ij = X_0[i, j],
@@ -196,6 +205,7 @@ Zij <- function(i, j, X_0, X_T,
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
+#' @importFrom rlang .data
 #' @importFrom utils head
 #' @importFrom utils tail
 #'
@@ -220,16 +230,19 @@ create0Tcolumns <- function(XvV,
   # the calculation of the first row deltaV values gives 0 and
   # the calculation of the first row D values gives 1, as it should.
   # Performing this action with "do" ensures that each group has a repeated first row.
+  # . refers to the current group.
+  # (See https://dplyr.tidyverse.org/reference/do.html for details.)
   XvV_repeat1strow <- XvV %>%
     do(
-      rbind(.data[1, ], .data)
+      rbind(head(., n = 1), .)
     )
 
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
-      head(.data, -1)
+      # . refers to the current group.
+      head(., -1)
     ) %>%
     rename(
       !!as.name(X0_colname) := !!as.name(X_colname),
@@ -244,7 +257,8 @@ create0Tcolumns <- function(XvV,
   .DFT <- XvV_repeat1strow %>%
     do(
       # do works in groups, which is what we want.
-      tail(.data, -1)
+      # . refers to the current group.
+      tail(., -1)
     ) %>%
     rename(
       !!as.name(XT_colname) := !!as.name(X_colname),

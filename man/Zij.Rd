@@ -4,18 +4,26 @@
 \alias{Zij}
 \title{Calculate element \code{Z_i,j}}
 \usage{
-Zij(i, j, X_0, X_T, v_0i1 = rowprods_byname(X_0)[i, 1],
-  v_Ti1 = rowprods_byname(X_T)[i, 1], X_0ij = X_0[i, j], X_Tij = X_T[i,
-  j])
+Zij(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
+  v_0i1 = rowprods_byname(X_0)[i, 1], v_Ti1 = rowprods_byname(X_T)[i,
+  1], X_0ij = X_0[i, j], X_Tij = X_T[i, j])
 }
 \arguments{
-\item{i}{row index}
+\item{i}{optional row index for \code{X_0} and \code{X_T}.
+If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+must be specified.}
 
-\item{j}{column index}
+\item{j}{optional column index for \code{X_0} and \code{X_T}.
+If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+must be specified.}
 
-\item{X_0}{the sub-sector by factor matrix for time 0}
+\item{X_0}{optional sub-sector by factor matrix for time 0.
+If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+must be specified.}
 
-\item{X_T}{the sub-sector by factor matrix for time T}
+\item{X_T}{optional sub-sector by factor matrix for time T.
+If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+must be specified.}
 
 \item{v_0i1}{the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)}
 

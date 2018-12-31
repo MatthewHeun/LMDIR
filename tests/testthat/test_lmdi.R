@@ -31,7 +31,7 @@ create_simple_LMDI <- function(){
       Country = "AB"
     ) %>%
     group_by(Country, Year) %>%
-    collapse_to_matrices(matnames = "matnames", values = "x",
+    collapse_to_matrices(matnames = "matnames", matvals = "x",
                          rownames = "rownames", colnames = "colnames",
                          rowtypes = "rowtypes", coltypes = "coltypes") %>%
     rename(X = x)
@@ -47,6 +47,12 @@ test_that("Zij works as expected", {
   # Test degenerate cases.
   PN <- 9999 # Positive Number
   ANS <- 42 # the answer (modulo the sign)
+  #
+  # The cases below are taken from Table 2, p. 492 in
+  # B. Ang, F. Zhang, and K.-H. Choi.
+  # Factorizing changes in energy and environmental indicators through decomposition.
+  # Energy, 23(6):489–495, Jun 1998.
+  #
   # Case 1
   expect_equal(LMDIR:::Zij(v_0i1 = 0, v_Ti1 = ANS, X_0ij = 0, X_Tij = PN), ANS)
   # Case 2
@@ -66,8 +72,8 @@ test_that("Zij works as expected", {
 
   simple <- create_simple_LMDI()
 
-  X_T <- simple$X[[2]]
   X_0 <- simple$X[[1]]
+  X_T <- simple$X[[2]]
   expect_equal(LMDIR:::Zij(1, 1, X_0 = X_0, X_T = X_T), 50.47438029)
   expect_equal(LMDIR:::Zij(1, 2, X_0 = X_0, X_T = X_T), -25.23719014)
   expect_equal(LMDIR:::Zij(1, 3, X_0 = X_0, X_T = X_T), 14.76280986)
@@ -156,10 +162,10 @@ test_that("Z_byname works as expected", {
 context("Group error")
 ###########################################################
 
-test_that("simple additive LMDI works as expected", {
-  # Verify that grouping on time_colname fails.
+test_that("errors are given when grouping errors are present", {
+  # Verify that grouping on time fails.
   expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
-               "'Year' is a grouping variable, but you can't group on time_colname in argument .lmdidata of collapse_to_matrices.")
+               "'Year' is a grouping variable, but you can't group on time in argument .lmdidata of collapse_to_matrices.")
 })
 
 
@@ -336,7 +342,7 @@ test_that("fillrow option works as expected on Z_byname", {
   # First using the small values approach.
   DF1 <- data.frame(Year = c(2003, 2004))
   DF1$X <- list(X_0, X_T)
-  res1 <- lmdi(DF1, time_colname = "Year", X_colname = "X")
+  res1 <- lmdi(DF1, time = "Year", X = "X")
   expect_equal(res1$dV_agg[[1]], 0)
   expect_equal(res1$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
   expect_equal(res1$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
@@ -357,7 +363,7 @@ test_that("fillrow option works as expected on Z_byname", {
   # Now using a fillrow.
   DF2 <- data.frame(Year = c(2003, 2004))
   DF2$X <- list(X_0, X_T)
-  res2 <- lmdi(DF2, time_colname = "Year", X_colname = "X", fillrow = fr)
+  res2 <- lmdi(DF2, time = "Year", X = "X", fillrow = fr)
   expect_equal(res2$dV_agg[[1]], 0)
   expect_equal(res2$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
   expect_equal(res2$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
@@ -376,3 +382,14 @@ test_that("fillrow option works as expected on Z_byname", {
                  setrowtype("factors") %>% setcoltype("categories"))
 })
 
+
+###########################################################
+# context("Interactive")
+###########################################################
+
+# test_that("interactive programming works, too", {
+#   res <- create_simple_LMDI() %>%
+#     group_by(Country) %>%
+#     lmdi(time_colname = Year)
+#
+# })

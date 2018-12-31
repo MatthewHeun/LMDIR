@@ -4,19 +4,19 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NULL,
-  deltaV_colname = "dV", D_colname = "D")
+lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL,
+  deltaV = "dV", D = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
 Group by columns of variables within which you want an LMDI analysis conducted.
-\code{time_colname} should not be one of the grouping variables.}
+\code{time} should not be one of the grouping variables.}
 
-\item{time_colname}{the name of the column in \code{.lmdidata} that contains times at which
+\item{time}{the name of the column in \code{.lmdidata} that contains times at which
 data are available (a string).
 Default is "\code{Year}".}
 
-\item{X_colname}{the name (as a string) of a column in \code{.lmdidata} containing
+\item{X}{the name (as a string) of a column in \code{.lmdidata} containing
 \code{X} matrices with
 named rows representing subcategories of the energy aggregate (\code{V}) and
 named columns representing factors contributing to changes in \code{V} over time.
@@ -25,10 +25,10 @@ Default is "\code{X}".}
 \item{fillrow}{a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
 (See \code{\link{Z_byname}} for details.)}
 
-\item{deltaV_colname}{the name for the \code{deltaV} column (a string).
+\item{deltaV}{the name for the \code{deltaV} column (a string).
 Default is "\code{dV}".}
 
-\item{D_colname}{the name for the \code{D} column (a string).
+\item{D}{the name for the \code{D} column (a string).
 Default is "\code{D}".}
 }
 \value{
