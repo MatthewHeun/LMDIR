@@ -66,6 +66,7 @@
 #' @importFrom matsbyname cumprod_byname
 #'
 #' @export
+#'
 Z_byname <- function(X_0, X_T, fillrow = NULL){
   Z_func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
