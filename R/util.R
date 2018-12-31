@@ -271,3 +271,41 @@ create0Tcolumns <- function(XvV,
     group_by(!!!groups(XvV))
 }
 
+
+#' Create a simple LMDI data frame
+#'
+#' This function creates a simple LMDI data frame that can be used for testing or examples.
+#' It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
+#' and four years (\code{1971-1974}).
+#'
+#' @return a data frame of example LMDI data
+#'
+#' @export
+#'
+#' @examples
+#' create_simple_LMDI()
+create_simple_LMDI <- function(){
+  simple.factor.names <- c("factor 1", "factor 2", "factor 3")
+  simple.subcat.names <- c("subcat 1", "subcat 2")
+  # Create a tidy data frame of x values
+  # which will be collapsed to matrices
+  AB <- data.frame(Year = rep.int(1971, 6), x = c(1, 10, 2, 4, 5, 3)) %>%
+    rbind(data.frame(Year = rep.int(1972, 6), x = c(4, 5, 3, 5, 6, 4))) %>%
+    rbind(data.frame(Year = rep.int(1973, 6), x = c(8, 2, 4, 5, 7, 5))) %>%
+    rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
+    mutate(
+      matnames = "X",
+      rowtypes = "subcat",
+      coltypes = "factor",
+      rownames = rep.int(c(rep.int(simple.subcat.names[[1]], 3), rep.int(simple.subcat.names[[2]], 3)), 4),
+      colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
+      Country = "AB"
+    ) %>%
+    group_by(Country, Year) %>%
+    collapse_to_matrices(matnames = "matnames", matvals = "x",
+                         rownames = "rownames", colnames = "colnames",
+                         rowtypes = "rowtypes", coltypes = "coltypes") %>%
+    rename(X = x)
+  rbind(AB, AB %>% mutate(Country = "YZ"))
+}
+
