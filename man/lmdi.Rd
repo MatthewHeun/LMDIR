@@ -4,7 +4,7 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
+lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{
@@ -16,7 +16,7 @@ Group by columns of variables within which you want an LMDI analysis conducted.
 data are available (a string).
 Default is "\code{Year}".}
 
-\item{X_colname}{the name (as a string) of a column in \code{.lmdidata} containing
+\item{X}{the name (as a string) of a column in \code{.lmdidata} containing
 \code{X} matrices with
 named rows representing subcategories of the energy aggregate (\code{V}) and
 named columns representing factors contributing to changes in \code{V} over time.

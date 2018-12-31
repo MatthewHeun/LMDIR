@@ -8,7 +8,7 @@
 #' @param time the name of the column in \code{.lmdidata} that contains times at which
 #'        data are available (a string).
 #'        Default is "\code{Year}".
-#' @param X_colname the name (as a string) of a column in \code{.lmdidata} containing
+#' @param X the name (as a string) of a column in \code{.lmdidata} containing
 #'        \code{X} matrices with
 #'        named rows representing subcategories of the energy aggregate (\code{V}) and
 #'        named columns representing factors contributing to changes in \code{V} over time.
@@ -44,7 +44,7 @@
 #'
 #' @export
 #'
-lmdi <- function(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
+lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
 
@@ -59,10 +59,10 @@ lmdi <- function(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
   zero_suffix <- "_0"
   T_suffix <- "_T"
   vec_suffix <- "_vec"
-  X0_colname <- paste0(X_colname, zero_suffix)
+  X0_colname <- paste0(X, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
   V0_colname <- paste0(V_colname, zero_suffix)
-  XT_colname <- paste0(X_colname, T_suffix)
+  XT_colname <- paste0(X, T_suffix)
   vT_colname <- paste0(v_colname, T_suffix)
   VT_colname <- paste0(V_colname, T_suffix)
   LV_colname <- paste0(L_name, "(", V_colname, ")")
@@ -74,14 +74,14 @@ lmdi <- function(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
   }
 
   XvV <- .lmdidata %>% mutate(
-    !!as.name(v_colname) := rowprods_byname(!!as.name(X_colname)),
+    !!as.name(v_colname) := rowprods_byname(!!as.name(X)),
     !!as.name(V_colname) := sumall_byname(!!as.name(v_colname))
   )
 
   # Create a data frame of metadata and X matrices, v column vectors, and V values
   # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time,
-                           X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
+                           X_colname = X, v_colname = v_colname, V_colname = V_colname,
                            zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
