@@ -120,10 +120,18 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #' Note that \code{i} and \code{j} must be positive and less than
 #' \code{nrow(X)} and \code{ncol(X)}, respectively.
 #'
-#' @param i row index
-#' @param j column index
-#' @param X_0 the sub-sector by factor matrix for time 0
-#' @param X_T the sub-sector by factor matrix for time T
+#' @param i optional row index for \code{X_0} and \code{X_T}.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param j optional column index for \code{X_0} and \code{X_T}.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param X_0 optional sub-sector by factor matrix for time 0.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
+#' @param X_T optional sub-sector by factor matrix for time T.
+#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#'        must be specified.
 #' @param v_0i1 the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)
 #' @param v_Ti1 the i,1th element of the \code{v_T} column vector. (v_T is formed from the row products of the \code{X_T} matrix.)
 #' @param X_0ij the i,jth element of the \code{X_0} matrix
@@ -132,7 +140,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #' @return the Z value corresponding to the \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij} values
 #'
 #' @export
-Zij <- function(i, j, X_0, X_T,
+Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
                 v_0i1 = rowprods_byname(X_0)[i, 1],
                 v_Ti1 = rowprods_byname(X_T)[i, 1],
                 X_0ij = X_0[i, j],
