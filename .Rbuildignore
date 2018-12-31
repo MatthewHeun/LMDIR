@@ -1,3 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ~*.xlsx
+^cran-comments\.md$
+^cran-comments\.html$
