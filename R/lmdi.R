@@ -15,9 +15,9 @@
 #'        Default is "\code{X}".
 #' @param fillrow a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
 #'        (See \code{\link{Z_byname}} for details.)
-#' @param deltaV_colname the name for the \code{deltaV} column (a string).
+#' @param deltaV the name for the \code{deltaV} column (a string).
 #'        Default is "\code{dV}".
-#' @param D_colname the name for the \code{D} column (a string).
+#' @param D the name for the \code{D} column (a string).
 #'        Default is "\code{D}".
 #'
 #' @return a data frame containing several columns.
@@ -46,7 +46,7 @@
 #'
 lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                  # Output columns
-                 deltaV_colname = "dV", D_colname = "D"){
+                 deltaV = "dV", D = "D"){
 
   # Establish names for some intermediate columns.
   Z_colname <- ".Z"
@@ -89,8 +89,8 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
-      !!as.name(deltaV_colname) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
-      !!as.name(D_colname) := elementquotient_byname(!!as.name(deltaV_colname), !!as.name(LV_colname)) %>%
+      !!as.name(deltaV) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
+      !!as.name(D_colname) := elementquotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
         elementexp_byname()
     )
 
@@ -107,12 +107,12 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   agg_suffix <- "_agg"
   cum_suffix <- "_cum"
   err_suffix <- "_err"
-  dV_raw_colname <- paste0(deltaV_colname, raw_suffix)
-  dV_decomp_colname <- paste0(deltaV_colname, dc_suffix)
-  dV_agg_colname <- paste0(deltaV_colname, agg_suffix)
+  dV_raw_colname <- paste0(deltaV, raw_suffix)
+  dV_decomp_colname <- paste0(deltaV, dc_suffix)
+  dV_agg_colname <- paste0(deltaV, agg_suffix)
   dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
-  dV_cum_colname <- paste0(deltaV_colname, cum_suffix)
-  dV_err_colname <- paste0(deltaV_colname, err_suffix)
+  dV_cum_colname <- paste0(deltaV, cum_suffix)
+  dV_err_colname <- paste0(deltaV, err_suffix)
   D_raw_colname <- paste0(D_colname, raw_suffix)
   D_decomp_colname <- paste0(D_colname, dc_suffix)
   D_agg_colname <- paste0(D_colname, agg_suffix)
@@ -125,7 +125,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(dV_raw_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating deltaV at each time comes after we calculate all deltaV's for all factors
       # The "raw" and "decomp" methods of calculating deltaV should be identical.
-      !!as.name(dV_decomp_colname) := sumall_byname(!!as.name(deltaV_colname)),
+      !!as.name(dV_decomp_colname) := sumall_byname(!!as.name(deltaV)),
       # Calculate error column
       !!as.name(dV_err_colname) := difference_byname(!!as.name(dV_decomp_colname), !!as.name(dV_raw_colname)),
       # The "raw" way of calaculating D at each time comes from the "raw" data in X.
@@ -149,7 +149,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   cumulatives <- chk %>%
     select(!!!group_vars(chk), !!as.name(time),
            !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
-           !!as.name(deltaV_colname), !!as.name(D_colname)) %>%
+           !!as.name(deltaV), !!as.name(D_colname)) %>%
     rename(
       !!as.name(dV_agg_colname) := !!as.name(dV_raw_colname),
       !!as.name(D_agg_colname) := !!as.name(D_raw_colname)
@@ -159,7 +159,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       # which is exactly what we want!
       !!as.name(dV_agg_cum_colname) := cumsum_byname(!!as.name(dV_agg_colname)),
       !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
-      !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV_colname)),
+      !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV)),
       !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D_colname))
     )
 

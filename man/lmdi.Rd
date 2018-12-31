@@ -5,7 +5,7 @@
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
 lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL,
-  deltaV_colname = "dV", D_colname = "D")
+  deltaV = "dV", D_colname = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
@@ -25,7 +25,7 @@ Default is "\code{X}".}
 \item{fillrow}{a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
 (See \code{\link{Z_byname}} for details.)}
 
-\item{deltaV_colname}{the name for the \code{deltaV} column (a string).
+\item{deltaV}{the name for the \code{deltaV} column (a string).
 Default is "\code{dV}".}
 
 \item{D_colname}{the name for the \code{D} column (a string).
