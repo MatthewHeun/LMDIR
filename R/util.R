@@ -230,6 +230,7 @@ create0Tcolumns <- function(XvV,
   # the calculation of the first row D values gives 1, as it should.
   # Performing this action with "do" ensures that each group has a repeated first row.
   # . refers to the current group.
+  # (See https://dplyr.tidyverse.org/reference/do.html for details.)
   XvV_repeat1strow <- XvV %>%
     do(
       rbind(head(., n = 1), .)
