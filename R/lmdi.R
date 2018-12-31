@@ -90,7 +90,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
       !!as.name(deltaV) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
-      !!as.name(D_colname) := elementquotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
+      !!as.name(D) := elementquotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
         elementexp_byname()
     )
 
@@ -113,12 +113,12 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   dV_agg_cum_colname <- paste0(dV_agg_colname, cum_suffix)
   dV_cum_colname <- paste0(deltaV, cum_suffix)
   dV_err_colname <- paste0(deltaV, err_suffix)
-  D_raw_colname <- paste0(D_colname, raw_suffix)
-  D_decomp_colname <- paste0(D_colname, dc_suffix)
-  D_agg_colname <- paste0(D_colname, agg_suffix)
+  D_raw_colname <- paste0(D, raw_suffix)
+  D_decomp_colname <- paste0(D, dc_suffix)
+  D_agg_colname <- paste0(D, agg_suffix)
   D_agg_cum_colname <- paste0(D_agg_colname, cum_suffix)
-  D_cum_colname <- paste0(D_colname, cum_suffix)
-  D_err_colname <- paste0(D_colname, err_suffix)
+  D_cum_colname <- paste0(D, cum_suffix)
+  D_err_colname <- paste0(D, err_suffix)
   chk <- dVD %>%
     mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
@@ -132,7 +132,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(D_raw_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating D at each time comes after we calculate all D's for all factors
       # The "raw" and "decomp" methods of calculating D should be identical.
-      !!as.name(D_decomp_colname) := prodall_byname(!!as.name(D_colname)),
+      !!as.name(D_decomp_colname) := prodall_byname(!!as.name(D)),
       # Calculate D error column
       !!as.name(D_err_colname) := difference_byname(!!as.name(D_decomp_colname), !!as.name(D_raw_colname))
     )
@@ -149,7 +149,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   cumulatives <- chk %>%
     select(!!!group_vars(chk), !!as.name(time),
            !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
-           !!as.name(deltaV), !!as.name(D_colname)) %>%
+           !!as.name(deltaV), !!as.name(D)) %>%
     rename(
       !!as.name(dV_agg_colname) := !!as.name(dV_raw_colname),
       !!as.name(D_agg_colname) := !!as.name(D_raw_colname)
@@ -160,7 +160,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(dV_agg_cum_colname) := cumsum_byname(!!as.name(dV_agg_colname)),
       !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
       !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV)),
-      !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D_colname))
+      !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D))
     )
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
