@@ -1,5 +1,5 @@
 ## Context
-`LMDIR` is a new package that performs log-mean divisia index analysis on a data frame.
+`LMDIR` is a new package that performs log-mean divisia index decomposition analysis on a data frame.
 
 ## Test environments
 * local macOS X install 10.14.2 (Mojave), R3.5.2
