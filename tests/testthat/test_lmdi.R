@@ -163,7 +163,7 @@ context("Group error")
 ###########################################################
 
 test_that("errors are given when grouping errors are present", {
-  # Verify that grouping on time_colname fails.
+  # Verify that grouping on time fails.
   expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
                "'Year' is a grouping variable, but you can't group on time in argument .lmdidata of collapse_to_matrices.")
 })
