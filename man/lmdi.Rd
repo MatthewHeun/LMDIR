@@ -4,15 +4,15 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time_colname = "Year", X_colname = "X",
-  fillrow = NULL, deltaV_colname = "dV", D_colname = "D")
+lmdi(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
+  deltaV_colname = "dV", D_colname = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
 Group by columns of variables within which you want an LMDI analysis conducted.
-\code{time_colname} should not be one of the grouping variables.}
+\code{time} should not be one of the grouping variables.}
 
-\item{time_colname}{the name of the column in \code{.lmdidata} that contains times at which
+\item{time}{the name of the column in \code{.lmdidata} that contains times at which
 data are available (a string).
 Default is "\code{Year}".}
 

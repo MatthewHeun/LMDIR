@@ -4,8 +4,8 @@
 #'
 #' @param .lmdidata a grouped data frame.
 #'        Group by columns of variables within which you want an LMDI analysis conducted.
-#'        \code{time_colname} should not be one of the grouping variables.
-#' @param time_colname the name of the column in \code{.lmdidata} that contains times at which
+#'        \code{time} should not be one of the grouping variables.
+#' @param time the name of the column in \code{.lmdidata} that contains times at which
 #'        data are available (a string).
 #'        Default is "\code{Year}".
 #' @param X_colname the name (as a string) of a column in \code{.lmdidata} containing
@@ -44,7 +44,7 @@
 #'
 #' @export
 #'
-lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NULL,
+lmdi <- function(.lmdidata, time = "Year", X_colname = "X", fillrow = NULL,
                  # Output columns
                  deltaV_colname = "dV", D_colname = "D"){
 
@@ -67,11 +67,10 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
   VT_colname <- paste0(V_colname, T_suffix)
   LV_colname <- paste0(L_name, "(", V_colname, ")")
 
-  # Ensure that time_colname is NOT a grouping variable.
-  if (time_colname %in% groups(.lmdidata)) {
-    stop(paste0("'", time_colname, "'", " is a grouping variable, but you can't group on ",
-               "time_colname",
-               " in argument .lmdidata of collapse_to_matrices."))
+  # Ensure that time is NOT a grouping variable.
+  if (time %in% groups(.lmdidata)) {
+    stop(paste0("'", time, "'", " is a grouping variable, but you can't group on ",
+               "time in argument .lmdidata of collapse_to_matrices."))
   }
 
   XvV <- .lmdidata %>% mutate(
@@ -81,7 +80,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
 
   # Create a data frame of metadata and X matrices, v column vectors, and V values
   # for time 0 and time T.
-  XvV0T <- create0Tcolumns(XvV, time_colname = time_colname,
+  XvV0T <- create0Tcolumns(XvV, time_colname = time,
                            X_colname = X_colname, v_colname = v_colname, V_colname = V_colname,
                            zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
@@ -148,7 +147,7 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
   }
 
   cumulatives <- chk %>%
-    select(!!!group_vars(chk), !!as.name(time_colname),
+    select(!!!group_vars(chk), !!as.name(time),
            !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
            !!as.name(deltaV_colname), !!as.name(D_colname)) %>%
     rename(
@@ -166,6 +165,6 @@ lmdi <- function(.lmdidata, time_colname = "Year", X_colname = "X", fillrow = NU
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
   .lmdidata %>%
-    select(group_vars(.lmdidata), time_colname) %>%
-    left_join(cumulatives, by = c(group_vars(.lmdidata), time_colname))
+    select(group_vars(.lmdidata), time) %>%
+    left_join(cumulatives, by = c(group_vars(.lmdidata), time))
 }
