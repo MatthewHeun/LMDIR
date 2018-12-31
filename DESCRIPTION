@@ -23,5 +23,6 @@ Suggests:
     knitr, 
     rmarkdown,
     tidyr
-VignetteBuilder: 
-    knitr
+VignetteBuilder: knitr
+URL: https://github.com/MatthewHeun/LMDIR
+BugReports: https://github.com/MatthewHeun/LMDIR/issues
