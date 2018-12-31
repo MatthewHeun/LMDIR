@@ -1,3 +1,11 @@
+# LMDIR 0.1.4
+
+* Now including pkgdown website.
+* Removed `_colname` from argument names.
+* When calling `matsindf::collapse_to_matrices`, 
+  now using `matvals` argument name instead of `values`.
+
+
 # LMDIR 0.1.3
 
 * Now calculating the D vector by D_j = exp(deltaV_j / L(V)).
