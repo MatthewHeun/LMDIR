@@ -55,10 +55,9 @@ LMDI decomposes an energy aggregate by factors and subcategories.
 of the LMDI mathematics that works well with the 
 Physical Supply Use Table (PSUT) framework, 
 developed by [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
-
-We begin with a general description of the matrix method for LMDI analysis.
-Thereafter, we illustrate the method by application to Ghana
-in years 2003--2004.
+This vignette describes 
+and provides examples for
+the matrix method for LMDI decomposition analysis. 
 
 
 ## Description of the matrix method for LMDI decomposition analysis
@@ -202,7 +201,7 @@ and
 
 
 
-## Realilstic example
+## Realistic example
 
 
 
