@@ -1,3 +1,8 @@
+# LMDIR 0.1.6
+
+* Fixed a bug in the website. Vignette wasn't showing up due to capitalization error.
+
+
 # LMDIR 0.1.5
 
 * Now includes a detailed vignette.
