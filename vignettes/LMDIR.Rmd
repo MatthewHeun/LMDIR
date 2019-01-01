@@ -3,6 +3,7 @@ title: "Use cases and examples for `LMDIR`"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+
 vignette: >
   %\VignetteIndexEntry{LMDIR use cases and examples}
   %\VignetteEncoding{UTF-8}
@@ -18,9 +19,11 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(dplyr)
+library(ggplot2)
 library(LMDIR)
 library(matsbyname)
 library(matsindf)
+library(tidyr)
 ```
 
 <!-- This script numbers equations in the html output. -->
@@ -216,9 +219,11 @@ Countries `AB` and `YZ` are identical for the purposes of illustration.
 
 ```{r}
 library(dplyr)
+library(ggplot2)
 library(LMDIR)
 library(matsbyname)
 library(matsindf)
+library(tidyr)
 DF <- create_simple_LMDI()
 DF
 ```
@@ -329,7 +334,7 @@ res[1:4, ]$D_cum
 ```
 
 
-## Realistic example
+## Realistic example (Ghaha)
 
 To demonstrate the use of the LMDIR package with data from a real energy conversion chain,
 we'll use data from [Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx)
@@ -378,10 +383,80 @@ GHlmdi <- XGH %>%
 glimpse(GHlmdi)
 ```
 
-The GHlmdi object To graph the results, 
+The `GHlmdi` object contains everything needed to graph the results. 
+But first, we need to expand the data from matrices to tidy format and
+select the columns we want.
+The focus here is on the aggregate (`D_agg_cum`) and disaggregate (`D_cum`)
+factors that affect changes in useful exergy delivered to the economy.
+
+```{r}
+GHlmdi_tidy <- GHlmdi %>% 
+  select(Country, Year, D_agg_cum, D_cum) %>% 
+  gather(key = varname, value = value, -Country, -Year) %>% 
+  expand_to_tidy(matnames = "varname", matvals = "value", 
+                 rownames = "rowname", colnames = "colname", 
+                 rowtypes = "rowtype", coltypes = "coltype") %>% 
+  select(-colname, -rowtype, -coltype)
+head(GHlmdi_tidy, 10)
+```
+
+Next, we map the values of `varname` and `rowname` 
+to variable names appropriate for graphing.
+We also set the levels of the Factors,
+and therefore the order they will appear in the legend of the graph.
+We choose an order that mimics the vertical position of the data in the graph.
+
+```{r}
+GHlmdi_forgraphing <- GHlmdi_tidy %>% 
+  mutate(
+    Factor = case_when(
+      varname == "D_agg_cum" ~ "D_tot", 
+      rowname == "EXp.ktoe" ~ "D_ex",
+      rowname == "eta_ij" ~ "D_eff", 
+      rowname == "phi_i"  ~ "D_str", 
+      rowname == "phi_ij" ~ "D_dil" 
+    ), 
+    Factor = factor(Factor, levels = c("D_tot", "D_ex", "D_str", "D_eff", "D_dil"))
+  ) %>% 
+  select(-rowname, -varname) %>% 
+  group_by(Country, Factor)
+head(GHlmdi_forgraphing, 10)
+```
+
+Finally, we create a graph showing both the total changes and the factors 
+that comprise the total change.
+
+| graph variable | factor | description
+|-:|:-:|:---------------
+| D~tot~ |                 | Total change in useful exergy
+| D~ex~  | $X_p$           | Primary exergy supplied to the economy
+| D~str~ | $\phi_{p,sc}$   | Allocation of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work) or main class structural change
+| D~eff~ | $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
+| D~dil~ | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.) or subclass structural change
+
+```{r, fig.width = 7, fig.height = 4}
+GHlmdi_forgraphing %>%   
+  ggplot(mapping = aes(x = Year, y = value, linetype = Factor)) + 
+  geom_line() + 
+  geom_hline(yintercept = 1, colour = "gray50", size = 0.1) +
+  labs(x = NULL, y = "Cumulative changes relative to 1971 [-]", linetype = NULL, colour = NULL) +
+  scale_linetype_manual(values = c("D_tot" = 1, "D_ex" = 5, "D_str" = 2, "D_dil" = 6, "D_eff" = 3),
+                        labels = c("D_tot" = expression(D[tot]), 
+                                   "D_ex"  = expression(D[ex]), 
+                                   "D_str" = expression(D[str]), 
+                                   "D_dil" = expression(D[dil]), 
+                                   "D_eff" = expression(D[eff]))
+  )
+```
+
+Note that the graph above is the same as Figure 7 of 
+[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx).
 
 
+## Conclusion
 
+The `LMDIR` package provides a very convenient and powerful approach to log-mean divisia index
+analysis of energy conversion chains.
 
 
 ## References
