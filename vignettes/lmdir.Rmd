@@ -17,6 +17,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(dplyr)
+library(LMDIR)
+library(matsindf)
 ```
 
 <!-- This script numbers equations in the html output. -->
@@ -200,15 +203,40 @@ and
 ## Simple example
 
 A data frame of values is the starting point for a simple example.
+The example has two fictitious countries (`AB` and `YZ`) and
+covers four years (1971--1974).
+Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
 
 ```{r}
-library(matsindf)
+library(dplyr)
 library(LMDIR)
+library(matsindf)
 DF <- create_simple_LMDI()
 DF
 DF$X[[1]]
-
+DF$X[[2]]
 ```
+
+To see how the factors affect the aggregate over time, 
+we can perform the LMDI decomposition analysis.
+But we first group by Country to ensure that each Country will be 
+treated separately.
+The `lmdi()` function respects grouping.
+
+```{r}
+res <- DF %>%
+  group_by(Country) %>%
+  lmdi()
+```
+
+The result of the call to `lmdi()` is `DF` with additional columns.
+
+```{r}
+res
+```
+
+The 
+
 
 
 ## Realistic example
