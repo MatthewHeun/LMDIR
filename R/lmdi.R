@@ -15,43 +15,45 @@
 #'        Default is "\code{X}".
 #' @param fillrow a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
 #'        (See \code{\link{Z_byname}} for details.)
-#' @param deltaV the name for the \code{deltaV} column (a string).
+#' @param V the name for the \code{V} output column (a string).
+#'        Default is "\code{V}".
+#' @param Z the name for the \code{Z} output column (a string).
+#'        Default is "\code{Z}".
+#' @param deltaV the name for the \code{deltaV} output column (a string).
 #'        Default is "\code{dV}".
-#' @param D the name for the \code{D} column (a string).
+#' @param D the name for the \code{D} output column (a string).
 #'        Default is "\code{D}".
 #'
 #' @return a data frame containing several columns.
 #'
-#' @importFrom matsbyname elementquotient_byname
-#' @importFrom matsbyname elementpow_byname
-#' @importFrom matsbyname difference_byname
-#' @importFrom matsbyname logarithmicmean_byname
-#' @importFrom matsbyname rowprods_byname
-#' @importFrom matsbyname colsums_byname
-#' @importFrom matsbyname rowtype
-#' @importFrom matsbyname setrowtype
-#' @importFrom matsbyname coltype
-#' @importFrom matsbyname setcoltype
-#' @importFrom matsbyname complete_rows_cols
-#' @importFrom matsbyname sort_rows_cols
 #' @importFrom dplyr groups
 #' @importFrom dplyr left_join
-#' @importFrom dplyr ungroup
 #' @importFrom dplyr mutate
+#' @importFrom dplyr ungroup
+#' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname coltype
+#' @importFrom matsbyname complete_rows_cols
+#' @importFrom matsbyname difference_byname
+#' @importFrom matsbyname elementpow_byname
+#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname logarithmicmean_byname
+#' @importFrom matsbyname rowprods_byname
+#' @importFrom matsbyname rowtype
+#' @importFrom matsbyname setcoltype
+#' @importFrom matsbyname setrowtype
+#' @importFrom matsbyname sort_rows_cols
+#' @importFrom matsindf verify_cols_missing
 #' @importFrom rlang .data
 #' @importFrom rlang :=
-#' @importFrom magrittr %>%
 #'
 #' @export
 #'
 lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                  # Output columns
-                 deltaV = "dV", D = "D"){
+                 V = "V", Z = "Z", deltaV = "dV", D = "D"){
 
   # Establish names for some intermediate columns.
-  Z_colname <- ".Z"
   v_colname <- ".v"
-  V_colname <- ".V"
   L_name <- ".L"
   w_colname <- ".w"
 
@@ -61,15 +63,15 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   vec_suffix <- "_vec"
   X0_colname <- paste0(X, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
-  V0_colname <- paste0(V_colname, zero_suffix)
+  V0_colname <- paste0(V, zero_suffix)
   XT_colname <- paste0(X, T_suffix)
   vT_colname <- paste0(v_colname, T_suffix)
-  VT_colname <- paste0(V_colname, T_suffix)
-  LV_colname <- paste0(L_name, "(", V_colname, ")")
+  VT_colname <- paste0(V, T_suffix)
+  LV_colname <- paste0(L_name, "(", V, ")")
 
   # Ensure that all of these intermediate columns are missing.
   .lmdidata %>%
-    verify_cols_missing(c(deltaV, D, Z_colname, v_colname, V_colname, L_name, w_colname,
+    verify_cols_missing(c(deltaV, D, Z, v_colname, V, L_name, w_colname,
                           X0_colname, v0_colname, V0_colname,
                           XT_colname, vT_colname, VT_colname, LV_colname))
 
@@ -81,21 +83,21 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
 
   XvV <- .lmdidata %>% mutate(
     !!as.name(v_colname) := rowprods_byname(!!as.name(X)),
-    !!as.name(V_colname) := sumall_byname(!!as.name(v_colname))
+    !!as.name(V) := sumall_byname(!!as.name(v_colname))
   )
 
   # Create a data frame of metadata and X matrices, v column vectors, and V values
   # for time 0 and time T.
   XvV0T <- create0Tcolumns(XvV, time_colname = time,
-                           X_colname = X, v_colname = v_colname, V_colname = V_colname,
+                           X_colname = X, v_colname = v_colname, V_colname = V,
                            zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
     mutate(
       !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
-      !!as.name(Z_colname) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
+      !!as.name(Z) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
-      !!as.name(deltaV) := colsums_byname(!!as.name(Z_colname)) %>% transpose_byname(),
+      !!as.name(deltaV) := colsums_byname(!!as.name(Z)) %>% transpose_byname(),
       !!as.name(D) := elementquotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
         elementexp_byname()
     )
@@ -157,7 +159,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   }
 
   cumulatives <- chk %>%
-    select(!!!group_vars(chk), !!as.name(time),
+    select(!!!group_vars(chk), !!as.name(time), !!as.name(Z),
            !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
            !!as.name(deltaV), !!as.name(D)) %>%
     rename(
@@ -174,7 +176,10 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
     )
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
-  .lmdidata %>%
-    select(group_vars(.lmdidata), time, X) %>%
+  # .lmdidata %>%
+  #   select(group_vars(.lmdidata), time, X) %>%
+  #   left_join(cumulatives, by = c(group_vars(.lmdidata), time))
+  XvV %>%
+    select(group_vars(XvV), time, X, V) %>%
     left_join(cumulatives, by = c(group_vars(.lmdidata), time))
 }

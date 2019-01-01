@@ -184,7 +184,7 @@ The decomposition factors are given in the following table.
 | $X_p$           | Total primary exergy supplied to the economy
 | $\phi_{p,sc}$   | Allocation ratio of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work)
 | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.)
-| $\eta_{ssc}$    | Thermodynamic efficiency of subsubcategory ($ssc$)
+| $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
 
 In equation form, the energy aggregate ($X_u$) is calculated by
 
@@ -198,6 +198,9 @@ and
   X_{u,ssc} = X_{p,tot} \phi_{p,sc} \phi_{sc,ssc} \eta_{ssc}
       = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}} \frac{X_{u,ssc}}{X_{p,ssc}} \; .
 \end{equation}
+
+Note that $X_{p,ssc}$ is the embodied primary exergy 
+of the useful exergy produced by the subsubcategory ($X_{u,ssc}$).
 
 
 ## Simple example
@@ -216,17 +219,25 @@ library(LMDIR)
 library(matsindf)
 DF <- create_simple_LMDI()
 DF
-DF$X[[1]]
-DF$X[[2]]
-DF$X[[3]]
-DF$X[[4]]
+```
+
+For the remainder of these examples, 
+only the first four rows will be shown.
+(Rows 5--8 for country `YZ` are the same as rows 1--4 for country `AB`.)
+
+The `X` column of the data frame contains $\mat{X}$ matrices.
+The $\mat{X}$ matrices contain all the information about energy categories and factors.
+The $\mat{X}$ matrices are all that is needed to perform the LMDI analysis.
+
+```{r}
+DF[1:4, ]$X
 ```
 
 To see how the factors affect the aggregate over time, 
 we can perform the LMDI decomposition analysis.
 But we first group by `Country` to ensure that each `Country` will be 
 treated separately.
-The `lmdi()` function respects grouping.
+(`lmdi()` respects grouping.)
 
 ```{r}
 res <- DF %>%
@@ -240,10 +251,29 @@ The result of the call to `lmdi()` is `DF` with additional columns.
 res
 ```
 
+Each additional column provides results of the LMDI analysis.
+Both additive and multiplicative results are provided.
+
+The `V` column contains aggregates ($V$).
+
+```{r} 
+res$V %>% unlist()
+```
+
+The `Z` column contains $\mat{Z}$ matrices.
+Note that calculating the entries in the $Z$ matrices requires
+evaluating 8 degenerate cases as shown in Table 2, p. 492 of
+[Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4).
+Evaluation of the 8 degenerate cases is performed by the `Zij()` function.
+
+```{r}
+res[1:4, ]$Z
+```
+
 The `dV_agg` column contains year-to-year differences in the aggregate ($V$).
 
 ```{r}
-res$dV_agg %>% unlist()
+res[1:4, ]$dV_agg %>% unlist()
 ```
 
 The `D_agg` column contains year-to-year ratios of the aggregate ($V$).
@@ -255,13 +285,10 @@ res$D_agg %>% unlist()
 The `dV` column contains $\Delta V$ vectors.
 
 ```{r}
-res$dV
+res[1:4, ]$dV
 ```
 
 The `D` column contains $D$ vectors.
-For the remainder of these examples, 
-only the first four rows will be shown.
-(Rows 5--8 are the same as rows 1--4.)
 
 ```{r}
 res[1:4, ]$D
@@ -280,13 +307,15 @@ The `D_agg_cum` column gives cumulative ratios of the aggregate ($V$) relative t
 res$D_agg_cum %>% unlist()
 ```
 
-The `dV_cum` column gives the cumulative differences in the $\Delta V$ vectors.
+The `dV_cum` column gives the cumulative differences in the $\Delta V$ vectors
+relative to the first time.
 
 ```{r}
 res[1:4, ]$dV_cum
 ```
 
-The `D_cum` column gives the cumulative ratios of the $D$ vectors.
+The `D_cum` column gives the cumulative ratios of the $D$ vectors
+relative to the first time.
 
 ```{r}
 res[1:4, ]$D_cum
