@@ -54,7 +54,7 @@ The technique was pioneered by B.W. Ang and is described in detail in
 [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).
 LMDI decomposes an energy aggregate by factors and subcategories.
 
-[Heun and Brockway [-@Heun:2019]](https://doi.org/) developed a matrix representation
+[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx) developed a matrix representation
 of the LMDI mathematics that works well with the 
 Physical Supply Use Table (PSUT) framework, 
 developed by [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
@@ -324,6 +324,8 @@ res[1:4, ]$D_cum
 
 ## Realistic example
 
+To demonstrate the use of the LMDIR package with data from a real energy conversion chain,
+we'll 
 
 
 
