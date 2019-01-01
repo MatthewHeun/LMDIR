@@ -17,7 +17,8 @@ Imports:
     rlang,
     dplyr,
     magrittr,
-    matsbyname
+    matsbyname,
+    matsindf
 Suggests:
     testthat,
     knitr, 

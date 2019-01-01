@@ -26,25 +26,25 @@
 #'
 #' @return a data frame containing several columns.
 #'
-#' @importFrom matsbyname elementquotient_byname
-#' @importFrom matsbyname elementpow_byname
-#' @importFrom matsbyname difference_byname
-#' @importFrom matsbyname logarithmicmean_byname
-#' @importFrom matsbyname rowprods_byname
-#' @importFrom matsbyname colsums_byname
-#' @importFrom matsbyname rowtype
-#' @importFrom matsbyname setrowtype
-#' @importFrom matsbyname coltype
-#' @importFrom matsbyname setcoltype
-#' @importFrom matsbyname complete_rows_cols
-#' @importFrom matsbyname sort_rows_cols
 #' @importFrom dplyr groups
 #' @importFrom dplyr left_join
-#' @importFrom dplyr ungroup
 #' @importFrom dplyr mutate
+#' @importFrom dplyr ungroup
+#' @importFrom matsbyname colsums_byname
+#' @importFrom matsbyname coltype
+#' @importFrom matsbyname complete_rows_cols
+#' @importFrom matsbyname difference_byname
+#' @importFrom matsbyname elementpow_byname
+#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname logarithmicmean_byname
+#' @importFrom matsbyname rowprods_byname
+#' @importFrom matsbyname rowtype
+#' @importFrom matsbyname setcoltype
+#' @importFrom matsbyname setrowtype
+#' @importFrom matsbyname sort_rows_cols
+#' @importFrom matsindf verify_cols_missing
 #' @importFrom rlang .data
 #' @importFrom rlang :=
-#' @importFrom magrittr %>%
 #'
 #' @export
 #'

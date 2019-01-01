@@ -261,6 +261,10 @@ res$V %>% unlist()
 ```
 
 The `Z` column contains $\mat{Z}$ matrices.
+Note that calculating the entries in the $Z$ matrices requires
+evaluating 8 degenerate cases as shown in Table 2, p. 492 of
+[Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4).
+Evaluation of the 8 degenerate cases is performed by the `Zij()` function.
 
 ```{r}
 res[1:4, ]$Z
