@@ -215,11 +215,13 @@ DF <- create_simple_LMDI()
 DF
 DF$X[[1]]
 DF$X[[2]]
+DF$X[[3]]
+DF$X[[4]]
 ```
 
 To see how the factors affect the aggregate over time, 
 we can perform the LMDI decomposition analysis.
-But we first group by Country to ensure that each Country will be 
+But we first group by `Country` to ensure that each `Country` will be 
 treated separately.
 The `lmdi()` function respects grouping.
 
@@ -235,7 +237,57 @@ The result of the call to `lmdi()` is `DF` with additional columns.
 res
 ```
 
-The 
+The `dV_agg` column contains year-to-year differences in the aggregate ($V$).
+
+```{r}
+res$dV_agg %>% unlist()
+```
+
+The `D_agg` column contains year-to-year ratios of the aggregate ($V$).
+
+```{r}
+res$D_agg %>% unlist()
+```
+
+The `dV` column contains $\Delta V$ vectors.
+
+```{r}
+res$dV
+```
+
+The `D` column contains $D$ vectors.
+For the remainder of these examples, 
+only the first four rows will be shown.
+(Rows 5--8 are the same as rows 1--4.)
+
+```{r}
+res[1:4, ]$D
+```
+
+The remaining columns have the `_cum` suffix and represent cumulative values.
+The `dV_agg_cum` column gives cumulative differences in the aggregate ($V$) relative to the first time.
+
+```{r}
+res$dV_agg_cum %>% unlist()
+```
+
+The `D_agg_cum` column gives cumulative ratios of the aggregate ($V$) relative to the first time.
+
+```{r}
+res$D_agg_cum %>% unlist()
+```
+
+The `dV_cum` column gives the cumulative differences in the $\Delta V$ vectors.
+
+```{r}
+res[1:4, ]$dV_cum
+```
+
+The `D_cum` column gives the cumulative ratios of the $D$ vectors.
+
+```{r}
+res[1:4, ]$D_cum
+```
 
 
 
