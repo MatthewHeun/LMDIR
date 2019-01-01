@@ -325,7 +325,41 @@ res[1:4, ]$D_cum
 ## Realistic example
 
 To demonstrate the use of the LMDIR package with data from a real energy conversion chain,
-we'll 
+we'll use data from [Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx)
+for exergy flows through Ghanaian society.
+The data frame consists of the $X$ matrix for Ghana for several years. 
+This data frame is available in the `LMDIR` package as object `XGH`.
+
+```{r}
+head(XGH)
+```
+
+Each $X$ matrix contains useful exergy subsub categories (in rows)
+and factors (in columns). 
+The format of the $X$ matrices is shown below.
+Note that the row and column orders are provided for readability.
+
+```{r}
+XGH$X[[1]] %>% 
+  sort_rows_cols(roworder = c(# Heat categories (phi_i = 0.622)
+                              "HTH.600.C - Electric heaters", "MTH.100.C - Charcoal stoves",
+                              "MTH.100.C - Kerosene stoves", "MTH.100.C - LPG stoves",
+                              "MTH.100.C - Wood stoves",
+                              # Electricity categories (phi_i = 0.020)
+                              "KE - Fans", "Light - Electric lights",
+                              "Light - Televisions", "LTH.-10.C - Refrigerators", 
+                              "MD - Electric motors", "MD - Other appliances", 
+                              "MTH.100.C - Electric heaters", "MTH.200.C - Irons",
+                              "Light - Electric lights",
+                              # Petrol categories (phi_i = 0.131)
+                              "MD - Boat engines", "MD - Diesel cars", 
+                              "MD - Diesel trains", "MD - Industry static diesel engines", 
+                              "MD - Petrol cars", "MD - Tractors", 
+                              # Food and feed categories (phi_i = 0.226)
+                              "MD - Draught animals", "MD - Manual laborers"
+                              ), 
+                 colorder = c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij"))
+```
 
 
 
