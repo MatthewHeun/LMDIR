@@ -49,7 +49,7 @@ MathJax.Hub.Config({
 ## Introduction
 
 Log-mean divisia index (LMDI) decomposition analysis is an important technique 
-for understanding changes in an energy composite variable over time.
+for understanding causes of changes in an energy composite over time.
 The technique was pioneered by B.W. Ang and is described in detail in
 [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).
 LMDI decomposes an energy aggregate by factors and subcategories.
