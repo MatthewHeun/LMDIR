@@ -116,23 +116,20 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #' These special cases must be handled on a term-by term basis.
 #' This function handles all those cases.
 #' See \code{\link{Z_byname}} for details.
-#' The \strong{\code{X}} matrices must be same size, must have same row and column names, and
+#' The \code{X} matrices must be same size, must have same row and column names, and
 #' must have same row and column types.
-#' Note that \code{i} and \code{j} must be positive and less than
+#' Note that \code{i} and \code{j} must be positive and less than or equal to
 #' \code{nrow(X)} and \code{ncol(X)}, respectively.
 #'
+#' Arguments \code{i}, \code{j}, \code{X_0}, and \code{X_T} are optional.
+#' If they are not specified,
+#' arguments \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#' must be given.
+#'
 #' @param i optional row index for \code{X_0} and \code{X_T}.
-#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-#'        must be specified.
 #' @param j optional column index for \code{X_0} and \code{X_T}.
-#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-#'        must be specified.
 #' @param X_0 optional sub-sector by factor matrix for time 0.
-#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-#'        must be specified.
 #' @param X_T optional sub-sector by factor matrix for time T.
-#'        If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-#'        must be specified.
 #' @param v_0i1 the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)
 #' @param v_Ti1 the i,1th element of the \code{v_T} column vector. (v_T is formed from the row products of the \code{X_T} matrix.)
 #' @param X_0ij the i,jth element of the \code{X_0} matrix
@@ -217,6 +214,9 @@ create0Tcolumns <- function(XvV,
                             zero_suffix = "_0",
                             T_suffix = "_T"){
 
+  # Eliminate the NOTE in R CMD chk about no visible global binding for "."
+  . <- NULL
+
   # Establish names for new columns.
   X0_colname <- paste0(X_colname, zero_suffix)
   v0_colname <- paste0(v_colname, zero_suffix)
@@ -277,16 +277,26 @@ create0Tcolumns <- function(XvV,
 #' This function creates a simple LMDI data frame that can be used for testing or examples.
 #' It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
 #' and four years (\code{1971-1974}).
+#' Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
 #'
 #' @return a data frame of example LMDI data
+#'
+#' @importFrom matsindf collapse_to_matrices
 #'
 #' @export
 #'
 #' @examples
-#' create_simple_LMDI()
+#' library(matsindf)
+#' DF <- create_simple_LMDI()
+#' DF
+#' DF$X[[1]]
 create_simple_LMDI <- function(){
   simple.factor.names <- c("factor 1", "factor 2", "factor 3")
-  simple.subcat.names <- c("subcat 1", "subcat 2")
+  simple.subsubcat.names <- c("subsubcat 1", "subsubcat 2")
+  # Eliminate the NOTE in R CMD chk about no visible global binding for these variables
+  Country <- NULL
+  Year <- NULL
+  x <- NULL
   # Create a tidy data frame of x values
   # which will be collapsed to matrices
   AB <- data.frame(Year = rep.int(1971, 6), x = c(1, 10, 2, 4, 5, 3)) %>%
@@ -295,9 +305,9 @@ create_simple_LMDI <- function(){
     rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
     mutate(
       matnames = "X",
-      rowtypes = "subcat",
+      rowtypes = "subsubcat",
       coltypes = "factor",
-      rownames = rep.int(c(rep.int(simple.subcat.names[[1]], 3), rep.int(simple.subcat.names[[2]], 3)), 4),
+      rownames = rep.int(c(rep.int(simple.subsubcat.names[[1]], 3), rep.int(simple.subsubcat.names[[2]], 3)), 4),
       colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
       Country = "AB"
     ) %>%

@@ -38,7 +38,7 @@ This function handles all those cases.
 See Z_byname for details.
 The X matrices must be same size, must have same row and column names, and
 must have same row and column types.
-Note that i and j must be positive and less than
+Note that i and j must be positive and less than or equal to
 nrow(X) and ncol(X), respectively." />
 <meta name="twitter:card" content="summary" />
 
@@ -123,9 +123,9 @@ nrow(X) and ncol(X), respectively." />
 These special cases must be handled on a term-by term basis.
 This function handles all those cases.
 See <code><a href='Z_byname.html'>Z_byname</a></code> for details.
-The <strong><code>X</code></strong> matrices must be same size, must have same row and column names, and
+The <code>X</code> matrices must be same size, must have same row and column names, and
 must have same row and column types.
-Note that <code>i</code> and <code>j</code> must be positive and less than
+Note that <code>i</code> and <code>j</code> must be positive and less than or equal to
 <code><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>nrow(X)</a></code> and <code><a href='https://www.rdocumentation.org/packages/base/topics/nrow'>ncol(X)</a></code>, respectively.</p>
     
     </div>
@@ -139,27 +139,19 @@ Note that <code>i</code> and <code>j</code> must be positive and less than
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>i</th>
-      <td><p>optional row index for <code>X_0</code> and <code>X_T</code>.
-If not specified, <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code>
-must be specified.</p></td>
+      <td><p>optional row index for <code>X_0</code> and <code>X_T</code>.</p></td>
     </tr>
     <tr>
       <th>j</th>
-      <td><p>optional column index for <code>X_0</code> and <code>X_T</code>.
-If not specified, <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code>
-must be specified.</p></td>
+      <td><p>optional column index for <code>X_0</code> and <code>X_T</code>.</p></td>
     </tr>
     <tr>
       <th>X_0</th>
-      <td><p>optional sub-sector by factor matrix for time 0.
-If not specified, <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code>
-must be specified.</p></td>
+      <td><p>optional sub-sector by factor matrix for time 0.</p></td>
     </tr>
     <tr>
       <th>X_T</th>
-      <td><p>optional sub-sector by factor matrix for time T.
-If not specified, <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code>
-must be specified.</p></td>
+      <td><p>optional sub-sector by factor matrix for time T.</p></td>
     </tr>
     <tr>
       <th>v_0i1</th>
@@ -183,6 +175,13 @@ must be specified.</p></td>
 
     <p>the Z value corresponding to the <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code> values</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Arguments <code>i</code>, <code>j</code>, <code>X_0</code>, and <code>X_T</code> are optional.
+If they are not specified,
+arguments <code>v_0i1</code>, <code>v_Ti1</code>, <code>X_0ij</code>, and <code>X_Tij</code>
+must be given.</p>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -191,6 +190,8 @@ must be specified.</p></td>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

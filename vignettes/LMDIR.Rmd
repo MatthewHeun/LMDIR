@@ -1,0 +1,494 @@
+---
+title: "Use cases and examples for `LMDIR`"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+
+vignette: >
+  %\VignetteIndexEntry{LMDIR use cases and examples}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: References.bib
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dplyr)
+library(ggplot2)
+library(LMDIR)
+library(matsbyname)
+library(matsindf)
+library(tidyr)
+```
+
+<!-- This script numbers equations in the html output. -->
+<!-- From https://stackoverflow.com/questions/35026405/auto-number-equations-in-r-markdown-documents-in-rstudio. -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { 
+      equationNumbers: { 
+            autoNumber: "all",
+            formatNumber: function (n) {return n}
+      } 
+  }
+});
+</script>
+
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
+
+
+## Introduction
+
+Log-mean divisia index (LMDI) decomposition analysis is an important technique 
+for understanding causes of changes in an energy composite over time.
+The technique was pioneered by B.W. Ang and is described in detail in
+[Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).
+LMDI decomposes an energy aggregate by factors and categories.
+
+[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx) developed a matrix representation
+of the LMDI mathematics that works well with the 
+Physical Supply Use Table (PSUT) framework
+developed by [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+This vignette describes 
+and provides examples for
+the matrix method for LMDI decomposition analysis. 
+This vignette is a version of Section S3 of the Supplemental Information to 
+[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx).
+
+
+## Description of the matrix method for LMDI decomposition analysis
+
+The LMDI approach pioneered by [Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
+and described in detail by [Liu and Ang [-@Liu:2003]](https://doi.org/10.1016/s0306-2619(03)00043-6)
+decomposes an energy aggregate ($V$) by factors ($x$)
+that cause $V$ to change over time. 
+(In this vignette, we adopt the notation of [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).)
+
+Noting that at a given time every combination of energy category ($i$) and decomposition factor ($j$)
+has an associated numerical value for the decomposition factor ($x_{ij}$),
+the matrix approach to LMDI decomposition analysis begins with formation of an $\mat{X}$ matrix
+for each time of interest.
+Rows of $\mat{X}$ contain energy categories (indexed by $i$) of the aggregate ($V$) and 
+columns of $\mat{X}$ contain decomposition factors (indexed by $j$).
+
+Column vector $\colvec{v}$ contains 
+the value of each energy category ($v_i$)
+and is formed from row products of $\mat{X}$. 
+
+\begin{equation} \label{eq:v}
+  v_i = \prod_j x_{ij}
+\end{equation}
+
+At any given time, the energy aggregate ($V$) is obtained by 
+the column sum of elements in the $\colvec{v}$ vector
+
+\begin{equation} \label{eq:V}
+  V = \rowvec{i} \colvec{v} \; ,
+\end{equation}
+
+where $\colvec{i}$ is a column vector of 1's (an identity vector) of same size as $\colvec{v}$.
+
+Additive ($\Delta V$) and multiplicative ($D$) changes in the energy aggregate ($V$)
+between two adjacent times,
+an initial time (superscript $0$) and a later time (superscript $T$),
+are calculated by
+
+\begin{equation} \label{eq:deltaV_def}
+  \Delta V = V^T - V^0 \; ,
+\end{equation}
+
+and
+
+\begin{equation} \label{eq:D_def}
+  D = \frac{V^T}{V^0} \; .
+\end{equation}
+
+A $\mat{Z}$ matrix is formed for two adjacent times by
+
+\begin{equation} \label{eq:Z_eqn_element_notation}
+  Z_{ij} = \frac{v_i^T - v_i^0}{\ln \left( \frac{v_i^T}{v_i^0}\right)} 
+            \ln \left( \frac{x_{ij}^T}{x_{ij}^0} \right) ,
+\end{equation}
+
+with care taken to address the zero-value problem noted by 
+[Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
+in Table 2
+and discussed at length by 
+[Wood and Lenzen [-@Wood:2006]](https://doi.org/10.1016/j.enpol.2004.11.010).
+
+Given the $\mat{Z}$ matrix defined by the equation for $Z_{ij}$ above,
+a $\Delta \mat{v}$ vector is calculated by column sums of $\mat{Z}$
+
+\begin{equation} \label{eq:deltaV_eqn}
+  \Delta \mat{V} = \rowvec{i} \mat{Z} \; ,
+\end{equation}
+
+where entries in $\Delta \mat{V}$ give the additive contribution 
+of the $j^\mathrm{th}$ decomposition factor 
+to changes in $V$ from time $0$ to time $T$.
+
+Multiplicative decomposition is obtained with the $\mat{D}$ row vector calculated by
+
+\begin{equation} \label{eq:D_eqn}
+  D_j = \exp \left( \frac{\Delta V_j}{\frac{V^T - V^0}{\ln \frac{V^T}{V^0}}} \right) \; ,
+\end{equation}
+
+where entries in $\mat{D}$ give the multiplicative contribution 
+of the $j^\mathrm{th}$ decomposition factor 
+to changes in $V$ from time $0$ to time $T$.
+
+Verification can be performed by 
+
+\begin{equation} \label{eq:deltaV_check}
+   \Delta \mat{V} \colvec{i} \overset{?}{=} V^T - V^0 \; ,
+\end{equation}
+
+and
+
+\begin{equation} \label{eq:D_check}
+   \prod_j D_j \overset{?}{=} \frac{V^T}{V^0}\; .
+\end{equation}
+
+Cumulative changes in $V$ over many time periods can be calculated by 
+cumulative sums of the $\Delta \mat{V}$ row vector for additive decomposition and by
+cumulative products of the $\mat{D}$ row vector for multiplicative decomposition.
+
+
+## Application of the matrix method to energy conversion chain (ECC) analysis
+
+An energy conversion chain (ECC) is a set of
+energy carriers, 
+energy transformation devices, and 
+energy services 
+within spatial and temporal boundaries of interest.
+For the purposes of this vignette, an ECC comprises 
+primary, final, and useful energy and exergy flowing through society.
+
+Following 
+[Brockway et al. [-@Brockway:2015aa]](https://doi.org/10.1016/j.apenergy.2015.05.082),
+one energy aggregate from an ECC is total useful exergy supplied to the economy ($X_u$).
+$X_u$ is comprised of 
+subcategories ($sc$, Heat, Electric, Mechanical Drive (Petroleum), and Muscle Work)
+and
+subsubcategories ($ssc$, such as KE--Fans and MD--Tractors).
+The decomposition factors are given in the following table.
+
+| factor   | description
+|-:|:----------------
+| $X_p$           | Total primary exergy supplied to the economy
+| $\phi_{p,sc}$   | Allocation ratio of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work)
+| $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.)
+| $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
+
+In equation form, the energy aggregate ($X_u$) is calculated by
+
+\begin{equation} \label{eq:X_u_eqn}
+  X_u = \sum_{ssc} X_{u,ssc} \; ,
+\end{equation}
+
+and
+
+\begin{equation} \label{eq:X_u_i_eqn}
+  X_{u,ssc} = X_{p,tot} \phi_{p,sc} \phi_{sc,ssc} \eta_{ssc}
+      = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}} \frac{X_{u,ssc}}{X_{p,ssc}} \; .
+\end{equation}
+
+Note that $X_{p,ssc}$ is the embodied primary exergy 
+of the useful exergy produced by the subsubcategory ($X_{u,ssc}$).
+
+
+## Simple example
+
+To demonstrate the matrix approach to LMDI decomposition analysis,
+we begin with a simple example that is 
+small enough to allow 
+replication of the results by hand calculations 
+if desired  
+but sufficient detail to illustrate features of the calculations.
+
+A data frame of $\mat{X}$ matrices is the starting point for a simple example.
+The example has two fictitious countries (`AB` and `YZ`) and
+covers four years (1971--1974).
+Countries `AB` and `YZ` are identical for the purposes of illustration.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(LMDIR)
+library(matsbyname)
+library(matsindf)
+library(tidyr)
+DF <- create_simple_LMDI()
+DF
+```
+
+For the remainder of these examples, 
+only the first four rows will be shown.
+(Rows 5--8 for country `YZ` are the same as rows 1--4 for country `AB`.)
+
+The `X` column of the data frame contains $\mat{X}$ matrices.
+The $\mat{X}$ matrices contain all the information about energy categories and factors.
+The $\mat{X}$ matrices are all that is needed to perform the LMDI analysis.
+
+```{r}
+DF[1:4, ]$X
+```
+
+To see how the factors affect the aggregate over time, 
+we can perform the LMDI decomposition analysis.
+But we first group by `Country` to ensure that each `Country` will be 
+treated separately.
+(`lmdi()` respects grouping.)
+
+```{r}
+res <- DF %>%
+  group_by(Country) %>%
+  lmdi()
+```
+
+The result of the call to `lmdi()` is `DF` with additional columns.
+
+```{r}
+glimpse(res)
+```
+
+Each additional column provides results of the LMDI analysis.
+Both additive and multiplicative results are provided.
+
+The `V` column contains aggregates ($V$),
+with the first year assigned a value of `0`.
+
+```{r} 
+res$V %>% unlist()
+```
+
+The `Z` column contains $\mat{Z}$ matrices,
+with the first year assigned a value of `1`.
+
+```{r}
+res[1:4, ]$Z
+```
+
+Note that calculating the entries in the $\mat{Z}$ matrices requires
+evaluating 8 degenerate cases as shown in Table 2, p. 492 of
+[Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4).
+Evaluation of the 8 degenerate cases is performed by the `Zij()` function.
+
+```{r}
+Zij
+```
+
+The `dV_agg` column contains year-to-year differences in the aggregate ($V$).
+
+```{r}
+res[1:4, ]$dV_agg %>% unlist()
+```
+
+The `D_agg` column contains year-to-year ratios of the aggregate ($V$).
+
+```{r}
+res$D_agg %>% unlist()
+```
+
+The `dV` column contains $\colvec{\Delta V}$ vectors.
+
+```{r}
+res[1:4, ]$dV
+```
+
+The `D` column contains $\colvec{D}$ vectors.
+
+```{r}
+res[1:4, ]$D
+```
+
+The remaining columns have the `_cum` suffix and represent cumulative values.
+The `dV_agg_cum` column gives cumulative differences in the aggregate ($V$) relative to the first time.
+
+```{r}
+res$dV_agg_cum %>% unlist()
+```
+
+The `D_agg_cum` column gives cumulative ratios of the aggregate ($V$) relative to the first time.
+
+```{r}
+res$D_agg_cum %>% unlist()
+```
+
+The `dV_cum` column gives the cumulative differences in the $\colvec{\Delta V}$ vectors
+relative to the first time.
+
+```{r}
+res[1:4, ]$dV_cum
+```
+
+The `D_cum` column gives the cumulative ratios of the $\colvec{D}$ vectors
+relative to the first time.
+
+```{r}
+res[1:4, ]$D_cum
+```
+
+
+## Realistic example (Ghaha)
+
+The objective of this analysis is to discern the drivers of changes
+to useful exergy supplied to the Ghanaian economy over time,
+expressed in multiplicative form. 
+To achieve this objective, we will perform and report results of an
+LMDI analysis of the Ghanaian energy conversion chain. 
+This analysis also serves to demonstrate the use of the LMDIR package with data 
+from a real energy conversion chain.
+
+We'll use data from [Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx)
+for exergy flows through Ghanaian society.
+The data frame consists of annual $\mat{X}$ matrices for Ghana over the period 1971--2013.
+This data frame is available as `LMDIR::XGH`.
+
+```{r}
+glimpse(XGH)
+```
+
+Each $\mat{X}$ matrix contains 
+useful exergy subsubcategories (in rows)
+and factors (in columns). 
+The format of the $\mat{X}$ matrices is shown below.
+Note that row and column ordering is provided for readability.
+The ordered rows show identical values of $\phi_i$
+for allocation to the subcategories of
+Heat, Electricity, Mechanical drive (fueled by petroleum), and 
+Muscle work (fueled by food and feed).
+Column order follows flows of energy and exergy through the economy,
+from primary stage to allocation to subcategories
+through allocation to subsubcategories and, finally, to 
+a primary-to-useful efficiency for each task.
+All unique $\phi_i$ values sum to 1.
+(Specifically, 0.6225 + .0204 + 0.1314 + .2258 = 1.)
+Within each subsubcategory, $\phi_{ij}$ values sum to 1.
+(E.g., for Mechanical drive fueled by food and feed, 0.8416 + 0.1584 = 1)
+
+```{r}
+XGH$X[[1]] %>%
+  sort_rows_cols(roworder = c(# Heat categories (phi_i = 0.622)
+                              "HTH.600.C - Electric heaters", "MTH.100.C - Charcoal stoves",
+                              "MTH.100.C - Kerosene stoves", "MTH.100.C - LPG stoves",
+                              "MTH.100.C - Wood stoves",
+                              # Electricity categories (phi_i = 0.020)
+                              "KE - Fans", "Light - Electric lights",
+                              "Light - Televisions", "LTH.-10.C - Refrigerators",
+                              "MD - Electric motors", "MD - Other appliances",
+                              "MTH.100.C - Electric heaters", "MTH.200.C - Irons",
+                              "MTH.200.C - Electric heaters",
+                              # Liquid petroleum categories (phi_i = 0.131)
+                              "MD - Boat engines", "MD - Diesel cars",
+                              "MD - Diesel trains", "MD - Industry static diesel engines",
+                              "MD - Petrol cars", "MD - Tractors",
+                              # Food and feed categories (phi_i = 0.226)
+                              "MD - Draught animals", "MD - Manual laborers"
+                              ),
+                 colorder = c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij"))
+```
+
+To perform LMDI analysis, we use the `lmdi()` function after grouping on metadata variables
+(in this case, only `Country`).
+
+```{r}
+GHlmdi <- XGH %>% 
+  group_by(Country) %>% 
+  lmdi()
+glimpse(GHlmdi)
+```
+
+The `GHlmdi` object contains everything needed to graph the results. 
+But first, we need to expand the data from matrices to tidy format and
+select the desired columns.
+The focus here is on the ratioed aggregate (`D_agg_cum`) and disaggregate (`D_cum`)
+factors that affect changes in useful exergy delivered to the economy.
+
+```{r}
+GHlmdi_tidy <- GHlmdi %>% 
+  select(Country, Year, D_agg_cum, D_cum) %>% 
+  gather(key = matnames, value = matvals, -Country, -Year) %>% 
+  expand_to_tidy() %>% 
+  select(-colnames, -rowtypes, -coltypes)
+head(GHlmdi_tidy, 10)
+```
+
+Next, we map the values of `varname` and `rowname` 
+to variable names appropriate for graphing.
+We also set the levels of the Factors,
+and therefore the order they will appear in the legend of the graph.
+We choose an order that mimics the vertical position of the data in the graph.
+
+```{r}
+GHlmdi_forgraphing <- GHlmdi_tidy %>% 
+  mutate(
+    Factor = case_when(
+      matnames == "D_agg_cum" ~ "D_tot", 
+      rownames == "EXp.ktoe" ~ "D_ex",
+      rownames == "eta_ij" ~ "D_eff", 
+      rownames == "phi_i"  ~ "D_str", 
+      rownames == "phi_ij" ~ "D_dil" 
+    ), 
+    Factor = factor(Factor, levels = c("D_tot", "D_ex", "D_str", "D_eff", "D_dil"))
+  ) %>% 
+  rename(
+    value = matvals
+  ) %>% 
+  select(-rownames, -matnames) %>% 
+  group_by(Country, Factor)
+head(GHlmdi_forgraphing, 10)
+```
+
+Finally, we create a graph showing both the total changes and the factors 
+that comprise the total change.
+
+| graph variable | factor | description
+|-:|:-:|:---------------
+| D~tot~ |                 | Total change in useful exergy
+| D~ex~  | $X_p$           | Primary exergy supplied to the economy
+| D~str~ | $\phi_{p,sc}$   | Allocation of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work) or main class structural change
+| D~eff~ | $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
+| D~dil~ | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.) or subclass structural change
+
+```{r, fig.width = 7, fig.height = 4}
+GHlmdi_forgraphing %>%
+  ggplot(mapping = aes(x = Year, y = value, linetype = Factor)) + 
+  geom_line() + 
+  geom_hline(yintercept = 1, colour = "gray50", size = 0.1) +
+  labs(x = NULL, y = "Cumulative changes relative to 1971 [-]", linetype = NULL, colour = NULL) +
+  scale_linetype_manual(values = c("D_tot" = 1, "D_ex" = 5, "D_str" = 2, "D_dil" = 6, "D_eff" = 3),
+                        labels = c("D_tot" = expression(D[tot]), 
+                                   "D_ex"  = expression(D[ex]), 
+                                   "D_str" = expression(D[str]), 
+                                   "D_dil" = expression(D[dil]), 
+                                   "D_eff" = expression(D[eff]))
+  )
+```
+
+Note that the graph above is the same as Figure 7 of 
+[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx).
+
+
+## Conclusion
+
+The `LMDIR` package provides a convenient and powerful capability
+for log-mean divisia index
+analysis of energy conversion chains.
+
+
+## References
+

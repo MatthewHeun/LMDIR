@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Log-Mean Divisia Index (LMDI) decomposition analysis — lmdi • LMDIR</title>
+<title>Pipe operator — %&gt;% • LMDIR</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Log-Mean Divisia Index (LMDI) decomposition analysis — lmdi" />
+<meta property="og:title" content="Pipe operator — %&gt;%" />
 
-<meta property="og:description" content="Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame." />
+<meta property="og:description" content="See magrittr::%&amp;gt;% for details." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -105,83 +105,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Log-Mean Divisia Index (LMDI) decomposition analysis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/LMDIR/blob/master/R/lmdi.R'><code>R/lmdi.R</code></a></small>
-    <div class="hidden name"><code>lmdi.Rd</code></div>
+    <h1>Pipe operator</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/LMDIR/blob/master/R/utils-pipe.R'><code>R/utils-pipe.R</code></a></small>
+    <div class="hidden name"><code>pipe.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame.</p>
+    <p>See <code>magrittr::%&gt;%</code> for details.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>lmdi</span>(<span class='no'>.lmdidata</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>X</span> <span class='kw'>=</span> <span class='st'>"X"</span>, <span class='kw'>fillrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Z</span> <span class='kw'>=</span> <span class='st'>"Z"</span>, <span class='kw'>deltaV</span> <span class='kw'>=</span> <span class='st'>"dV"</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>.lmdidata</th>
-      <td><p>a grouped data frame.
-Group by columns of variables within which you want an LMDI analysis conducted.
-<code>time</code> should not be one of the grouping variables.</p></td>
-    </tr>
-    <tr>
-      <th>time</th>
-      <td><p>the name of the column in <code>.lmdidata</code> that contains times at which
-data are available (a string).
-Default is "<code>Year</code>".</p></td>
-    </tr>
-    <tr>
-      <th>X</th>
-      <td><p>the name (as a string) of a column in <code>.lmdidata</code> containing
-<code>X</code> matrices with
-named rows representing subcategories of the energy aggregate (<code>V</code>) and
-named columns representing factors contributing to changes in <code>V</code> over time.
-Default is "<code>X</code>".</p></td>
-    </tr>
-    <tr>
-      <th>fillrow</th>
-      <td><p>a row vector of type <code>matrix</code> passed to <code><a href='Z_byname.html'>Z_byname</a></code>.
-(See <code><a href='Z_byname.html'>Z_byname</a></code> for details.)</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>the name for the <code>V</code> output column (a string).
-Default is "<code>V</code>".</p></td>
-    </tr>
-    <tr>
-      <th>Z</th>
-      <td><p>the name for the <code>Z</code> output column (a string).
-Default is "<code>Z</code>".</p></td>
-    </tr>
-    <tr>
-      <th>deltaV</th>
-      <td><p>the name for the <code>deltaV</code> output column (a string).
-Default is "<code>dV</code>".</p></td>
-    </tr>
-    <tr>
-      <th>D</th>
-      <td><p>the name for the <code>D</code> output column (a string).
-Default is "<code>D</code>".</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a data frame containing several columns.</p>
-    
+    <pre class="usage"><span class='no'>lhs</span> <span class='kw'>%&gt;%</span> <span class='no'>rhs</span></pre>
+        
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
