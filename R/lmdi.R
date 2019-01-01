@@ -175,6 +175,6 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
   .lmdidata %>%
-    select(group_vars(.lmdidata), time) %>%
+    select(group_vars(.lmdidata), time, X) %>%
     left_join(cumulatives, by = c(group_vars(.lmdidata), time))
 }
