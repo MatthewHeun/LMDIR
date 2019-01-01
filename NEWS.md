@@ -1,3 +1,10 @@
+# LMDIR 0.1.5
+
+* Now includes a detailed vignette.
+* Now includes a new dataset `XGH` for the vignette.
+* Output from `lmdi()` now includes `X`, `V`, and `Z` columns.
+
+
 # LMDIR 0.1.4
 
 * Now including pkgdown website.
