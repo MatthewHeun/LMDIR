@@ -75,7 +75,7 @@ Noting that at a given time every combination of energy category ($i$) and decom
 has an associated numerical value for the decomposition factor ($x_{ij}$),
 the matrix approach to LMDI decomposition analysis begins with formation of an $\mat{X}$ matrix
 for each time of interest.
-Rows of $\mat{X}$ contain energy categories (indexed by $i$) and 
+Rows of $\mat{X}$ contain energy categories (indexed by $i$) of the aggregate ($V$) and 
 columns of $\mat{X}$ contain decomposition factors (indexed by $j$).
 
 Column vector $\colvec{v}$ contains 
@@ -180,7 +180,7 @@ subsubcategories ($ssc$, such as KE--Fans and MD--Tractors).
 The decomposition factors are given in the following table.
 
 | factor   | description
-|-:|:-----------
+|-:|:----------------
 | $X_p$           | Total primary exergy supplied to the economy
 | $\phi_{p,sc}$   | Allocation ratio of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work)
 | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.)
@@ -202,10 +202,13 @@ and
 
 ## Simple example
 
-A data frame of values is the starting point for a simple example.
+A data frame of $\mat{X}$ matrices is the starting point for a simple example.
+The simple example is small enough to allow hand calculations
+if desired, and
+sufficient detail is provided for replication of the results.
 The example has two fictitious countries (`AB` and `YZ`) and
 covers four years (1971--1974).
-Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
+Countries `AB` and `YZ` are identical for the purposes of illustration.
 
 ```{r}
 library(dplyr)
@@ -288,7 +291,6 @@ The `D_cum` column gives the cumulative ratios of the $D$ vectors.
 ```{r}
 res[1:4, ]$D_cum
 ```
-
 
 
 ## Realistic example
