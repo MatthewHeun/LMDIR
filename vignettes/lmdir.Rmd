@@ -65,12 +65,12 @@ in years 2003--2004.
 
 The LMDI approach pioneered by [Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
 and described in detail by [Liu and Ang [-@Liu:2003]](https://doi.org/10.1016/s0306-2619(03)00043-6)
-decomposes an energy aggregate~($V$) by factors~($x$)
+decomposes an energy aggregate ($V$) by factors ($x$)
 that cause $V$ to change over time. 
 (In this vignette, we adopt the notation of [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).)
 
-Noting that at a given time every combination of energy category~($i$) and decomposition factor~($j$)
-has an associated numerical value for the decomposition factor~($x_{ij}$),
+Noting that at a given time every combination of energy category ($i$) and decomposition factor ($j$)
+has an associated numerical value for the decomposition factor ($x_{ij}$),
 the matrix approach to LMDI decomposition analysis begins with formation of an $\mat{X}$ matrix
 for each time of interest.
 Rows of $\mat{X}$ contain energy categories (indexed by $i$) and 
@@ -144,7 +144,7 @@ to changes in $V$ from time $0$ to time $T$.
 Verification can be performed by 
 
 \begin{equation} \label{eq:deltaV_check}
-   \Delta \mat{v} \colvec{i} \overset{?}{=} V^T - V^0 \; ,
+   \Delta \mat{V} \colvec{i} \overset{?}{=} V^T - V^0 \; ,
 \end{equation}
 
 and
@@ -188,6 +188,11 @@ and
   X_{u,ssc} = X_{p,tot} \phi_{p,sc} \phi_{sc,ssc} \eta_{ssc}
       = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}} \frac{X_{u,ssc}}{X_{p,ssc}} \; .
 \end{equation}
+
+
+## Simple example
+
+
 
 
 ## References
