@@ -4,8 +4,8 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL,
-  deltaV = "dV", D = "D")
+lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL, V = "V",
+  Z = "Z", deltaV = "dV", D = "D")
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
@@ -25,10 +25,16 @@ Default is "\code{X}".}
 \item{fillrow}{a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
 (See \code{\link{Z_byname}} for details.)}
 
-\item{deltaV}{the name for the \code{deltaV} column (a string).
+\item{V}{the name for the \code{V} output column (a string).
+Default is "\code{V}".}
+
+\item{Z}{the name for the \code{Z} output column (a string).
+Default is "\code{Z}".}
+
+\item{deltaV}{the name for the \code{deltaV} output column (a string).
 Default is "\code{dV}".}
 
-\item{D}{the name for the \code{D} column (a string).
+\item{D}{the name for the \code{D} output column (a string).
 Default is "\code{D}".}
 }
 \value{
