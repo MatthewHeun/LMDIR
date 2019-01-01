@@ -43,19 +43,10 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/LMDIR.html">Get started</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/lmdir.html">Use cases and examples for `LMDIR`</a>
-    </li>
-  </ul>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -86,24 +77,150 @@
             
             <h4 class="date">2018-12-31</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/LMDIR/blob/master/vignettes/lmdir.Rmd"><code>vignettes/lmdir.Rmd</code></a></small>
-      <div class="hidden name"><code>lmdir.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/LMDIR/blob/master/vignettes/LMDIR.Rmd"><code>vignettes/LMDIR.Rmd</code></a></small>
+      <div class="hidden name"><code>LMDIR.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level2">
+<!-- This script numbers equations in the html output. -->
+<!-- From https://stackoverflow.com/questions/35026405/auto-number-equations-in-r-markdown-documents-in-rstudio. -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { 
+      equationNumbers: { 
+            autoNumber: "all",
+            formatNumber: function (n) {return n}
+      } 
+  }
+});
+</script><!-- Establish some helpful LaTeX shortcuts for equations --><div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Log-mean divisia index decomposition analysis is an important technique for understanding changes in an energy composite variable over time. The technique was pioneered by B.W. Ang and is described in detail in <a href="https://doi.org/10.1016/j.enpol.2003.10.010">Ang <span class="citation">(2005)</span></a>.</p>
+<p>Log-mean divisia index (LMDI) decomposition analysis is an important technique for understanding changes in an energy composite variable over time. The technique was pioneered by B.W. Ang and is described in detail in <a href="https://doi.org/10.1016/j.enpol.2003.10.010">Ang <span class="citation">(2005)</span></a>. LMDI decomposes an energy aggregate by factors and subcategories.</p>
+<p><a href="https://doi.org/">Heun and Brockway <span class="citation">(<span class="citeproc-not-found" data-reference-id="Heun:2019"><strong>???</strong></span>)</span></a> developed a matrix representation of the LMDI mathematics that works well with the Physical Supply Use Table (PSUT) framework, developed by <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>.</p>
+<p>We begin with a general description of the matrix method for LMDI analysis. Thereafter, we illustrate the method by application to Ghana in years 2003–2004.</p>
+</div>
+<div id="description-of-the-matrix-method-for-lmdi-decomposition-analysis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#description-of-the-matrix-method-for-lmdi-decomposition-analysis" class="anchor"></a>Description of the matrix method for LMDI decomposition analysis</h2>
+<p>The LMDI approach pioneered by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a> and described in detail by <a href="https://doi.org/10.1016/s0306-2619(03)00043-6">Liu and Ang <span class="citation">(2003)</span></a> decomposes an energy aggregate (<span class="math inline">\(V\)</span>) by factors (<span class="math inline">\(x\)</span>) that cause <span class="math inline">\(V\)</span> to change over time. (In this vignette, we adopt the notation of <a href="https://doi.org/10.1016/j.enpol.2003.10.010">Ang <span class="citation">(2005)</span></a>.)</p>
+<p>Noting that at a given time every combination of energy category (<span class="math inline">\(i\)</span>) and decomposition factor (<span class="math inline">\(j\)</span>) has an associated numerical value for the decomposition factor (<span class="math inline">\(x_{ij}\)</span>), the matrix approach to LMDI decomposition analysis begins with formation of an <span class="math inline">\(\mathbf{X}\)</span> matrix for each time of interest. Rows of <span class="math inline">\(\mathbf{X}\)</span> contain energy categories (indexed by <span class="math inline">\(i\)</span>) and columns of <span class="math inline">\(\mathbf{X}\)</span> contain decomposition factors (indexed by <span class="math inline">\(j\)</span>).</p>
+<p>Column vector <span class="math inline">\(\mathbf{v}\)</span> contains the value of each energy category (<span class="math inline">\(v_i\)</span>) and is formed from row products of <span class="math inline">\(\mathbf{X}\)</span>.</p>
+<span class="math display">\[\begin{equation} \label{eq:v}
+  v_i = \prod_j x_{ij}
+\end{equation}\]</span>
+<p>At any given time, the energy aggregate (<span class="math inline">\(V\)</span>) is obtained by the column sum of elements in the <span class="math inline">\(\mathbf{v}\)</span> vector</p>
+<span class="math display">\[\begin{equation} \label{eq:V}
+  V = \mathbf{i}^\mathrm{T} \mathbf{v} \; ,
+\end{equation}\]</span>
+<p>where <span class="math inline">\(\mathbf{i}\)</span> is a column vector of 1’s (an identity vector) of same size as <span class="math inline">\(\mathbf{v}\)</span>.</p>
+<p>Additive (<span class="math inline">\(\Delta V\)</span>) and multiplicative (<span class="math inline">\(D\)</span>) changes in the energy aggregate (<span class="math inline">\(V\)</span>) between two adjacent times, an initial time (superscript <span class="math inline">\(0\)</span>) and a later time (superscript <span class="math inline">\(T\)</span>), are calculated by</p>
+<span class="math display">\[\begin{equation} \label{eq:deltaV_def}
+  \Delta V = V^T - V^0 \; ,
+\end{equation}\]</span>
+<p>and</p>
+<span class="math display">\[\begin{equation} \label{eq:D_def}
+  D = \frac{V^T}{V^0} \; .
+\end{equation}\]</span>
+<p>A <span class="math inline">\(\mathbf{Z}\)</span> matrix is formed for two adjacent times by</p>
+<span class="math display">\[\begin{equation} \label{eq:Z_eqn_element_notation}
+  Z_{ij} = \frac{v_i^T - v_i^0}{\ln \left( \frac{v_i^T}{v_i^0}\right)} 
+            \ln \left( \frac{x_{ij}^T}{x_{ij}^0} \right) ,
+\end{equation}\]</span>
+<p>with care taken to address the zero-value problem noted by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a> in Table 2 and discussed at length by <a href="https://doi.org/10.1016/j.enpol.2004.11.010">Wood and Lenzen <span class="citation">(2006)</span></a>. Given the <span class="math inline">\(\mathbf{Z}\)</span> matrix defined by the equation for <span class="math inline">\(Z_{ij}\)</span> above, a <span class="math inline">\(\Delta \mathbf{v}\)</span> row vector is calculated by column sums of <span class="math inline">\(\mathbf{Z}\)</span></p>
+<span class="math display">\[\begin{equation} \label{eq:deltaV_eqn}
+  \Delta \mathbf{V} = \mathbf{i}^\mathrm{T} \mathbf{Z} \; ,
+\end{equation}\]</span>
+<p>where each entry in <span class="math inline">\(\Delta \mathbf{V}\)</span> gives the additive contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
+<p>Multiplicative decomposition is obtained with the <span class="math inline">\(\mathbf{D}\)</span> row vector calculated by</p>
+<span class="math display">\[\begin{equation} \label{eq:D_eqn}
+  D_j = \exp \left( \frac{\Delta V_j}{\frac{V^T - V^0}{\ln \frac{V^T}{V^0}}} \right) \; ,
+\end{equation}\]</span>
+<p>where each entry in <span class="math inline">\(\mathbf{D}\)</span> gives the multiplicative contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
+<p>Verification can be performed by</p>
+<span class="math display">\[\begin{equation} \label{eq:deltaV_check}
+   \Delta \mathbf{V} \mathbf{i} \overset{?}{=} V^T - V^0 \; ,
+\end{equation}\]</span>
+<p>and</p>
+<span class="math display">\[\begin{equation} \label{eq:D_check}
+   \prod_j D_j \overset{?}{=} \frac{V^T}{V^0}\; .
+\end{equation}\]</span>
+<p>Cumulative changes in <span class="math inline">\(V\)</span> over many time periods can be calculated by cumulative sums of the <span class="math inline">\(\Delta \mathbf{V}\)</span> row vector for additive decomposition and by cumulative products of the <span class="math inline">\(\mathbf{D}\)</span> row vector for multiplicative decomposition.</p>
+</div>
+<div id="application-of-matrix-method-to-energy-conversion-chain-ecc-analysis" class="section level2">
+<h2 class="hasAnchor">
+<a href="#application-of-matrix-method-to-energy-conversion-chain-ecc-analysis" class="anchor"></a>Application of matrix method to energy conversion chain (ECC) analysis</h2>
+<p>An energy conversion chain (ECC) is a set of energy carriers, energy transformation devices, and energy services within spatial and temporal boundaries of interest. For our purposes here, an ECC comprises primary, final, and useful energy and exergy flowing through society.</p>
+<p>Following <a href="https://doi.org/10.1016/j.apenergy.2015.05.082">Brockway et al. <span class="citation">(2015)</span></a>, one energy aggregate from an ECC is total useful exergy supplied to the economy (<span class="math inline">\(X_u\)</span>). <span class="math inline">\(X_u\)</span> is comprised of subcategories (<span class="math inline">\(sc\)</span>, Heat, Electric, Mechanical Drive (Petroleum), and Muscle Work) and subsubcategories (<span class="math inline">\(ssc\)</span>, such as KE–Fans and MD–Tractors). The decomposition factors are given in the following table.</p>
+<table class="table">
+<colgroup>
+<col width="14%">
+<col width="85%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">factor</th>
+<th align="left">description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right"><span class="math inline">\(X_p\)</span></td>
+<td align="left">Total primary exergy supplied to the economy</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\phi_{p,sc}\)</span></td>
+<td align="left">Allocation ratio of primary exergy to subcategory (<span class="math inline">\(sc\)</span>) (Heat, Electric, Mechanical drive, Muscle work)</td>
+</tr>
+<tr class="odd">
+<td align="right"><span class="math inline">\(\phi_{sc,ssc}\)</span></td>
+<td align="left">Allocation ratio of exergy from subcategory (<span class="math inline">\(sc)\)</span> to subsubcategory (<span class="math inline">\(ssc\)</span>) (MD - Diesel trains, Electric lights, etc.)</td>
+</tr>
+<tr class="even">
+<td align="right"><span class="math inline">\(\eta_{ssc}\)</span></td>
+<td align="left">Thermodynamic efficiency of subsubcategory (<span class="math inline">\(ssc\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p>In equation form, the energy aggregate (<span class="math inline">\(X_u\)</span>) is calculated by</p>
+<span class="math display">\[\begin{equation} \label{eq:X_u_eqn}
+  X_u = \sum_{ssc} X_{u,ssc} \; ,
+\end{equation}\]</span>
+<p>and</p>
+<span class="math display">\[\begin{equation} \label{eq:X_u_i_eqn}
+  X_{u,ssc} = X_{p,tot} \phi_{p,sc} \phi_{sc,ssc} \eta_{ssc}
+      = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}} \frac{X_{u,ssc}}{X_{p,ssc}} \; .
+\end{equation}\]</span>
+</div>
+<div id="simple-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simple-example" class="anchor"></a>Simple example</h2>
+</div>
+<div id="realilstic-example" class="section level2">
+<h2 class="hasAnchor">
+<a href="#realilstic-example" class="anchor"></a>Realilstic example</h2>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-Ang:2005">
-<p>Ang, B. W. 2005. “The LMDI Approach to Decomposition Analysis: A Practical Guide.” <em>Energy Policy</em> 33:867–71. <a href="https://doi.org/10.1016/j.enpol.2003.10.010" class="uri">https://doi.org/10.1016/j.enpol.2003.10.010</a>.</p>
+<p>Ang, B.W. 2005. “The LMDI Approach to Decomposition Analysis: A Practical Guide.” <em>Energy Policy</em> 33:867–71. <a href="https://doi.org/10.1016/j.enpol.2003.10.010" class="uri">https://doi.org/10.1016/j.enpol.2003.10.010</a>.</p>
+</div>
+<div id="ref-Ang:1998">
+<p>Ang, B.W., F.Q. Zhang, and Ki-Hong Choi. 1998. “Factorizing Changes in Energy and Environmental Indicators Through Decomposition.” <em>Energy</em> 23 (6):489–95. <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="uri">https://doi.org/10.1016/s0360-5442(98)00016-4</a>.</p>
+</div>
+<div id="ref-Brockway:2015aa">
+<p>Brockway, Paul E., Julia K. Steinberger, John R. Barrett, and Timothy J. Foxon. 2015. “Understanding China’s Past and Future Energy Demand: An Exergy Efficiency and Decomposition Analysis.” <em>Applied Energy</em> 155:892–903. <a href="https://doi.org/10.1016/j.apenergy.2015.05.082" class="uri">https://doi.org/10.1016/j.apenergy.2015.05.082</a>.</p>
+</div>
+<div id="ref-Heun:2018">
+<p>Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” <em>Applied Energy</em> 226 (September):1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="uri">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.</p>
+</div>
+<div id="ref-Liu:2003">
+<p>Liu, F. L., and B. W. Ang. 2003. “Eight Methods for Decomposing the Aggregate Energy-Intensity of Industry.” <em>Applied Energy</em> 76 (1-3):15–23. <a href="https://doi.org/10.1016/s0306-2619(03)00043-6" class="uri">https://doi.org/10.1016/s0306-2619(03)00043-6</a>.</p>
+</div>
+<div id="ref-Wood:2006">
+<p>Wood, Richard, and Manfred Lenzen. 2006. “Zero-Value Problems of the Logarithmic Mean Divisia Index Decomposition Method.” <em>Energy Policy</em> 34 (12):1326–31. <a href="https://doi.org/10.1016/j.enpol.2004.11.010" class="uri">https://doi.org/10.1016/j.enpol.2004.11.010</a>.</p>
 </div>
 </div>
 </div>
@@ -115,6 +232,10 @@
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#description-of-the-matrix-method-for-lmdi-decomposition-analysis">Description of the matrix method for LMDI decomposition analysis</a></li>
+      <li><a href="#application-of-matrix-method-to-energy-conversion-chain-ecc-analysis">Application of matrix method to energy conversion chain (ECC) analysis</a></li>
+      <li><a href="#simple-example">Simple example</a></li>
+      <li><a href="#realilstic-example">Realilstic example</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

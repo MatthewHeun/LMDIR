@@ -13,6 +13,7 @@ a data frame of example LMDI data
 This function creates a simple LMDI data frame that can be used for testing or examples.
 It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
 and four years (\code{1971-1974}).
+Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
 }
 \examples{
 library(matsindf)
