@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LMDIR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
 
@@ -116,8 +116,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>lmdi</span>(<span class='no'>.lmdidata</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>X</span> <span class='kw'>=</span> <span class='st'>"X"</span>, <span class='kw'>fillrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>deltaV</span> <span class='kw'>=</span> <span class='st'>"dV"</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>)</pre>
+    <pre class="usage"><span class='fu'>lmdi</span>(<span class='no'>.lmdidata</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>X</span> <span class='kw'>=</span> <span class='st'>"X"</span>, <span class='kw'>fillrow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
+  <span class='kw'>Z</span> <span class='kw'>=</span> <span class='st'>"Z"</span>, <span class='kw'>deltaV</span> <span class='kw'>=</span> <span class='st'>"dV"</span>, <span class='kw'>D</span> <span class='kw'>=</span> <span class='st'>"D"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,13 +148,23 @@ Default is "<code>X</code>".</p></td>
 (See <code><a href='Z_byname.html'>Z_byname</a></code> for details.)</p></td>
     </tr>
     <tr>
+      <th>V</th>
+      <td><p>the name for the <code>V</code> output column (a string).
+Default is "<code>V</code>".</p></td>
+    </tr>
+    <tr>
+      <th>Z</th>
+      <td><p>the name for the <code>Z</code> output column (a string).
+Default is "<code>Z</code>".</p></td>
+    </tr>
+    <tr>
       <th>deltaV</th>
-      <td><p>the name for the <code>deltaV</code> column (a string).
+      <td><p>the name for the <code>deltaV</code> output column (a string).
 Default is "<code>dV</code>".</p></td>
     </tr>
     <tr>
       <th>D</th>
-      <td><p>the name for the <code>D</code> column (a string).
+      <td><p>the name for the <code>D</code> output column (a string).
 Default is "<code>D</code>".</p></td>
     </tr>
     </table>

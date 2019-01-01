@@ -9,21 +9,13 @@ Zij(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
   1], X_0ij = X_0[i, j], X_Tij = X_T[i, j])
 }
 \arguments{
-\item{i}{optional row index for \code{X_0} and \code{X_T}.
-If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-must be specified.}
+\item{i}{optional row index for \code{X_0} and \code{X_T}.}
 
-\item{j}{optional column index for \code{X_0} and \code{X_T}.
-If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-must be specified.}
+\item{j}{optional column index for \code{X_0} and \code{X_T}.}
 
-\item{X_0}{optional sub-sector by factor matrix for time 0.
-If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-must be specified.}
+\item{X_0}{optional sub-sector by factor matrix for time 0.}
 
-\item{X_T}{optional sub-sector by factor matrix for time T.
-If not specified, \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
-must be specified.}
+\item{X_T}{optional sub-sector by factor matrix for time T.}
 
 \item{v_0i1}{the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)}
 
@@ -41,8 +33,14 @@ There are many special cases for calculating the \code{i,j}th term in \code{Z}.
 These special cases must be handled on a term-by term basis.
 This function handles all those cases.
 See \code{\link{Z_byname}} for details.
-The \strong{\code{X}} matrices must be same size, must have same row and column names, and
+The \code{X} matrices must be same size, must have same row and column names, and
 must have same row and column types.
-Note that \code{i} and \code{j} must be positive and less than
+Note that \code{i} and \code{j} must be positive and less than or equal to
 \code{nrow(X)} and \code{ncol(X)}, respectively.
+}
+\details{
+Arguments \code{i}, \code{j}, \code{X_0}, and \code{X_T} are optional.
+If they are not specified,
+arguments \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+must be given.
 }

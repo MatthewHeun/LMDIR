@@ -13,32 +13,6 @@ library(matsindf)
 library(testthat)
 
 
-create_simple_LMDI <- function(){
-  simple.factor.names <- c("factor 1", "factor 2", "factor 3")
-  simple.subcat.names <- c("subcat 1", "subcat 2")
-  # Create a tidy data frame of x values
-  # which will be collapsed to matrices
-  AB <- data.frame(Year = rep.int(1971, 6), x = c(1, 10, 2, 4, 5, 3)) %>%
-    rbind(data.frame(Year = rep.int(1972, 6), x = c(4, 5, 3, 5, 6, 4))) %>%
-    rbind(data.frame(Year = rep.int(1973, 6), x = c(8, 2, 4, 5, 7, 5))) %>%
-    rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
-    mutate(
-      matnames = "X",
-      rowtypes = "subcat",
-      coltypes = "factor",
-      rownames = rep.int(c(rep.int(simple.subcat.names[[1]], 3), rep.int(simple.subcat.names[[2]], 3)), 4),
-      colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
-      Country = "AB"
-    ) %>%
-    group_by(Country, Year) %>%
-    collapse_to_matrices(matnames = "matnames", matvals = "x",
-                         rownames = "rownames", colnames = "colnames",
-                         rowtypes = "rowtypes", coltypes = "coltypes") %>%
-    rename(X = x)
-  rbind(AB, AB %>% mutate(Country = "YZ"))
-}
-
-
 ###########################################################
 context("Utilities")
 ###########################################################
@@ -90,16 +64,16 @@ test_that("Z_byname works as expected", {
 
   Z_1 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                   19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
-                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subcat") %>% setcoltype("factor")
+                dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subsubcat") %>% setcoltype("factor")
   Z_2 <- matrix(c(42.96021467, -56.79031473, 17.83010006,
                   0, 22.47128816, 32.52871184), byrow = TRUE, nrow = 2, ncol = 3,
-                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subcat") %>% setcoltype("factor")
+                dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subsubcat") %>% setcoltype("factor")
   Z_3 <- matrix(c(12.6549815, -39.30996299, 12.6549815,
                   41.35566084, 30.28867832, 41.35566084), byrow = TRUE, nrow = 2, ncol = 3,
-                dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subcat") %>% setcoltype("factor")
+                dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subsubcat") %>% setcoltype("factor")
 
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T), Z_1)
   expect_equal(Z_byname(X_0 = simple$X[1:3], X_T = simple$X[2:4]),
@@ -139,8 +113,8 @@ test_that("Z_byname works as expected", {
   # For Z_12 and Z_13, we have Case 3, and both are 0.
   Z_expected_1 <- matrix(c(60, 0, 0,
                            19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
-                         dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subcat") %>% setcoltype("factor")
+                         dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subsubcat") %>% setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected_1)
 
   X_T_2 <- X_T
@@ -151,8 +125,8 @@ test_that("Z_byname works as expected", {
   # For Z_23, we have Case 2, and we obtain Z_23 = -v_0_21 = -60.
   Z_expected_2 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                            0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
-                         dimnames = list(c("subcat 1", "subcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subcat") %>% setcoltype("factor")
+                         dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
+    setrowtype("subsubcat") %>% setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T_2), Z_expected_2)
 
 })
@@ -181,20 +155,20 @@ test_that("linear LMDI works as expected", {
   expect_equal(res$dV_agg_cum, list(0, 100, 159, 258, 0, 100, 159, 258))
   expect_equal(res$dV[[1]], matrix(c(0, 0, 0),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$dV[[2]], matrix(c(69.79006598, -9.455125793, 39.66505981),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$dV[[3]], matrix(c(42.96021467, -34.31902656, 50.3588119),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$dV[[4]], matrix(c(54.01064234, -9.021284671, 54.01064234),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
 
   expect_equal(res$dV[[1]], res$dV[[5]])
   expect_equal(res$dV[[2]], res$dV[[6]])
@@ -221,20 +195,20 @@ test_that("multiplicative LMDI works as expected", {
                                    1, 2.25, 2.25*1.327777778, 2.25*1.327777778*1.414225941))
   expect_equal(res$D[[1]], matrix(c(1, 1, 1),
                                   nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                      c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                      c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$D[[2]], matrix(c(1.761117821, 0.926191306, 1.379410116),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$D[[3]], matrix(c(1.229284572, 0.847970248, 1.273773912),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
   expect_equal(res$D[[4]], matrix(c(1.208140223, 0.968911503, 1.208140223),
                                    nrow = 3, ncol = 1, dimnames = list(c("factor 1", "factor 2", "factor 3"),
-                                                                       c("subcat"))) %>%
-                 setrowtype("factor") %>% setcoltype("subcat"))
+                                                                       c("subsubcat"))) %>%
+                 setrowtype("factor") %>% setcoltype("subsubcat"))
 
   expect_equal(res$D[[1]], res$D[[5]])
   expect_equal(res$D[[2]], res$D[[6]])
@@ -276,11 +250,11 @@ test_that("First row contains 0s and 1s", {
   expect_equal(res$dV_agg_cum[[1]], 0)
   expect_equal(res$D_agg_cum[[1]], 1)
   dV0 <- matrix(c(0, 0, 0), nrow = 3, ncol = 1,
-                dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subcat"))) %>%
-    setrowtype("factor") %>% setcoltype("subcat")
+                dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subsubcat"))) %>%
+    setrowtype("factor") %>% setcoltype("subsubcat")
   D0 <- matrix(c(1, 1, 1), nrow = 3, ncol = 1,
-               dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subcat"))) %>%
-    setrowtype("factor") %>% setcoltype("subcat")
+               dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subsubcat"))) %>%
+    setrowtype("factor") %>% setcoltype("subsubcat")
   expect_equal(res$dV[[1]], dV0)
   expect_equal(res$D[[1]], D0)
   expect_equal(res$dV_cum[[1]], dV0)
