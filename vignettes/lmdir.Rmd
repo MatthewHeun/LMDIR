@@ -120,7 +120,7 @@ with care taken to address the zero-value problem noted by
 in Table 2
 and discussed at length by 
 [Wood and Lenzen [-@Wood:2006]](https://doi.org/10.1016/j.enpol.2004.11.010).
-Given the $\mat{Z}$ matrix defined by Equation 5,
+Given the $\mat{Z}$ matrix defined by the equation for $Z_{ij}$ above,
 a $\Delta \mat{v}$ row vector is calculated by column sums of $\mat{Z}$
 
 \begin{equation} \label{eq:deltaV_eqn}
@@ -158,11 +158,19 @@ cumulative sums of the $\Delta \mat{V}$ row vector for additive decomposition an
 cumulative products of the $\mat{D}$ row vector for multiplicative decomposition.
 
 
-## Application of matrix method to useful exergy supply in Ghana
+## Application of matrix method to energy conversion chain (ECC) analysis
+
+An energy conversion chain (ECC) is a set of
+energy carriers, 
+energy transformation devices, and 
+energy services 
+within spatial and temporal boundaries of interest.
+For our purposes here, an ECC comprises 
+primary, final, and useful energy and exergy flowing through society.
 
 Following 
 [Brockway et al. [-@Brockway:2015aa]](https://doi.org/10.1016/j.apenergy.2015.05.082),
-one energy aggregate is total useful exergy supplied to the economy ($X_u$).
+one energy aggregate from an ECC is total useful exergy supplied to the economy ($X_u$).
 $X_u$ is comprised of 
 subcategories ($sc$, Heat, Electric, Mechanical Drive (Petroleum), and Muscle Work)
 and
@@ -191,6 +199,10 @@ and
 
 
 ## Simple example
+
+
+
+## Realilstic example
 
 
 
