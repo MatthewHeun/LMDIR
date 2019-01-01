@@ -290,7 +290,7 @@ create0Tcolumns <- function(XvV,
 #' DF$X[[1]]
 create_simple_LMDI <- function(){
   simple.factor.names <- c("factor 1", "factor 2", "factor 3")
-  simple.subcat.names <- c("subcat 1", "subcat 2")
+  simple.subsubcat.names <- c("subsubcat 1", "subsubcat 2")
   # Create a tidy data frame of x values
   # which will be collapsed to matrices
   AB <- data.frame(Year = rep.int(1971, 6), x = c(1, 10, 2, 4, 5, 3)) %>%
@@ -299,9 +299,9 @@ create_simple_LMDI <- function(){
     rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
     mutate(
       matnames = "X",
-      rowtypes = "subcat",
+      rowtypes = "subsubcat",
       coltypes = "factor",
-      rownames = rep.int(c(rep.int(simple.subcat.names[[1]], 3), rep.int(simple.subcat.names[[2]], 3)), 4),
+      rownames = rep.int(c(rep.int(simple.subsubcat.names[[1]], 3), rep.int(simple.subsubcat.names[[2]], 3)), 4),
       colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
       Country = "AB"
     ) %>%

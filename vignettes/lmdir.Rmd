@@ -179,7 +179,7 @@ The decomposition factors are given in the following table.
 | factor   | description
 |-:|:-----------
 | $X_p$           | Total primary exergy supplied to the economy
-| $\phi_{p,sc}$   | Allocation ratio of primary exergy to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work)
+| $\phi_{p,sc}$   | Allocation ratio of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work)
 | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.)
 | $\eta_{ssc}$    | Thermodynamic efficiency of subsubcategory ($ssc$)
 
@@ -199,6 +199,16 @@ and
 
 ## Simple example
 
+A data frame of values is the starting point for a simple example.
+
+```{r}
+library(matsindf)
+library(LMDIR)
+DF <- create_simple_LMDI()
+DF
+DF$X[[1]]
+
+```
 
 
 ## Realistic example
