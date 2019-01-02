@@ -1,3 +1,8 @@
+# LMDIR 0.1.8 (2019-01-02)
+
+* Vignette no longer needs correct order for fillrow columns.
+
+
 # LMDIR 0.1.7 (2019-01-02)
 
 * Improved the vignette with details of replacing missing values.
