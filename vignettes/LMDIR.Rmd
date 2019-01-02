@@ -552,8 +552,8 @@ GHlmdi_forgraphing <- GHlmdi_tidy %>%
 head(GHlmdi_forgraphing, 10)
 ```
 
-Finally, we create a graph showing both the total changes ($D_{tot}$) and the factors 
-that comprise the total change
+Finally, we create a graph showing both the total changes ($D_{tot}$) and 
+the multiplicative factors that comprise the total change
 ($D_{ex}$, $D_{str}$, $D_{eff}$, and $D_{dil}$).
 
 ```{r graph, fig.width = 7, fig.height = 4}
