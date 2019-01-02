@@ -429,10 +429,9 @@ To perform LMDI decomposition analysis, we use the `lmdi()` function after group
 (in this case, only `Country`).
 
 ```{r}
-fillrowX <- matrix(c(1, 1, 0, 1), byrow = TRUE, nrow = 1, ncol = 4,
-                   dimnames = list("HTH.600.C - Electric heaters", 
-                                   c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij"))) %>% 
-  sort_rows_cols()
+fillrowX <- matrix(c(1, 1, 1, 0), byrow = TRUE, nrow = 1, ncol = 4,
+                   dimnames = list("row", 
+                                   c("eta_ij", "EXp.ktoe", "phi_i", "phi_ij")))
 GHlmdi <- XGH %>% 
   group_by(Country) %>% 
   lmdi(fillrow = fillrowX)
@@ -442,7 +441,7 @@ glimpse(GHlmdi)
 (The need for and values in `fillrowX` are described below.)
 
 
-### A note about special cases when calculating entires in $\mat{Z}$
+### A note about special cases for calculating entires in $\mat{Z}$
 
 When a category of useful exergy is present in one year
 but absent in an adjacent year, 
