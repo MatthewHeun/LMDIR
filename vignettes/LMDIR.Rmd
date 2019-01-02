@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(ggplot2)
 library(LMDIR)
+library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(tidyr)
@@ -228,6 +229,7 @@ Countries `AB` and `YZ` are identical for the purposes of illustration.
 library(dplyr)
 library(ggplot2)
 library(LMDIR)
+library(magrittr)
 library(matsbyname)
 library(matsindf)
 library(tidyr)
@@ -364,8 +366,48 @@ glimpse(XGH)
 
 Each $\mat{X}$ matrix contains 
 useful exergy subsubcategories (in rows)
-and factors (in columns). 
-The format of the $\mat{X}$ matrices is shown below.
+and factors (in columns)
+as shown below for Ghana for 2003 and 2004.
+
+```{r}
+prettifyXZ <- function(XZ){
+  out <- XZ %>% 
+    sort_rows_cols(roworder = c(
+      # Heat categories (phi_i = 0.622)
+      "HTH.600.C - Electric heaters", "MTH.100.C - Charcoal stoves",
+      "MTH.100.C - Kerosene stoves", "MTH.100.C - LPG stoves",
+      "MTH.100.C - Wood stoves",
+      # Electricity categories (phi_i = 0.020)
+      "KE - Fans", "Light - Electric lights",
+      "Light - Televisions", "LTH.-10.C - Refrigerators",
+      "MD - Electric motors", "MD - Other appliances",
+      "MTH.100.C - Electric heaters", "MTH.200.C - Irons",
+      "MTH.200.C - Electric heaters",
+      # Liquid petroleum categories (phi_i = 0.131)
+      "MD - Boat engines", "MD - Diesel cars",
+      "MD - Diesel trains", "MD - Industry static diesel engines",
+      "MD - Petrol cars", "MD - Tractors",
+      # Food and feed categories (phi_i = 0.226)
+      "MD - Draught animals", "MD - Manual laborers"),
+      colorder = c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij"))
+  out[ , "EXp.ktoe"] <-  round(out[ , "EXp.ktoe"], 1)
+  out[ , "phi_i"]    <-  round(out[ , "phi_i"], 3)
+  out[ , "phi_ij"]   <-  round(out[ , "phi_ij"], 3)
+  out[ , "eta_ij"]   <-  round(out[ , "eta_ij"], 3)
+  return(out)
+}
+XGH %>% 
+  filter(Year == 2003) %>% 
+  extract2("X") %>% 
+  extract2(1) %>% 
+  prettifyXZ()
+XGH %>% 
+  filter(Year == 2004) %>% 
+  extract2("X") %>% 
+  extract2(1) %>% 
+  prettifyXZ()
+```
+
 Note that row and column ordering is provided for readability.
 The ordered rows show identical values of $\phi_i$
 for allocation to the subcategories of
@@ -376,47 +418,95 @@ from primary stage to allocation to subcategories
 through allocation to subsubcategories and, finally, to 
 a primary-to-useful efficiency for each task.
 All unique $\phi_i$ values sum to 1.
-(Specifically, 0.6225 + .0204 + 0.1314 + .2258 = 1.)
-Within each subsubcategory, $\phi_{ij}$ values sum to 1.
-(E.g., for Mechanical drive fueled by food and feed, 0.8416 + 0.1584 = 1)
+(Specifically for 2003, 0.519 + 0.081 + 0.188 + 0.212 = 1.)
+Within each subcategory, $\phi_{ij}$ values sum to 1.
+(E.g., for Mechanical drive fueled by food and feed, 0.789 + 0.211 = 1)
 
-```{r}
-XGH$X[[1]] %>%
-  sort_rows_cols(roworder = c(# Heat categories (phi_i = 0.622)
-                              "HTH.600.C - Electric heaters", "MTH.100.C - Charcoal stoves",
-                              "MTH.100.C - Kerosene stoves", "MTH.100.C - LPG stoves",
-                              "MTH.100.C - Wood stoves",
-                              # Electricity categories (phi_i = 0.020)
-                              "KE - Fans", "Light - Electric lights",
-                              "Light - Televisions", "LTH.-10.C - Refrigerators",
-                              "MD - Electric motors", "MD - Other appliances",
-                              "MTH.100.C - Electric heaters", "MTH.200.C - Irons",
-                              "MTH.200.C - Electric heaters",
-                              # Liquid petroleum categories (phi_i = 0.131)
-                              "MD - Boat engines", "MD - Diesel cars",
-                              "MD - Diesel trains", "MD - Industry static diesel engines",
-                              "MD - Petrol cars", "MD - Tractors",
-                              # Food and feed categories (phi_i = 0.226)
-                              "MD - Draught animals", "MD - Manual laborers"
-                              ),
-                 colorder = c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij"))
-```
 
-To perform LMDI analysis, we use the `lmdi()` function after grouping on metadata variables
+### Perform the LMDI decomposition analysis
+
+To perform LMDI decomposition analysis, we use the `lmdi()` function after grouping on metadata variables
 (in this case, only `Country`).
 
 ```{r}
+fillrowX <- matrix(c(1, 1, 1, 0), byrow = TRUE, nrow = 1, ncol = 4,
+                   dimnames = list("row", 
+                                   c("eta_ij", "EXp.ktoe", "phi_i", "phi_ij")))
 GHlmdi <- XGH %>% 
   group_by(Country) %>% 
-  lmdi()
+  lmdi(fillrow = fillrowX)
 glimpse(GHlmdi)
 ```
 
-The `GHlmdi` object contains everything needed to graph the results. 
-But first, we need to expand the data from matrices to tidy format and
-select the desired columns.
+(The need for and values in `fillrowX` are described below.)
+
+
+### A note about special cases for calculating entires in $\mat{Z}$
+
+When a category of useful exergy is present in one year
+but absent in an adjacent year, 
+the corresponding row in $\mat{X}^0$ or $\mat{X}^T$ is missing compared to the other.
+That happened in Ghana between 2003 and 2004;
+in 2003, VALCO's aluminum smelters were operating, but in 2004 they were not.
+Thus, we treat the `HTH.600.C - Electric heaters` row specially in 2004. 
+
+For 2004, we insert a row for `HTH.600.C - Electric Heaters` and fill it 
+with positive numbers for
+primary exergy ($X_{p,tot}$ or `EXp,ktoe`),
+allocation from primary exergy to subcategory ($\phi_{p,sc}$ or `phi_i`), and
+thermodynamic efficiency ($\eta_{ssc}$ or `eta_ij`).
+(The fill values are irrelevant to the calculated result,
+so long as they are positive numbers.)
+We set the allocation from subcategory to subsubcategory ($\phi_{sc,ssc}$ or `phi_ij`) to `0`.
+This approach reflects the reality that
+despite the fact that there is no useful exergy of this type in 2004,
+we still have total primary exergy ($X_{p,tot}$),
+there is still an allocation of primary exergy 
+to the subcategory `Heat` ($\phi_{p,sc} \neq 0$), and
+if there were electric heaters making `HTH.600.C - Electric heaters` in this year, 
+they would have done so with a non-zero thermodynamic efficiency ($\eta_{ssc}$).
+
+```{r}
+XGH %>% 
+  filter(Year == 2004) %>% 
+  extract2("X") %>% 
+  extract2(1) %>% 
+  sum_byname(fillrowX) %>% 
+  prettifyXZ()
+```
+
+`fillrowX` triggers special calculation of $\mat{Z}$ values for 2004.
+When  
+$X_{p,tot} > 0$, 
+$\phi_{p,sc} > 0$, 
+$\eta_{ssc} > 0$, 
+and $\phi_{sc,ssc} = 0$, 
+we employ Table 2, Row 2 
+of [Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4)
+to calculate `Z[HTH.600.C - Electric heaters, phi_ij] = -6.416`, 
+as shown below.
+The other values on the row are `0.0`.
+(If this example were switched in time such that the smelters 
+were not used in 2003 but turned \emph{on} in 2004,
+we would employ Table 2, Row 1 
+of [Ang et al. [-@Ang:1998]](https://doi.org/10.1016/s0360-5442(98)00016-4).)
+
+```{r}
+GHlmdi %>% 
+  filter(Year == 2004) %>% 
+  extract2("Z") %>% 
+  extract2(1) %>%
+  prettifyXZ()
+```
+
+
+### Presentation of results
+
+The `GHlmdi` object contains everything needed to present the results. 
 The focus here is on the ratioed aggregate (`D_agg_cum`) and disaggregate (`D_cum`)
 factors that affect changes in useful exergy delivered to the economy.
+So we first need to expand the data from matrices to tidy format and
+select the desired columns.
 
 ```{r}
 GHlmdi_tidy <- GHlmdi %>% 
@@ -427,11 +517,20 @@ GHlmdi_tidy <- GHlmdi %>%
 head(GHlmdi_tidy, 10)
 ```
 
-Next, we map the values of `varname` and `rowname` 
-to variable names appropriate for graphing.
-We also set the levels of the Factors,
-and therefore the order they will appear in the legend of the graph.
-We choose an order that mimics the vertical position of the data in the graph.
+Next, we map the values of `matnames` and `rownames` 
+to variable names appropriate for graphing, according to the table below.
+
+| graph variable | factor | description
+|-:|:-:|:---------------
+| D~tot~ |                 | Total change in useful exergy
+| D~ex~  | $X_p$           | Primary exergy supplied to the economy
+| D~str~ | $\phi_{p,sc}$   | Allocation of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work) or main class structural change
+| D~eff~ | $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
+| D~dil~ | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.) or subclass structural change
+
+We also set the levels of the `Factor`s,
+and thereby the order in which they will appear in the legend of the graph.
+We choose an order that reflects the vertical positioning of the lines on the graph.
 
 ```{r}
 GHlmdi_forgraphing <- GHlmdi_tidy %>% 
@@ -453,16 +552,9 @@ GHlmdi_forgraphing <- GHlmdi_tidy %>%
 head(GHlmdi_forgraphing, 10)
 ```
 
-Finally, we create a graph showing both the total changes and the factors 
-that comprise the total change.
-
-| graph variable | factor | description
-|-:|:-:|:---------------
-| D~tot~ |                 | Total change in useful exergy
-| D~ex~  | $X_p$           | Primary exergy supplied to the economy
-| D~str~ | $\phi_{p,sc}$   | Allocation of primary exergy ($p$) to subcategory ($sc$) (Heat, Electric, Mechanical drive, Muscle work) or main class structural change
-| D~eff~ | $\eta_{ssc}$    | Primary-to-useful thermodynamic efficiency of subsubcategory ($ssc$)
-| D~dil~ | $\phi_{sc,ssc}$ | Allocation ratio of exergy from subcategory ($sc)$ to subsubcategory ($ssc$) (MD - Diesel trains, Electric lights, etc.) or subclass structural change
+Finally, we create a graph showing both the total changes ($D_{tot}$) and the factors 
+that comprise the total change
+($D_{ex}$, $D_{str}$, $D_{eff}$, and $D_{dil}$).
 
 ```{r, fig.width = 7, fig.height = 4}
 GHlmdi_forgraphing %>%
@@ -487,7 +579,8 @@ Note that the graph above is the same as Figure 7 of
 
 The `LMDIR` package provides a convenient and powerful capability
 for log-mean divisia index
-analysis of energy conversion chains.
+decomposition analysis of energy conversion chains
+expressed as Physical Supply Use Table (PSUT) matrices.
 
 
 ## References
