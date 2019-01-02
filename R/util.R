@@ -82,8 +82,10 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
                          dimnames = list("row", colnames(X_0))) %>%
         setrowtype(rowtype(X_0)) %>% setcoltype(coltype(X_0))
     }
+    # Complete the matrices relative to one another, using fillrow.
     X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
     X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
+    # Sort the matrices relative to one another.
     X_0_comp_sort <- sort_rows_cols(X_0_comp)
     X_T_comp_sort <- sort_rows_cols(X_T_comp)
     # At this point, X_0_comp_sort and X_T_comp_sort should be the same type of matrices.
