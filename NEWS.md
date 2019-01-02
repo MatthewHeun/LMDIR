@@ -1,16 +1,16 @@
-# LMDIR 0.1.6
+# LMDIR 0.1.6 (2019-01-01)
 
 * Fixed a bug in the website. Vignette wasn't showing up due to capitalization error.
 
 
-# LMDIR 0.1.5
+# LMDIR 0.1.5 (2019-01-01)
 
 * Now includes a detailed vignette.
 * Now includes a new dataset `XGH` for the vignette.
 * Output from `lmdi()` now includes `X`, `V`, and `Z` columns.
 
 
-# LMDIR 0.1.4
+# LMDIR 0.1.4 (2018-12-29)
 
 * Now including pkgdown website.
 * Removed `_colname` from argument names.
