@@ -1,4 +1,4 @@
-# LMDIR 0.1.6
+# LMDIR 0.1.6 (2019-01-01)
 
 * Fixed a bug in the website. Vignette wasn't showing up due to capitalization error.
 
