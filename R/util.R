@@ -186,7 +186,7 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
     # This is the non-degenerate case
     return(logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
   }
-
+  # We should never get here.
   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")
 }
 
