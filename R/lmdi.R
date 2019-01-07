@@ -34,8 +34,7 @@
 #' @importFrom matsbyname coltype
 #' @importFrom matsbyname complete_rows_cols
 #' @importFrom matsbyname difference_byname
-#' @importFrom matsbyname elementpow_byname
-#' @importFrom matsbyname elementquotient_byname
+#' @importFrom matsbyname quotient_byname
 #' @importFrom matsbyname logarithmicmean_byname
 #' @importFrom matsbyname rowprods_byname
 #' @importFrom matsbyname rowtype
@@ -98,8 +97,8 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       !!as.name(Z) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
       !!as.name(deltaV) := colsums_byname(!!as.name(Z)) %>% transpose_byname(),
-      !!as.name(D) := elementquotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
-        elementexp_byname()
+      !!as.name(D) := quotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
+        exp_byname()
     )
 
   # Test to ensure that everything works as expected.
@@ -141,7 +140,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       # Calculate error column
       !!as.name(dV_err_colname) := difference_byname(!!as.name(dV_decomp_colname), !!as.name(dV_raw_colname)),
       # The "raw" way of calaculating D at each time comes from the "raw" data in X.
-      !!as.name(D_raw_colname) := elementquotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      !!as.name(D_raw_colname) := quotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating D at each time comes after we calculate all D's for all factors
       # The "raw" and "decomp" methods of calculating D should be identical.
       !!as.name(D_decomp_colname) := prodall_byname(!!as.name(D)),
