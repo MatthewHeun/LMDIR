@@ -85,7 +85,7 @@ test_that("multiplicative LMDI works as expected", {
   expect_equal(res$D[[4]], res$D[[8]])
 
   expect_equal(res$D_cum[[1]], res$D[[1]])
-  expect_equal(res$D_cum[[2]], elementproduct_byname(res$D[[1]], res$D[[2]]))
-  expect_equal(res$D_cum[[3]], elementproduct_byname(res$D_cum[[2]], res$D[[3]]))
-  expect_equal(res$D_cum[[4]], elementproduct_byname(res$D_cum[[3]], res$D[[4]]))
+  expect_equal(res$D_cum[[2]], hadamardproduct_byname(res$D[[1]], res$D[[2]]))
+  expect_equal(res$D_cum[[3]], hadamardproduct_byname(res$D_cum[[2]], res$D[[3]]))
+  expect_equal(res$D_cum[[4]], hadamardproduct_byname(res$D_cum[[3]], res$D[[4]]))
 })
