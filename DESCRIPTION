@@ -1,8 +1,8 @@
 Package: LMDIR
 Type: Package
 Title: Log Mean Divisia Index Decomposition in R
-Version: 0.1.8
-Date: 2010-01-02
+Version: 0.1.9
+Date: 2019-01-07
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Maintainer: Matthew Heun <matthew.heun@me.com>

@@ -1,3 +1,8 @@
+# LMDIR 0.1.9 (2019-01-07)
+
+* Compatibility with removal of `element` prefixes to function names in `matsbyname`.
+
+
 # LMDIR 0.1.8 (2019-01-02)
 
 * Vignette no longer needs correct order for fillrow columns.
