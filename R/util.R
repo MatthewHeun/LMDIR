@@ -51,20 +51,6 @@
 #'
 #' @return a \code{Z} matrix
 #'
-#' @importFrom dplyr everything
-#' @importFrom dplyr group_by
-#' @importFrom matsbyname samestructure_byname
-#' @importFrom matsbyname setrownames_byname
-#' @importFrom matsbyname setcolnames_byname
-#' @importFrom matsbyname binaryapply_byname
-#' @importFrom matsbyname logmean
-#' @importFrom matsbyname sumall_byname
-#' @importFrom matsbyname transpose_byname
-#' @importFrom matsbyname exp_byname
-#' @importFrom matsbyname prodall_byname
-#' @importFrom matsbyname cumsum_byname
-#' @importFrom matsbyname cumprod_byname
-#'
 #' @export
 #'
 Z_byname <- function(X_0, X_T, fillrow = NULL){
@@ -108,7 +94,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     return(Z)
   }
 
-  binaryapply_byname(Z_func, a = X_0, b = X_T,
+  matsbyname::binaryapply_byname(Z_func, a = X_0, b = X_T,
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
@@ -141,8 +127,8 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #'
 #' @export
 Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
-                v_0i1 = rowprods_byname(X_0)[i, 1],
-                v_Ti1 = rowprods_byname(X_T)[i, 1],
+                v_0i1 = matsbyname::rowprods_byname(X_0)[i, 1],
+                v_Ti1 = matsbyname::rowprods_byname(X_T)[i, 1],
                 X_0ij = X_0[i, j],
                 X_Tij = X_T[i, j]){
 
@@ -184,7 +170,7 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
 
   } else if (v_0i1 > 0 & v_Ti1 > 0 & X_0ij > 0 & X_Tij > 0) {
     # This is the non-degenerate case
-    return(logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
+    return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
   }
   # We should never get here.
   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")
@@ -235,13 +221,13 @@ create0Tcolumns <- function(XvV,
   # . refers to the current group.
   # (See https://dplyr.tidyverse.org/reference/do.html for details.)
   XvV_repeat1strow <- XvV %>%
-    do(
+    dplyr::do(
       rbind(head(., n = 1), .)
     )
 
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV_repeat1strow %>%
-    do(
+    dplyr::do(
       # do works in groups, which is what we want.
       # . refers to the current group.
       head(., -1)
@@ -257,12 +243,12 @@ create0Tcolumns <- function(XvV,
     dplyr::select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
 
   .DFT <- XvV_repeat1strow %>%
-    do(
+    dplyr::do(
       # do works in groups, which is what we want.
       # . refers to the current group.
       tail(., -1)
     ) %>%
-    rename(
+    dplyr::rename(
       !!as.name(XT_colname) := !!as.name(X_colname),
       !!as.name(vT_colname) := !!as.name(v_colname),
       !!as.name(VT_colname) := !!as.name(V_colname))
@@ -305,7 +291,7 @@ create_simple_LMDI <- function(){
     rbind(data.frame(Year = rep.int(1972, 6), x = c(4, 5, 3, 5, 6, 4))) %>%
     rbind(data.frame(Year = rep.int(1973, 6), x = c(8, 2, 4, 5, 7, 5))) %>%
     rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
-    mutate(
+    dplyr::mutate(
       matnames = "X",
       rowtypes = "subsubcat",
       coltypes = "factor",
@@ -313,11 +299,11 @@ create_simple_LMDI <- function(){
       colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
       Country = "AB"
     ) %>%
-    group_by(Country, Year) %>%
-    collapse_to_matrices(matnames = "matnames", matvals = "x",
+    dplyr::group_by(Country, Year) %>%
+    matsindf::collapse_to_matrices(matnames = "matnames", matvals = "x",
                          rownames = "rownames", colnames = "colnames",
                          rowtypes = "rowtypes", coltypes = "coltypes") %>%
-    rename(X = x)
-  rbind(AB, AB %>% mutate(Country = "YZ"))
+    dplyr::rename(X = x)
+  rbind(AB, AB %>% dplyr::mutate(Country = "YZ"))
 }
 

@@ -56,12 +56,12 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                                     XT_colname, vT_colname, VT_colname, LV_colname))
 
   # Ensure that time is NOT a grouping variable.
-  if (time %in% groups(.lmdidata)) {
+  if (time %in% dplyr::groups(.lmdidata)) {
     stop(paste0("'", time, "'", " is a grouping variable, but you can't group on ",
                "time in argument .lmdidata of collapse_to_matrices."))
   }
 
-  XvV <- .lmdidata %>% mutate(
+  XvV <- .lmdidata %>% dplyr::mutate(
     !!as.name(v_colname) := matsbyname::rowprods_byname(!!as.name(X)),
     !!as.name(V) := matsbyname::sumall_byname(!!as.name(v_colname))
   )
@@ -73,7 +73,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                            zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
-    mutate(
+    dplyr::mutate(
       !!as.name(LV_colname) := matsbyname::logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
@@ -112,7 +112,7 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
     matsindf::verify_cols_missing(c(dV_raw_colname, dV_decomp_colname, dV_agg_colname, dV_agg_cum_colname, dV_cum_colname, dV_err_colname,
                                     D_raw_colname, D_decomp_colname, D_agg_colname, D_agg_cum_colname, D_cum_colname, D_err_colname))
   chk <- dVD %>%
-    mutate(
+    dplyr::mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
       !!as.name(dV_raw_colname) := matsbyname::difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating deltaV at each time comes after we calculate all deltaV's for all factors
