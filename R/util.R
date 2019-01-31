@@ -80,25 +80,25 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
       # Energy, Volume 23, Number 6, pp. 489-495.
       fillrow <- matrix(1e-10, nrow = 1, ncol = ncol(X_0),
                          dimnames = list("row", colnames(X_0))) %>%
-        setrowtype(rowtype(X_0)) %>% setcoltype(coltype(X_0))
+        matsbyname::setrowtype(matsbyname::rowtype(X_0)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0))
     }
     # Complete the matrices relative to one another, using fillrow.
-    X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
-    X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
+    X_0_comp <- matsbyname::complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
+    X_T_comp <- matsbyname::complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
     # Sort the matrices relative to one another.
-    X_0_comp_sort <- sort_rows_cols(X_0_comp)
-    X_T_comp_sort <- sort_rows_cols(X_T_comp)
+    X_0_comp_sort <- matsbyname::sort_rows_cols(X_0_comp)
+    X_T_comp_sort <- matsbyname::sort_rows_cols(X_T_comp)
     # At this point, X_0_comp_sort and X_T_comp_sort should be the same type of matrices.
     # I.e., they have the same row and column names.
     # And they have the same row and column types.
     # Ensure that this is so!
-    stopifnot(samestructure_byname(X_0_comp_sort, X_T_comp_sort))
+    stopifnot(matsbyname::samestructure_byname(X_0_comp_sort, X_T_comp_sort))
 
     # Create an empty Z matrix.
     # The empty Z is filled with default entries (NA).
     Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
-      setrownames_byname(rownames(X_0_comp_sort)) %>% setcolnames_byname(colnames(X_0_comp_sort)) %>%
-      setrowtype(rowtype(X_0_comp_sort)) %>% setcoltype(coltype(X_0_comp_sort))
+      matsbyname::setrownames_byname(rownames(X_0_comp_sort)) %>% matsbyname::setcolnames_byname(colnames(X_0_comp_sort)) %>%
+      matsbyname::setrowtype(matsbyname::rowtype(X_0_comp_sort)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0_comp_sort))
     # Use an old-fashioned for loop to fill all elements of the Z matrix
     for (i in 1:nrow(Z)) {
       for (j in 1:ncol(Z)) {
@@ -253,8 +253,8 @@ create0Tcolumns <- function(XvV,
     ) %>%
     # Don't need grouping variables or time variable here.
     # We'll pick them up from .DFT.
-    ungroup() %>%
-    select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
+    dplyr::ungroup() %>%
+    dplyr::select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
 
   .DFT <- XvV_repeat1strow %>%
     do(
@@ -268,9 +268,9 @@ create0Tcolumns <- function(XvV,
       !!as.name(VT_colname) := !!as.name(V_colname))
 
   # Bind everything together and return it
-  cbind(.DF0 %>% ungroup(), .DFT %>% ungroup()) %>%
-    select(group_vars(XvV), time_colname, everything()) %>%
-    group_by(!!!groups(XvV))
+  cbind(.DF0 %>% dplyr::ungroup(), .DFT %>% dplyr::ungroup()) %>%
+    dplyr::select(dplyr::group_vars(XvV), time_colname, dplyr::everything()) %>%
+    dplyr::group_by(!!!dplyr::groups(XvV))
 }
 
 
