@@ -1,5 +1,4 @@
 library(testthat)
-library(parallel)
-library(matsbyname)
+library(LMDIR)
 
 test_check("LMDIR")

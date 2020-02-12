@@ -26,25 +26,6 @@
 #'
 #' @return a data frame containing several columns.
 #'
-#' @importFrom dplyr groups
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr ungroup
-#' @importFrom matsbyname colsums_byname
-#' @importFrom matsbyname coltype
-#' @importFrom matsbyname complete_rows_cols
-#' @importFrom matsbyname difference_byname
-#' @importFrom matsbyname quotient_byname
-#' @importFrom matsbyname logarithmicmean_byname
-#' @importFrom matsbyname rowprods_byname
-#' @importFrom matsbyname rowtype
-#' @importFrom matsbyname setcoltype
-#' @importFrom matsbyname setrowtype
-#' @importFrom matsbyname sort_rows_cols
-#' @importFrom matsindf verify_cols_missing
-#' @importFrom rlang .data
-#' @importFrom rlang :=
-#'
 #' @export
 #'
 lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
@@ -70,19 +51,19 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
 
   # Ensure that all of these intermediate columns are missing.
   .lmdidata %>%
-    verify_cols_missing(c(deltaV, D, Z, v_colname, V, L_name, w_colname,
-                          X0_colname, v0_colname, V0_colname,
-                          XT_colname, vT_colname, VT_colname, LV_colname))
+    matsindf::verify_cols_missing(c(deltaV, D, Z, v_colname, V, L_name, w_colname,
+                                    X0_colname, v0_colname, V0_colname,
+                                    XT_colname, vT_colname, VT_colname, LV_colname))
 
   # Ensure that time is NOT a grouping variable.
-  if (time %in% groups(.lmdidata)) {
+  if (time %in% dplyr::groups(.lmdidata)) {
     stop(paste0("'", time, "'", " is a grouping variable, but you can't group on ",
                "time in argument .lmdidata of collapse_to_matrices."))
   }
 
-  XvV <- .lmdidata %>% mutate(
-    !!as.name(v_colname) := rowprods_byname(!!as.name(X)),
-    !!as.name(V) := sumall_byname(!!as.name(v_colname))
+  XvV <- .lmdidata %>% dplyr::mutate(
+    !!as.name(v_colname) := matsbyname::rowprods_byname(!!as.name(X)),
+    !!as.name(V) := matsbyname::sumall_byname(!!as.name(v_colname))
   )
 
   # Create a data frame of metadata and X matrices, v column vectors, and V values
@@ -92,13 +73,13 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
                            zero_suffix = zero_suffix, T_suffix = T_suffix)
   # Do year-by-year LMDI calcs.
   dVD <- XvV0T %>%
-    mutate(
-      !!as.name(LV_colname) := logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+    dplyr::mutate(
+      !!as.name(LV_colname) := matsbyname::logarithmicmean_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       !!as.name(Z) := Z_byname(X_0 = !!as.name(X0_colname), X_T = !!as.name(XT_colname),
                                        fillrow = fillrow),
-      !!as.name(deltaV) := colsums_byname(!!as.name(Z)) %>% transpose_byname(),
-      !!as.name(D) := quotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
-        exp_byname()
+      !!as.name(deltaV) := matsbyname::colsums_byname(!!as.name(Z)) %>% matsbyname::transpose_byname(),
+      !!as.name(D) := matsbyname::quotient_byname(!!as.name(deltaV), !!as.name(LV_colname)) %>%
+        matsbyname::exp_byname()
     )
 
   # Test to ensure that everything works as expected.
@@ -128,57 +109,50 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
   D_err_colname <- paste0(D, err_suffix)
   # Verify that these columns are missing.
   dVD %>%
-    verify_cols_missing(c(dV_raw_colname, dV_decomp_colname, dV_agg_colname, dV_agg_cum_colname, dV_cum_colname, dV_err_colname,
-                          D_raw_colname, D_decomp_colname, D_agg_colname, D_agg_cum_colname, D_cum_colname, D_err_colname))
+    matsindf::verify_cols_missing(c(dV_raw_colname, dV_decomp_colname, dV_agg_colname, dV_agg_cum_colname, dV_cum_colname, dV_err_colname,
+                                    D_raw_colname, D_decomp_colname, D_agg_colname, D_agg_cum_colname, D_cum_colname, D_err_colname))
   chk <- dVD %>%
-    mutate(
+    dplyr::mutate(
       # The "raw" way of calaculating deltaV at each time comes from the "raw" data in X.
-      !!as.name(dV_raw_colname) := difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      !!as.name(dV_raw_colname) := matsbyname::difference_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating deltaV at each time comes after we calculate all deltaV's for all factors
       # The "raw" and "decomp" methods of calculating deltaV should be identical.
-      !!as.name(dV_decomp_colname) := sumall_byname(!!as.name(deltaV)),
+      !!as.name(dV_decomp_colname) := matsbyname::sumall_byname(!!as.name(deltaV)),
       # Calculate error column
-      !!as.name(dV_err_colname) := difference_byname(!!as.name(dV_decomp_colname), !!as.name(dV_raw_colname)),
+      !!as.name(dV_err_colname) := matsbyname::difference_byname(!!as.name(dV_decomp_colname), !!as.name(dV_raw_colname)),
       # The "raw" way of calaculating D at each time comes from the "raw" data in X.
-      !!as.name(D_raw_colname) := quotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
+      !!as.name(D_raw_colname) := matsbyname::quotient_byname(!!as.name(VT_colname), !!as.name(V0_colname)),
       # The "decomp" way of calculating D at each time comes after we calculate all D's for all factors
       # The "raw" and "decomp" methods of calculating D should be identical.
-      !!as.name(D_decomp_colname) := prodall_byname(!!as.name(D)),
+      !!as.name(D_decomp_colname) := matsbyname::prodall_byname(!!as.name(D)),
       # Calculate D error column
-      !!as.name(D_err_colname) := difference_byname(!!as.name(D_decomp_colname), !!as.name(D_raw_colname))
+      !!as.name(D_err_colname) := matsbyname::difference_byname(!!as.name(D_decomp_colname), !!as.name(D_raw_colname))
     )
-  # If these tests pass, the calculations are internally consistent.
-  if (!all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_decomp_colname]]) %>% as.logical)) {
-    # There is a problem. dV_raw and dV_decomp should be identical.
-    warning("dV_raw and dV_decomp are not all identical in lmdi()")
-  }
-  if (!all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_decomp_colname]]) %>% as.logical)) {
-    # There is a problem. D_raw and D_decomp should be identical.
-    warning("D_raw and D_decomp are not all identical in lmdi()")
-  }
+  # If these assertions pass, the calculations are internally consistent.
+  assertthat::assert_that(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_decomp_colname]]) %>% as.logical()),
+              msg = "dV_raw and dV_decomp are not all identical in lmdi()")
+  assertthat::assert_that(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_decomp_colname]]) %>% as.logical()),
+              msg = "D_raw and D_decomp are not all identical in lmdi()")
 
   cumulatives <- chk %>%
-    select(!!!group_vars(chk), !!as.name(time), !!as.name(Z),
-           !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
-           !!as.name(deltaV), !!as.name(D)) %>%
-    rename(
+    dplyr::select(!!!dplyr::group_vars(chk), !!as.name(time), !!as.name(Z),
+                  !!as.name(dV_raw_colname), !!as.name(D_raw_colname),
+                  !!as.name(deltaV), !!as.name(D)) %>%
+    dplyr::rename(
       !!as.name(dV_agg_colname) := !!as.name(dV_raw_colname),
       !!as.name(D_agg_colname) := !!as.name(D_raw_colname)
     ) %>%
-    mutate(
+    dplyr::mutate(
       # These cululative sums and products are performed by group,
       # which is exactly what we want!
-      !!as.name(dV_agg_cum_colname) := cumsum_byname(!!as.name(dV_agg_colname)),
-      !!as.name(D_agg_cum_colname) := cumprod_byname(!!as.name(D_agg_colname)),
-      !!as.name(dV_cum_colname) := cumsum_byname(!!as.name(deltaV)),
-      !!as.name(D_cum_colname) := cumprod_byname(!!as.name(D))
+      !!as.name(dV_agg_cum_colname) := matsbyname::cumsum_byname(!!as.name(dV_agg_colname)),
+      !!as.name(D_agg_cum_colname) := matsbyname::cumprod_byname(!!as.name(D_agg_colname)),
+      !!as.name(dV_cum_colname) := matsbyname::cumsum_byname(!!as.name(deltaV)),
+      !!as.name(D_cum_colname) := matsbyname::cumprod_byname(!!as.name(D))
     )
 
   # Now join the group_vars and Year column of .lmdidata and out by the group_vars and Year.
-  # .lmdidata %>%
-  #   select(group_vars(.lmdidata), time, X) %>%
-  #   left_join(cumulatives, by = c(group_vars(.lmdidata), time))
   XvV %>%
-    select(group_vars(XvV), time, X, V) %>%
-    left_join(cumulatives, by = c(group_vars(.lmdidata), time))
+    dplyr::select(dplyr::group_vars(XvV), time, X, V) %>%
+    dplyr::left_join(cumulatives, by = c(dplyr::group_vars(.lmdidata), time))
 }

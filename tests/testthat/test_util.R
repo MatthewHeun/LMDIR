@@ -1,18 +1,5 @@
 # Contains tests for the util functions in the LMDIR package.
 
-# Need to put dplyr before testthat.
-# If not, the "matches" function in dplyr overrides the "matches" function in testthat,
-# and tests containing the string "(" don't work as expected.
-
-library(dplyr)
-library(tidyr)
-library(rlang)
-library(magrittr)
-library(matsbyname)
-library(matsindf)
-library(testthat)
-
-
 ###########################################################
 context("Utilities")
 ###########################################################
@@ -69,29 +56,29 @@ test_that("Z_byname works as expected", {
   Z_1 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                   19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
                 dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subsubcat") %>% setcoltype("factor")
+    matsbyname::setrowtype("subsubcat") %>% matsbyname::setcoltype("factor")
   Z_2 <- matrix(c(42.96021467, -56.79031473, 17.83010006,
                   0, 22.47128816, 32.52871184), byrow = TRUE, nrow = 2, ncol = 3,
                 dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subsubcat") %>% setcoltype("factor")
+    matsbyname::setrowtype("subsubcat") %>% matsbyname::setcoltype("factor")
   Z_3 <- matrix(c(12.6549815, -39.30996299, 12.6549815,
                   41.35566084, 30.28867832, 41.35566084), byrow = TRUE, nrow = 2, ncol = 3,
                 dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subsubcat") %>% setcoltype("factor")
+    matsbyname::setrowtype("subsubcat") %>% matsbyname::setcoltype("factor")
 
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T), Z_1)
   expect_equal(Z_byname(X_0 = simple$X[1:3], X_T = simple$X[2:4]),
                list(Z_1, Z_2, Z_3))
   # Now try in the context of a data frame.
   simple2 <- simple %>%
-    mutate(
+    dplyr::mutate(
       X_0 = list(simple$X[[1]], simple$X[[2]], simple$X[[3]], NULL,
                  simple$X[[5]], simple$X[[6]], simple$X[[7]], NULL),
       X_T = list(simple$X[[2]], simple$X[[3]], simple$X[[4]], NULL,
                  simple$X[[6]], simple$X[[7]], simple$X[[8]], NULL)
     ) %>%
-    filter(Year != 1974) %>%
-    mutate(
+    dplyr::filter(Year != 1974) %>%
+    dplyr::mutate(
       Z = Z_byname(X_0 = X_0, X_T = X_T)
     )
   expect_equal(simple2$Z, list(Z_1, Z_2, Z_3, Z_1, Z_2, Z_3))
@@ -118,7 +105,7 @@ test_that("Z_byname works as expected", {
   Z_expected_1 <- matrix(c(60, 0, 0,
                            19.31568569, 15.78206435, 24.90224996), byrow = TRUE, nrow = 2, ncol = 3,
                          dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subsubcat") %>% setcoltype("factor")
+    matsbyname::setrowtype("subsubcat") %>% matsbyname::setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0_2, X_T = X_T), Z_expected_1)
 
   X_T_2 <- X_T
@@ -130,7 +117,7 @@ test_that("Z_byname works as expected", {
   Z_expected_2 <- matrix(c(50.47438029, -25.23719014, 14.76280986,
                            0, 0, -60), byrow = TRUE, nrow = 2, ncol = 3,
                          dimnames = list(c("subsubcat 1", "subsubcat 2"), c("factor 1", "factor 2", "factor 3"))) %>%
-    setrowtype("subsubcat") %>% setcoltype("factor")
+    matsbyname::setrowtype("subsubcat") %>% matsbyname::setcoltype("factor")
   expect_equal(Z_byname(X_0 = X_0, X_T = X_T_2), Z_expected_2)
 
 })
@@ -142,7 +129,7 @@ context("Group error")
 
 test_that("errors are given when grouping errors are present", {
   # Verify that grouping on time fails.
-  expect_error(create_simple_LMDI() %>% group_by(Country, Year) %>% lmdi(),
+  expect_error(create_simple_LMDI() %>% dplyr::group_by(Country, Year) %>% lmdi(),
                "'Year' is a grouping variable, but you can't group on time in argument .lmdidata of collapse_to_matrices.")
 })
 
@@ -153,10 +140,10 @@ context("Preserve grouping")
 
 test_that("Preserving grouping works as expected", {
   res <- create_simple_LMDI() %>%
-    mutate(
+    dplyr::mutate(
       groupingcol = paste(Country, "group")
     ) %>%
-    group_by(Country, groupingcol) %>%
+    dplyr::group_by(Country, groupingcol) %>%
     lmdi()
   expect_equal(group_vars(res), c("Country", "groupingcol"))
 })
@@ -168,7 +155,7 @@ context("First row 0s and 1s")
 
 test_that("First row contains 0s and 1s", {
   res <- create_simple_LMDI() %>%
-    group_by(Country) %>%
+    dplyr::group_by(Country) %>%
     lmdi()
   expect_equal(res$dV_agg[[1]], 0)
   expect_equal(res$D_agg[[1]], 1)
@@ -176,10 +163,10 @@ test_that("First row contains 0s and 1s", {
   expect_equal(res$D_agg_cum[[1]], 1)
   dV0 <- matrix(c(0, 0, 0), nrow = 3, ncol = 1,
                 dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subsubcat"))) %>%
-    setrowtype("factor") %>% setcoltype("subsubcat")
+    matsbyname::setrowtype("factor") %>% matsbyname::setcoltype("subsubcat")
   D0 <- matrix(c(1, 1, 1), nrow = 3, ncol = 1,
                dimnames = list(c("factor 1", "factor 2", "factor 3"), c("subsubcat"))) %>%
-    setrowtype("factor") %>% setcoltype("subsubcat")
+    matsbyname::setrowtype("factor") %>% matsbyname::setcoltype("subsubcat")
   expect_equal(res$dV[[1]], dV0)
   expect_equal(res$D[[1]], D0)
   expect_equal(res$dV_cum[[1]], dV0)
@@ -199,10 +186,10 @@ test_that("fillrow option works as expected on Z_byname", {
   X_0 <- matrix(c(7909.898576, 0.168054745, 0.521283202, 0.009258785,
                   7909.898576, 0.072489945, 0.078700891, 0.036152202), byrow = TRUE, nrow = 2, ncol = 4,
                 dimnames = dn) %>%
-    setrowtype("categories") %>% setcoltype("factors")
+    matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors")
   X_T <- matrix(c(7962.921168, 0.101321321, 0.059104816, 0.036042366), byrow = TRUE, nrow = 1, ncol = 4,
                 dimnames = list("KE - Fans", dn[[2]])) %>%
-    setrowtype("categories") %>% setcoltype("factors")
+    matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors")
   # Z1 should be a 2-row matrix formed by assuming small numbers for all of the missing values.
   Z1 <- Z_byname(X_0 = X_0, X_T = X_T)
   expect_equal(nrow(Z1), 2)
@@ -210,7 +197,7 @@ test_that("fillrow option works as expected on Z_byname", {
   expect_equal(Z1, matrix(c(-2.185092, -1.450439688, -1.527733412, -1.252513979,
                             0.011188553, 0.56076961, -0.479535332, -0.005095744),
                           byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
-                 setrowtype("categories") %>% setcoltype("factors"),
+                 matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors"),
                tolerance = 1e-6)
   # Now try with a fillrow argument.
   # The following fillrow value sets ONLY the allocation from subcategory to subsubcategory to 0.
@@ -221,12 +208,12 @@ test_that("fillrow option works as expected on Z_byname", {
   # shutdown of the VALCO smelters.
   fr <- matrix(c(42, 42, 42, 0), nrow = 1, ncol = 4,
                     dimnames = list("row", c("E.ktoe", "eta_ij", "phi_i", "phi_ij"))) %>%
-    setrowtype("categories") %>% setcoltype("factors")
+    matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors")
   Z2 <- Z_byname(X_0 = X_0, X_T = X_T, fillrow = fr)
   expect_equal(Z2, matrix(c(0, 0, 0, -6.415779079,
                             0.011188553, 0.56076961, -0.479535332, -0.005095744),
                           byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
-                 setrowtype("categories") %>% setcoltype("factors"),
+                 matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors"),
                tolerance = 1e-6)
   # If we switch the order of X_0 and X_T, we kick to case 1 of of Table 2, p. 492 in Ang et al. 1998.
   # These conditions are what you find when an energy type turns appears in a subsequent year.
@@ -234,7 +221,7 @@ test_that("fillrow option works as expected on Z_byname", {
   expect_equal(Z3, matrix(c(0, 0, 0, 6.415779079,
                             -0.011188553, -0.56076961, 0.479535332, 0.005095744),
                           byrow = TRUE, nrow = 2, ncol = 4, dimnames = dn) %>%
-                 setrowtype("categories") %>% setcoltype("factors"),
+                 matsbyname::setrowtype("categories") %>% matsbyname::setcoltype("factors"),
                tolerance = 1e-6)
 
   # Ensure that fillrow works properly from the lmdi method.
@@ -245,19 +232,19 @@ test_that("fillrow option works as expected on Z_byname", {
   expect_equal(res1$dV_agg[[1]], 0)
   expect_equal(res1$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
   expect_equal(res1$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res1$dV[[2]], matrix(c(-2.173903446, -0.889670079, -2.007268743, -1.257609724),
                                    nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"),
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"),
                tolerance = 1e-6)
 
   expect_equal(res1$D_agg[[1]], 1)
   expect_equal(res1$D_agg[[2]], 0.213582281)
   expect_equal(res1$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res1$D[[2]], matrix(c(0.588433187, 0.804912278, 0.612844653, 0.7358158),
                                   nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
 
   # Now using a fillrow.
   DF2 <- data.frame(Year = c(2003, 2004))
@@ -266,18 +253,18 @@ test_that("fillrow option works as expected on Z_byname", {
   expect_equal(res2$dV_agg[[1]], 0)
   expect_equal(res2$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
   expect_equal(res2$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res2$dV[[2]], matrix(c(0.011188553, 0.56076961, -0.479535332, -6.420874823),
                                    nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"),
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"),
                tolerance = 1e-6)
 
   expect_equal(res2$D_agg[[1]], 1)
   expect_equal(res2$D_agg[[2]], 0.213582281)
   expect_equal(res2$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res2$D[[2]], matrix(c(1.002733012, 1.146589093, 0.889606884, 0.208820902),
                                   nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
-                 setrowtype("factors") %>% setcoltype("categories"))
+                 matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
 })
 

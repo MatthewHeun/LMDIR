@@ -1,0 +1,15 @@
+citHeader("To cite package ‘LMDIR’ in publications use:")
+
+citEntry(entry = "Manual",
+  title        = "LMDIR: Log Mean Divisia Index Decomposition in R",
+  author       = personList(as.person("Matthew Kuperus Heun")),
+  year         = "2020",
+  note         = "R package version 0.1.10",
+  url          = "https://github.com/MatthewHeun/LMDIR",
+
+  textVersion  =
+  paste("Matthew Kuperus Heun (2020).",
+        "LMDIR: Log Mean Divisia Index Decomposition in R.",
+        "R package version 0.1.10.",
+        "https://github.com/MatthewHeun/LMDIR")
+)

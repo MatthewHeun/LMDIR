@@ -7,3 +7,5 @@
 ^cran-comments\.html$
 ^README\.Rmd$
 ^README\.html$
+^codecov\.yml$
+^\.travis\.yml$

@@ -51,20 +51,6 @@
 #'
 #' @return a \code{Z} matrix
 #'
-#' @importFrom dplyr everything
-#' @importFrom dplyr group_by
-#' @importFrom matsbyname samestructure_byname
-#' @importFrom matsbyname setrownames_byname
-#' @importFrom matsbyname setcolnames_byname
-#' @importFrom matsbyname binaryapply_byname
-#' @importFrom matsbyname logmean
-#' @importFrom matsbyname sumall_byname
-#' @importFrom matsbyname transpose_byname
-#' @importFrom matsbyname exp_byname
-#' @importFrom matsbyname prodall_byname
-#' @importFrom matsbyname cumsum_byname
-#' @importFrom matsbyname cumprod_byname
-#'
 #' @export
 #'
 Z_byname <- function(X_0, X_T, fillrow = NULL){
@@ -80,25 +66,25 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
       # Energy, Volume 23, Number 6, pp. 489-495.
       fillrow <- matrix(1e-10, nrow = 1, ncol = ncol(X_0),
                          dimnames = list("row", colnames(X_0))) %>%
-        setrowtype(rowtype(X_0)) %>% setcoltype(coltype(X_0))
+        matsbyname::setrowtype(matsbyname::rowtype(X_0)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0))
     }
     # Complete the matrices relative to one another, using fillrow.
-    X_0_comp <- complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
-    X_T_comp <- complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
+    X_0_comp <- matsbyname::complete_rows_cols(X_0, X_T, fillrow = fillrow, margin = 1)
+    X_T_comp <- matsbyname::complete_rows_cols(X_T, X_0, fillrow = fillrow, margin = 1)
     # Sort the matrices relative to one another.
-    X_0_comp_sort <- sort_rows_cols(X_0_comp)
-    X_T_comp_sort <- sort_rows_cols(X_T_comp)
+    X_0_comp_sort <- matsbyname::sort_rows_cols(X_0_comp)
+    X_T_comp_sort <- matsbyname::sort_rows_cols(X_T_comp)
     # At this point, X_0_comp_sort and X_T_comp_sort should be the same type of matrices.
     # I.e., they have the same row and column names.
     # And they have the same row and column types.
     # Ensure that this is so!
-    stopifnot(samestructure_byname(X_0_comp_sort, X_T_comp_sort))
+    stopifnot(matsbyname::samestructure_byname(X_0_comp_sort, X_T_comp_sort))
 
     # Create an empty Z matrix.
     # The empty Z is filled with default entries (NA).
     Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
-      setrownames_byname(rownames(X_0_comp_sort)) %>% setcolnames_byname(colnames(X_0_comp_sort)) %>%
-      setrowtype(rowtype(X_0_comp_sort)) %>% setcoltype(coltype(X_0_comp_sort))
+      matsbyname::setrownames_byname(rownames(X_0_comp_sort)) %>% matsbyname::setcolnames_byname(colnames(X_0_comp_sort)) %>%
+      matsbyname::setrowtype(matsbyname::rowtype(X_0_comp_sort)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0_comp_sort))
     # Use an old-fashioned for loop to fill all elements of the Z matrix
     for (i in 1:nrow(Z)) {
       for (j in 1:ncol(Z)) {
@@ -108,7 +94,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     return(Z)
   }
 
-  binaryapply_byname(Z_func, a = X_0, b = X_T,
+  matsbyname::binaryapply_byname(Z_func, a = X_0, b = X_T,
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
@@ -141,8 +127,8 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #'
 #' @export
 Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
-                v_0i1 = rowprods_byname(X_0)[i, 1],
-                v_Ti1 = rowprods_byname(X_T)[i, 1],
+                v_0i1 = matsbyname::rowprods_byname(X_0)[i, 1],
+                v_Ti1 = matsbyname::rowprods_byname(X_T)[i, 1],
                 X_0ij = X_0[i, j],
                 X_Tij = X_T[i, j]){
 
@@ -184,7 +170,7 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
 
   } else if (v_0i1 > 0 & v_Ti1 > 0 & X_0ij > 0 & X_Tij > 0) {
     # This is the non-degenerate case
-    return(logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
+    return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
   }
   # We should never get here.
   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")
@@ -235,13 +221,13 @@ create0Tcolumns <- function(XvV,
   # . refers to the current group.
   # (See https://dplyr.tidyverse.org/reference/do.html for details.)
   XvV_repeat1strow <- XvV %>%
-    do(
+    dplyr::do(
       rbind(head(., n = 1), .)
     )
 
   # Set up for aligning the rows for further calculations.
   .DF0 <- XvV_repeat1strow %>%
-    do(
+    dplyr::do(
       # do works in groups, which is what we want.
       # . refers to the current group.
       head(., -1)
@@ -253,24 +239,24 @@ create0Tcolumns <- function(XvV,
     ) %>%
     # Don't need grouping variables or time variable here.
     # We'll pick them up from .DFT.
-    ungroup() %>%
-    select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
+    dplyr::ungroup() %>%
+    dplyr::select(!!as.name(X0_colname), !!as.name(v0_colname), !!as.name(V0_colname))
 
   .DFT <- XvV_repeat1strow %>%
-    do(
+    dplyr::do(
       # do works in groups, which is what we want.
       # . refers to the current group.
       tail(., -1)
     ) %>%
-    rename(
+    dplyr::rename(
       !!as.name(XT_colname) := !!as.name(X_colname),
       !!as.name(vT_colname) := !!as.name(v_colname),
       !!as.name(VT_colname) := !!as.name(V_colname))
 
   # Bind everything together and return it
-  cbind(.DF0 %>% ungroup(), .DFT %>% ungroup()) %>%
-    select(group_vars(XvV), time_colname, everything()) %>%
-    group_by(!!!groups(XvV))
+  cbind(.DF0 %>% dplyr::ungroup(), .DFT %>% dplyr::ungroup()) %>%
+    dplyr::select(dplyr::group_vars(XvV), time_colname, dplyr::everything()) %>%
+    dplyr::group_by(!!!dplyr::groups(XvV))
 }
 
 
@@ -305,7 +291,7 @@ create_simple_LMDI <- function(){
     rbind(data.frame(Year = rep.int(1972, 6), x = c(4, 5, 3, 5, 6, 4))) %>%
     rbind(data.frame(Year = rep.int(1973, 6), x = c(8, 2, 4, 5, 7, 5))) %>%
     rbind(data.frame(Year = rep.int(1974, 6), x = c(10, 1, 5, 6, 8, 6))) %>%
-    mutate(
+    dplyr::mutate(
       matnames = "X",
       rowtypes = "subsubcat",
       coltypes = "factor",
@@ -313,11 +299,11 @@ create_simple_LMDI <- function(){
       colnames = rep.int(c(rep.int(simple.factor.names, 2)), 4),
       Country = "AB"
     ) %>%
-    group_by(Country, Year) %>%
-    collapse_to_matrices(matnames = "matnames", matvals = "x",
+    dplyr::group_by(Country, Year) %>%
+    matsindf::collapse_to_matrices(matnames = "matnames", matvals = "x",
                          rownames = "rownames", colnames = "colnames",
                          rowtypes = "rowtypes", coltypes = "coltypes") %>%
-    rename(X = x)
-  rbind(AB, AB %>% mutate(Country = "YZ"))
+    dplyr::rename(X = x)
+  rbind(AB, AB %>% dplyr::mutate(Country = "YZ"))
 }
 
