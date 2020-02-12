@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make columns for time 0 and time T — create0Tcolumns • LMDIR</title>
+<title>Data pronoun — .data • LMDIR</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Make columns for time 0 and time T — create0Tcolumns" />
-<meta property="og:description" content="Make columns for time 0 and time T" />
+<meta property="og:title" content="Data pronoun — .data" />
+<meta property="og:description" content="See rlang::.data for details." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -111,69 +111,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make columns for time 0 and time T</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/LMDIR/blob/master/R/util.R'><code>R/util.R</code></a></small>
-    <div class="hidden name"><code>create0Tcolumns.Rd</code></div>
+    <h1>Data pronoun</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MatthewHeun/LMDIR/blob/master/R/utils-.data.R'><code>R/utils-.data.R</code></a></small>
+    <div class="hidden name"><code>data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Make columns for time 0 and time T</p>
+    <p>See <code>rlang::<a href='https://rlang.r-lib.org/reference/tidyeval-data.html'>.data</a></code> for details.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create0Tcolumns</span>(
-  <span class='no'>XvV</span>,
-  <span class='no'>time_colname</span>,
-  <span class='kw'>X_colname</span> <span class='kw'>=</span> <span class='st'>"X"</span>,
-  <span class='kw'>v_colname</span> <span class='kw'>=</span> <span class='st'>"v"</span>,
-  <span class='kw'>V_colname</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>zero_suffix</span> <span class='kw'>=</span> <span class='st'>"_0"</span>,
-  <span class='kw'>T_suffix</span> <span class='kw'>=</span> <span class='st'>"_T"</span>
-)</pre>
+    <pre class="usage"><span class='no'>.data</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>XvV</th>
-      <td><p>a data frame containing <code>X</code>, <code>v</code>, and <code>V</code> columns.</p></td>
-    </tr>
-    <tr>
-      <th>time_colname</th>
-      <td><p>the name of the time column (a string)</p></td>
-    </tr>
-    <tr>
-      <th>X_colname</th>
-      <td><p>the name of the <code>X</code> column (default is "<code>X</code>")</p></td>
-    </tr>
-    <tr>
-      <th>v_colname</th>
-      <td><p>the name of the <code>v</code> column (default is "<code>v</code>")</p></td>
-    </tr>
-    <tr>
-      <th>V_colname</th>
-      <td><p>the name of the <code>V</code> column (default is "<code>V</code>")</p></td>
-    </tr>
-    <tr>
-      <th>zero_suffix</th>
-      <td><p>suffix for "<code>0</code>" variables (default is "<code>_0</code>")</p></td>
-    </tr>
-    <tr>
-      <th>T_suffix</th>
-      <td><p>suffix for "<code>T</code>" variables (default is "<code>_T</code>")</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>a data frame containing metadata (<code>time_colname</code> and grouping variables)
-        and columns for X_0, v_0, V_0, X_T, v_T, and V_T.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>

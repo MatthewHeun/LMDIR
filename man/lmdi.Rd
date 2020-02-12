@@ -4,8 +4,16 @@
 \alias{lmdi}
 \title{Log-Mean Divisia Index (LMDI) decomposition analysis}
 \usage{
-lmdi(.lmdidata, time = "Year", X = "X", fillrow = NULL, V = "V",
-  Z = "Z", deltaV = "dV", D = "D")
+lmdi(
+  .lmdidata,
+  time = "Year",
+  X = "X",
+  fillrow = NULL,
+  V = "V",
+  Z = "Z",
+  deltaV = "dV",
+  D = "D"
+)
 }
 \arguments{
 \item{.lmdidata}{a grouped data frame.
