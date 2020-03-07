@@ -128,15 +128,11 @@ lmdi <- function(.lmdidata, time = "Year", X = "X", fillrow = NULL,
       # Calculate D error column
       !!as.name(D_err_colname) := matsbyname::difference_byname(!!as.name(D_decomp_colname), !!as.name(D_raw_colname))
     )
-  # If these tests pass, the calculations are internally consistent.
-  if (!all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_decomp_colname]]) %>% as.logical)) {
-    # There is a problem. dV_raw and dV_decomp should be identical.
-    warning("dV_raw and dV_decomp are not all identical in lmdi()")
-  }
-  if (!all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_decomp_colname]]) %>% as.logical)) {
-    # There is a problem. D_raw and D_decomp should be identical.
-    warning("D_raw and D_decomp are not all identical in lmdi()")
-  }
+  # If these assertions pass, the calculations are internally consistent.
+  assertthat::assert_that(all(Map(f = all.equal, chk[[dV_raw_colname]], chk[[dV_decomp_colname]]) %>% as.logical()),
+              msg = "dV_raw and dV_decomp are not all identical in lmdi()")
+  assertthat::assert_that(all(Map(f = all.equal, chk[[D_raw_colname]], chk[[D_decomp_colname]]) %>% as.logical()),
+              msg = "D_raw and D_decomp are not all identical in lmdi()")
 
   cumulatives <- chk %>%
     dplyr::select(!!!dplyr::group_vars(chk), !!as.name(time), !!as.name(Z),

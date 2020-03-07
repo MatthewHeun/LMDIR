@@ -8,7 +8,13 @@ bibliography: vignettes/References.bib
 <!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
 <!-- *********** -->
 
-<!-- [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/matsbyname.svg?branch=master)](https://travis-ci.org/MatthewHeun/matsbyname) -->
+<!-- README.md is generated from README.Rmd. Please edit README.Rmd -->
+
+[![CRAN status](https://www.r-pkg.org/badges/version/LMDIR)](https://cran.r-project.org/package=LMDIR)
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/LMDIR.svg?branch=master)](https://travis-ci.org/MatthewHeun/LMDIR)
+[![Coverage status](https://codecov.io/gh/MatthewHeun/LMDIR/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/LMDIR?branch=master)
 
 
 # LMDIR

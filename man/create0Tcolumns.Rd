@@ -4,8 +4,15 @@
 \alias{create0Tcolumns}
 \title{Make columns for time 0 and time T}
 \usage{
-create0Tcolumns(XvV, time_colname, X_colname = "X", v_colname = "v",
-  V_colname = "V", zero_suffix = "_0", T_suffix = "_T")
+create0Tcolumns(
+  XvV,
+  time_colname,
+  X_colname = "X",
+  v_colname = "v",
+  V_colname = "V",
+  zero_suffix = "_0",
+  T_suffix = "_T"
+)
 }
 \arguments{
 \item{XvV}{a data frame containing \code{X}, \code{v}, and \code{V} columns.}

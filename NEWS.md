@@ -1,3 +1,11 @@
+# LMDIR 0.1.10 (2020-02-12)
+
+* Added badges on README file.
+* Added automatic code coverage calculation.
+* All function calls are now fully-qualified.
+* Now at 100% testing coverage.
+
+
 # LMDIR 0.1.9 (2019-01-07)
 
 * Compatibility with removal of `element` prefixes to function names in `matsbyname`.
