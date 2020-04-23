@@ -3,7 +3,6 @@ title: "Use cases and examples for `LMDIR`"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
-
 vignette: >
   %\VignetteIndexEntry{LMDIR use cases and examples}
   %\VignetteEncoding{UTF-8}
@@ -434,7 +433,7 @@ fillrowX <- matrix(c(1, 1, 0, 1), byrow = TRUE, nrow = 1, ncol = 4,
                                    c("EXp.ktoe", "phi_i", "phi_ij", "eta_ij")))
 GHlmdi <- XGH %>% 
   group_by(Country) %>% 
-  lmdi(fillrow = fillrowX)
+  lmdi(fillrow = list(fillrowX))
 glimpse(GHlmdi)
 ```
 

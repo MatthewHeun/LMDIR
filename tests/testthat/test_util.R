@@ -249,7 +249,7 @@ test_that("fillrow option works as expected on Z_byname", {
   # Now using a fillrow.
   DF2 <- data.frame(Year = c(2003, 2004))
   DF2$X <- list(X_0, X_T)
-  res2 <- lmdi(DF2, time = "Year", X = "X", fillrow = fr)
+  res2 <- lmdi(DF2, time = "Year", X = "X", fillrow = list(fr))
   expect_equal(res2$dV_agg[[1]], 0)
   expect_equal(res2$dV_agg[[2]], -6.328451992, tolerance = 1e-6)
   expect_equal(res2$dV[[1]], matrix(0, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
