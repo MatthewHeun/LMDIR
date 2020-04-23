@@ -1,3 +1,5 @@
+# LMDIR 0.1.11 (2020-04-23)
+
 * Updates to keep up with changes to the `matsindf` package.
 
 
