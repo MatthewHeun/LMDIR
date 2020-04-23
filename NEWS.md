@@ -1,3 +1,8 @@
+# LMDIR 0.1.11 (2020-04-23)
+
+* Updates to keep up with changes to the `matsindf` package.
+
+
 # LMDIR 0.1.10 (2020-02-12)
 
 * Added badges on README file.
