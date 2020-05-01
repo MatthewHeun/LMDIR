@@ -54,6 +54,7 @@
 #' @export
 #'
 Z_byname <- function(X_0, X_T, fillrow = NULL){
+  fillrow <- matsbyname::prep_vector_arg(X_0, vector_arg = fillrow)
   Z_func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
     # We need to take control of completing and sorting X_0 and X_T matrices here, because

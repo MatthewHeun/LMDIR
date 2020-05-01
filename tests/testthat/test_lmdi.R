@@ -77,3 +77,20 @@ test_that("multiplicative LMDI works as expected", {
   expect_equal(res$D_cum[[3]], matsbyname::hadamardproduct_byname(res$D_cum[[2]], res$D[[3]]))
   expect_equal(res$D_cum[[4]], matsbyname::hadamardproduct_byname(res$D_cum[[3]], res$D[[4]]))
 })
+
+
+###########################################################
+context("In a data frame with custom fillrow")
+###########################################################
+
+test_that("LMDI works as expected with a custom fillrow", {
+  simple_lmdi <- create_simple_LMDI() %>%
+    dplyr::group_by(Country)
+  fillrow <- matrix(1e-10, nrow = 1, ncol = 3, dimnames = list("row", c("factor 1", "factor 2", "factor 3")))
+
+  res <- lmdi(simple_lmdi, fillrow = fillrow)
+
+  # Do a simple check to ensure that things worked correctly.
+  expect_equal(res$D[[1]], res$D[[5]])
+})
+
