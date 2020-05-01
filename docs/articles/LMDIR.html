@@ -77,7 +77,7 @@
 </h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-04-23</h4>
+            <h4 class="date">2020-05-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/LMDIR/blob/master/vignettes/LMDIR.Rmd"><code>vignettes/LMDIR.Rmd</code></a></small>
       <div class="hidden name"><code>LMDIR.Rmd</code></div>
@@ -209,10 +209,6 @@ but sufficient detail to illustrate features of the calculations.</p>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">matsindf</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
 <span class="no">DF</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/create_simple_LMDI.html">create_simple_LMDI</a></span>()
-<span class="co">#&gt; Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; Please use the `.add` argument instead.</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span>
 <span class="no">DF</span>
 <span class="co">#&gt;   Country Year                 X</span>
 <span class="co">#&gt; 1      AB 1971 1, 4, 10, 5, 2, 3</span>
@@ -375,7 +371,7 @@ but sufficient detail to illustrate features of the calculations.</p>
 <span class="co">#&gt;   # We should never get here.</span>
 <span class="co">#&gt;   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fefa5e16418&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7f89cad65a70&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:LMDIR&gt;</span></pre></body></html></div>
 <p>The <code>dV_agg</code> column contains year-to-year differences in the aggregate (<span class="math inline">\(V\)</span>).</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">res</span>[<span class="fl">1</span>:<span class="fl">4</span>, ]$<span class="no">dV_agg</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>()
@@ -837,7 +833,7 @@ but sufficient detail to illustrate features of the calculations.</p>
     ),
     <span class="kw">Factor</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(<span class="no">Factor</span>, <span class="kw">levels</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"D_tot"</span>, <span class="st">"D_ex"</span>, <span class="st">"D_str"</span>, <span class="st">"D_eff"</span>, <span class="st">"D_dil"</span>))
   ) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(
     <span class="kw">value</span> <span class="kw">=</span> <span class="no">matvals</span>
   ) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(-<span class="no">rownames</span>, -<span class="no">matnames</span>) <span class="kw">%&gt;%</span>

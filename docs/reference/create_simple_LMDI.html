@@ -138,10 +138,8 @@ Countries <code>AB</code> and <code>YZ</code> are identical for the purposes of 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>matsindf</span>)
-<span class='no'>DF</span> <span class='kw'>&lt;-</span> <span class='fu'>create_simple_LMDI</span>()</div><div class='output co'>#&gt; <span class='warning'>Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-#&gt; <span class='warning'>Please use the `.add` argument instead.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='input'><span class='no'>DF</span></div><div class='output co'>#&gt;   Country Year                 X
+<span class='no'>DF</span> <span class='kw'>&lt;-</span> <span class='fu'>create_simple_LMDI</span>()
+<span class='no'>DF</span></div><div class='output co'>#&gt;   Country Year                 X
 #&gt; 1      AB 1971 1, 4, 10, 5, 2, 3
 #&gt; 2      AB 1972  4, 5, 5, 6, 3, 4
 #&gt; 3      AB 1973  8, 5, 2, 7, 4, 5
@@ -155,7 +153,7 @@ Countries <code>AB</code> and <code>YZ</code> are identical for the purposes of 
 #&gt; attr(,"rowtype")
 #&gt; [1] "subsubcat"
 #&gt; attr(,"coltype")
-#&gt; [1] "factor"</div></span></pre>
+#&gt; [1] "factor"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
