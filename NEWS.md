@@ -1,3 +1,5 @@
+# LMDIR 0.1.12 (2020-05-01)
+
 * Update to automatically wrap argument `fillrow` in a list
   in `Z_byname()`.
 
