@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate element <code>Z_i,j</code> — Zij • LMDIR</title>
+<title>Calculate element Z_i,j — Zij • LMDIR</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Calculate element <code>Z_i,j</code> — Zij" />
+<meta property="og:title" content="Calculate element Z_i,j — Zij" />
 <meta property="og:description" content="There are many special cases for calculating the i,jth term in Z.
 These special cases must be handled on a term-by term basis.
 This function handles all those cases.
-See Z_byname for details.
+See Z_byname() for details.
 The X matrices must be same size, must have same row and column names, and
 must have same row and column types.
 Note that i and j must be positive and less than or equal to
@@ -79,7 +79,7 @@ nrow(X) and ncol(X), respectively." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LMDIR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@ nrow(X) and ncol(X), respectively." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -104,7 +104,7 @@ nrow(X) and ncol(X), respectively." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/MatthewHeun/LMDIR/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -130,23 +130,23 @@ nrow(X) and ncol(X), respectively." />
     <p>There are many special cases for calculating the <code>i,j</code>th term in <code>Z</code>.
 These special cases must be handled on a term-by term basis.
 This function handles all those cases.
-See <code><a href='Z_byname.html'>Z_byname</a></code> for details.
+See <code><a href='Z_byname.html'>Z_byname()</a></code> for details.
 The <code>X</code> matrices must be same size, must have same row and column names, and
 must have same row and column types.
 Note that <code>i</code> and <code>j</code> must be positive and less than or equal to
 <code><a href='https://rdrr.io/r/base/nrow.html'>nrow(X)</a></code> and <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(X)</a></code>, respectively.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Zij</span>(
-  <span class='kw'>i</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>j</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>X_0</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>X_T</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>v_0i1</span> <span class='kw'>=</span> <span class='kw pkg'>matsbyname</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/rowprods_byname.html'>rowprods_byname</a></span>(<span class='no'>X_0</span>)[<span class='no'>i</span>, <span class='fl'>1</span>],
-  <span class='kw'>v_Ti1</span> <span class='kw'>=</span> <span class='kw pkg'>matsbyname</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/rowprods_byname.html'>rowprods_byname</a></span>(<span class='no'>X_T</span>)[<span class='no'>i</span>, <span class='fl'>1</span>],
-  <span class='kw'>X_0ij</span> <span class='kw'>=</span> <span class='no'>X_0</span>[<span class='no'>i</span>, <span class='no'>j</span>],
-  <span class='kw'>X_Tij</span> <span class='kw'>=</span> <span class='no'>X_T</span>[<span class='no'>i</span>, <span class='no'>j</span>]
-)</pre>
+    <pre class="usage"><span class='fu'>Zij</span><span class='op'>(</span>
+  i <span class='op'>=</span> <span class='cn'>NULL</span>,
+  j <span class='op'>=</span> <span class='cn'>NULL</span>,
+  X_0 <span class='op'>=</span> <span class='cn'>NULL</span>,
+  X_T <span class='op'>=</span> <span class='cn'>NULL</span>,
+  v_0i1 <span class='op'>=</span> <span class='fu'>matsbyname</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/rowprods_byname.html'>rowprods_byname</a></span><span class='op'>(</span><span class='va'>X_0</span><span class='op'>)</span><span class='op'>[</span><span class='va'>i</span>, <span class='fl'>1</span><span class='op'>]</span>,
+  v_Ti1 <span class='op'>=</span> <span class='fu'>matsbyname</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/rowprods_byname.html'>rowprods_byname</a></span><span class='op'>(</span><span class='va'>X_T</span><span class='op'>)</span><span class='op'>[</span><span class='va'>i</span>, <span class='fl'>1</span><span class='op'>]</span>,
+  X_0ij <span class='op'>=</span> <span class='va'>X_0</span><span class='op'>[</span><span class='va'>i</span>, <span class='va'>j</span><span class='op'>]</span>,
+  X_Tij <span class='op'>=</span> <span class='va'>X_T</span><span class='op'>[</span><span class='va'>i</span>, <span class='va'>j</span><span class='op'>]</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -210,7 +210,7 @@ must be given.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -1,3 +1,11 @@
+# LMDIR 0.1.13 (2020-04-12)
+
+* Transition from Travis to GitHub actions for continuous integration testing.
+* No new tests.
+    * Still at 80 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # LMDIR 0.1.12 (2020-05-01)
 
 * Update to automatically wrap argument `fillrow` in a list

@@ -1,55 +1,55 @@
-#' Z matrix from \code{X_0} and \code{X_T} matrices
+#' Z matrix from `X_0` and `X_T` matrices
 #'
-#' The formula for \code{Z} is
+#' The formula for `Z` is
 #' \deqn{Z_ij = logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij)}
-#' where \code{v} is a column vector formed by row products of \code{X}.
-#' The \code{0} and \code{T} subscripts on \code{X} and \code{v} indicate an initial time (\code{0})
-#' and a final time (\code{T}).
-#' The \code{i} and \code{j} subscripts on \code{Z}, \code{v}, and \code{X} are
+#' where `v` is a column vector formed by row products of `X`.
+#' The `0` and `T` subscripts on `X` and `v` indicate an initial time (`0`)
+#' and a final time (`T`).
+#' The `i` and `j` subscripts on `Z`, `v`, and `X` are
 #' matrix indices.
 #'
-#' \code{Z} and \code{X} are category-by-factor matrices, and
-#' \code{v} is a category-by-1 column vector.
+#' `Z` and `X` are category-by-factor matrices, and
+#' `v` is a category-by-1 column vector.
 #'
 #' When a category comes and goes through time,
-#' the category row can be absent from the \code{X} matrix at one time
-#' but present in the \code{X} matrix at an adjacent time.
-#' If the missing category row is replaced by \code{0}s,
-#' the LMDI algorithm fails due to \code{log(0)} errors.
-#' The usual advice is to insert a row consisting not of \code{0}s
-#' but rather filled with small numbers (e.g., \code{1e-10}).
+#' the category row can be absent from the `X` matrix at one time
+#' but present in the `X` matrix at an adjacent time.
+#' If the missing category row is replaced by `0`s,
+#' the LMDI algorithm fails due to `log(0)` errors.
+#' The usual advice is to insert a row consisting not of `0`s
+#' but rather filled with small numbers (e.g., `1e-10`).
 #'
 #' But the usual advice doesn't represent reality for some LMDI decomposition analyses.
 #' For example, the missing row may be caused by only one of the many factors being zero,
 #' the other factors being non-zero.
-#' To provide greater flexibility, this function provides the \code{fillrow} argument.
-#' Callers can supply their own \code{fillrow},
-#' a single-row \code{matrix} with column names identical
-#' to \code{X_0} and \code{X_T}.
-#' If \code{fillrow} is not specified,
+#' To provide greater flexibility, this function provides the `fillrow` argument.
+#' Callers can supply their own `fillrow`,
+#' a single-row `matrix` with column names identical
+#' to `X_0` and `X_T`.
+#' If `fillrow` is not specified,
 #' the usual advice will be followed, and
-#' a row vector consisting of very small values (\code{1e-10})
+#' a row vector consisting of very small values (`1e-10`)
 #' for each factor will be inserted into
-#' \code{X_0} or \code{X_T}, as appropriate.
+#' `X_0` or `X_T`, as appropriate.
 #'
-#' Note that the \code{\link{lmdi}} function passes its \code{fillrow} argument, if present,
-#' to \code{Z_byname}.
+#' Note that the [lmdi()] function passes its `fillrow` argument, if present,
+#' to `Z_byname`.
 #'
 #' The nomenclature for this function comes from
-#' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
+#' [Ang, Zhang, and Choi (1998)](https://doi.org/10.1016/s0360-5442(98)00016-4).
 #' This function fully accounts for the degenerate cases
 #' found in Table 2, p. 492 of
-#' \href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
-#' When \code{0}s are encountered in \code{emptyrow},
-#' this function employs the method for dealing with the \code{log(0)} problem suggested by
-#' \href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
+#' [Ang, Zhang, and Choi (1998)](https://doi.org/10.1016/s0360-5442(98)00016-4).
+#' When `0`s are encountered in `emptyrow`,
+#' this function employs the method for dealing with the `log(0)` problem suggested by
+#' [Wood and Lenzen (2006)](https://doi.org/10.1016/j.enpol.2004.11.010).
 #'
-#' @param X_0 an \code{X} matrix for initial time \code{0}
-#' @param X_T an \code{X} matrix for final time \code{T}
-#' @param fillrow a row vector of type \code{matrix} with column names identical
-#'                to \code{X_0} and \code{X_T}. (See details.)
+#' @param X_0 an `X` matrix for initial time `0`
+#' @param X_T an `X` matrix for final time `T`
+#' @param fillrow a row vector of type `matrix` with column names identical
+#'                to `X_0` and `X_T`. (See details.)
 #'
-#' @return a \code{Z} matrix
+#' @return a `Z` matrix
 #'
 #' @export
 #'
@@ -99,32 +99,32 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
                      .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
-#' Calculate element \code{Z_i,j}
+#' Calculate element `Z_i,j`
 #'
-#' There are many special cases for calculating the \code{i,j}th term in \code{Z}.
+#' There are many special cases for calculating the `i,j`th term in `Z`.
 #' These special cases must be handled on a term-by term basis.
 #' This function handles all those cases.
-#' See \code{\link{Z_byname}} for details.
-#' The \code{X} matrices must be same size, must have same row and column names, and
+#' See [Z_byname()] for details.
+#' The `X` matrices must be same size, must have same row and column names, and
 #' must have same row and column types.
-#' Note that \code{i} and \code{j} must be positive and less than or equal to
-#' \code{nrow(X)} and \code{ncol(X)}, respectively.
+#' Note that `i` and `j` must be positive and less than or equal to
+#' `nrow(X)` and `ncol(X)`, respectively.
 #'
-#' Arguments \code{i}, \code{j}, \code{X_0}, and \code{X_T} are optional.
+#' Arguments `i`, `j`, `X_0`, and `X_T` are optional.
 #' If they are not specified,
-#' arguments \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij}
+#' arguments `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij`
 #' must be given.
 #'
-#' @param i optional row index for \code{X_0} and \code{X_T}.
-#' @param j optional column index for \code{X_0} and \code{X_T}.
+#' @param i optional row index for `X_0` and `X_T`.
+#' @param j optional column index for `X_0` and `X_T`.
 #' @param X_0 optional sub-sector by factor matrix for time 0.
 #' @param X_T optional sub-sector by factor matrix for time T.
-#' @param v_0i1 the i,1th element of the \code{v_0} column vector. (v_0 is formed from the row products of the \code{X_0} matrix.)
-#' @param v_Ti1 the i,1th element of the \code{v_T} column vector. (v_T is formed from the row products of the \code{X_T} matrix.)
-#' @param X_0ij the i,jth element of the \code{X_0} matrix
-#' @param X_Tij the i,jth element of the \code{X_T} matrix
+#' @param v_0i1 the i,1th element of the `v_0` column vector. (v_0 is formed from the row products of the `X_0` matrix.)
+#' @param v_Ti1 the i,1th element of the `v_T` column vector. (v_T is formed from the row products of the `X_T` matrix.)
+#' @param X_0ij the i,jth element of the `X_0` matrix
+#' @param X_Tij the i,jth element of the `X_T` matrix
 #'
-#' @return the Z value corresponding to the \code{v_0i1}, \code{v_Ti1}, \code{X_0ij}, and \code{X_Tij} values
+#' @return the Z value corresponding to the `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij` values
 #'
 #' @export
 Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
@@ -179,13 +179,13 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
 
 #' Make columns for time 0 and time T
 #'
-#' @param XvV a data frame containing \code{X}, \code{v}, and \code{V} columns.
+#' @param XvV a data frame containing `X`, `v`, and `V` columns.
 #' @param time_colname the name of the time column (a string)
-#' @param X_colname the name of the \code{X} column (default is "\code{X}")
-#' @param v_colname the name of the \code{v} column (default is "\code{v}")
-#' @param V_colname the name of the \code{V} column (default is "\code{V}")
-#' @param zero_suffix suffix for "\code{0}" variables (default is "\code{_0}")
-#' @param T_suffix suffix for "\code{T}" variables (default is "\code{_T}")
+#' @param X_colname the name of the `X` column (default is "`X`")
+#' @param v_colname the name of the `v` column (default is "`v`")
+#' @param V_colname the name of the `V` column (default is "`V`")
+#' @param zero_suffix suffix for "`0`" variables (default is "`_0`")
+#' @param T_suffix suffix for "`T`" variables (default is "`_T`")
 #'
 #' @importFrom dplyr do
 #' @importFrom dplyr group_vars
@@ -195,7 +195,7 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
 #' @importFrom utils head
 #' @importFrom utils tail
 #'
-#' @return a data frame containing metadata (\code{time_colname} and grouping variables)
+#' @return a data frame containing metadata (`time_colname` and grouping variables)
 #'         and columns for X_0, v_0, V_0, X_T, v_T, and V_T.
 create0Tcolumns <- function(XvV,
                             time_colname,
@@ -264,9 +264,9 @@ create0Tcolumns <- function(XvV,
 #' Create a simple LMDI data frame
 #'
 #' This function creates a simple LMDI data frame that can be used for testing or examples.
-#' It contains \code{X} matrices for two fictitious countries (\code{AB} and \code{XY})
-#' and four years (\code{1971-1974}).
-#' Countries \code{AB} and \code{YZ} are identical for the purposes of illustration.
+#' It contains `X` matrices for two fictitious countries (`AB` and `XY`)
+#' and four years (`1971-1974`).
+#' Countries `AB` and `YZ` are identical for the purposes of illustration.
 #'
 #' @return a data frame of example LMDI data
 #'

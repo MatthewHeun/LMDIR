@@ -1,8 +1,8 @@
 Package: LMDIR
 Type: Package
 Title: Log Mean Divisia Index Decomposition in R
-Version: 0.1.12
-Date: 2020-05-01
+Version: 0.1.13
+Date: 2020-04-12
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Maintainer: Matthew Heun <matthew.heun@me.com>
@@ -13,7 +13,8 @@ License: MIT + file LICENSE
 Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
 Depends: R (>= 2.10)
 Imports:
     assertthat,
@@ -23,9 +24,10 @@ Imports:
     matsindf,
     rlang
 Suggests:
+    spelling,
     covr,
     ggplot2,
-    knitr, 
+    knitr,
     rmarkdown,
     testthat,
     tidyr
