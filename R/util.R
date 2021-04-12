@@ -36,20 +36,20 @@
 #' to `Z_byname`.
 #'
 #' The nomenclature for this function comes from
-#' [Ang, Zhang, and Choi (1998)](https://doi.org/10.1016/s0360-5442(98)00016-4).
+#' [Ang, Zhang, and Choi (1998)](\doi{10.1016/s0360-5442(98)00016-4}).
 #' This function fully accounts for the degenerate cases
 #' found in Table 2, p. 492 of
-#' [Ang, Zhang, and Choi (1998)](https://doi.org/10.1016/s0360-5442(98)00016-4).
+#' [Ang, Zhang, and Choi (1998)](\doi{10.1016/s0360-5442(98)00016-4}).
 #' When `0`s are encountered in `emptyrow`,
 #' this function employs the method for dealing with the `log(0)` problem suggested by
-#' [Wood and Lenzen (2006)](https://doi.org/10.1016/j.enpol.2004.11.010).
+#' [Wood and Lenzen (2006)](\doi{10.1016/j.enpol.2004.11.010}).
 #'
 #' @param X_0 an `X` matrix for initial time `0`
 #' @param X_T an `X` matrix for final time `T`
 #' @param fillrow a row vector of type `matrix` with column names identical
 #'                to `X_0` and `X_T`. (See details.)
 #'
-#' @return a `Z` matrix
+#' @return A `Z` matrix.
 #'
 #' @export
 #'

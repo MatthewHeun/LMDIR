@@ -15,7 +15,7 @@ Z_byname(X_0, X_T, fillrow = NULL)
 to \code{X_0} and \code{X_T}. (See details.)}
 }
 \value{
-a \code{Z} matrix
+A \code{Z} matrix.
 }
 \description{
 The formula for \code{Z} is
@@ -55,11 +55,11 @@ Note that the \code{\link[=lmdi]{lmdi()}} function passes its \code{fillrow} arg
 to \code{Z_byname}.
 
 The nomenclature for this function comes from
-\href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
+\href{\doi{10.1016/s0360-5442(98)00016-4}}{Ang, Zhang, and Choi (1998)}.
 This function fully accounts for the degenerate cases
 found in Table 2, p. 492 of
-\href{https://doi.org/10.1016/s0360-5442(98)00016-4}{Ang, Zhang, and Choi (1998)}.
+\href{\doi{10.1016/s0360-5442(98)00016-4}}{Ang, Zhang, and Choi (1998)}.
 When \code{0}s are encountered in \code{emptyrow},
 this function employs the method for dealing with the \code{log(0)} problem suggested by
-\href{https://doi.org/10.1016/j.enpol.2004.11.010}{Wood and Lenzen (2006)}.
+\href{\doi{10.1016/j.enpol.2004.11.010}}{Wood and Lenzen (2006)}.
 }
