@@ -14,6 +14,7 @@ Language: en-US
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
 Depends: R (>= 2.10)
 Imports:
     assertthat,
@@ -34,4 +35,3 @@ VignetteBuilder:
     knitr
 URL: https://github.com/MatthewHeun/LMDIR
 BugReports: https://github.com/MatthewHeun/LMDIR/issues
-Roxygen: list(markdown = TRUE)
