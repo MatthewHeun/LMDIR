@@ -1,6 +1,6 @@
 #' X matrices for Ghana
 #'
-#' A dataset containing \code{X} matrices for Ghana over a variety of years.
+#' A dataset containing `X` matrices for Ghana over a variety of years.
 #'
 #' These data were used to create Figure 7 and Table 6 in the paper
 #'
@@ -11,7 +11,7 @@
 #' \describe{
 #'   \item{Country}{The country, Ghana}
 #'   \item{Year}{The year for this row of the data frame}
-#'   \item{X}{The \code{X} matrix for the year of this row of the data frame}
+#'   \item{X}{The `X` matrix for the year of this row of the data frame}
 #' }
 #' @source \doi{10.1016/j.apenergy.2019.01.255}
 "XGH"

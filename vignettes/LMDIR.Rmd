@@ -555,7 +555,7 @@ Finally, we create a graph showing both the total changes ($D_{tot}$) and
 the multiplicative factors that comprise the total change
 ($D_{ex}$, $D_{str}$, $D_{eff}$, and $D_{dil}$).
 
-```{r graph, fig.width = 7, fig.height = 4}
+```{r graph, fig.width = 7, fig.height = 4, fig.retina = 2}
 GHlmdi_forgraphing %>%
   ggplot(mapping = aes(x = Year, y = value, linetype = Factor)) + 
   geom_line() + 

@@ -34,3 +34,4 @@ VignetteBuilder:
     knitr
 URL: https://github.com/MatthewHeun/LMDIR
 BugReports: https://github.com/MatthewHeun/LMDIR/issues
+Roxygen: list(markdown = TRUE)

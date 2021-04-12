@@ -4,25 +4,25 @@
 #'
 #' @param .lmdidata a grouped data frame.
 #'        Group by columns of variables within which you want an LMDI analysis conducted.
-#'        \code{time} should not be one of the grouping variables.
-#' @param time the name of the column in \code{.lmdidata} that contains times at which
+#'        `time` should not be one of the grouping variables.
+#' @param time the name of the column in `.lmdidata` that contains times at which
 #'        data are available (a string).
-#'        Default is "\code{Year}".
-#' @param X the name (as a string) of a column in \code{.lmdidata} containing
-#'        \code{X} matrices with
-#'        named rows representing subcategories of the energy aggregate (\code{V}) and
-#'        named columns representing factors contributing to changes in \code{V} over time.
-#'        Default is "\code{X}".
-#' @param fillrow a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
-#'        (See \code{\link{Z_byname}} for details.)
-#' @param V the name for the \code{V} output column (a string).
-#'        Default is "\code{V}".
-#' @param Z the name for the \code{Z} output column (a string).
-#'        Default is "\code{Z}".
-#' @param deltaV the name for the \code{deltaV} output column (a string).
-#'        Default is "\code{dV}".
-#' @param D the name for the \code{D} output column (a string).
-#'        Default is "\code{D}".
+#'        Default is "`Year`".
+#' @param X the name (as a string) of a column in `.lmdidata` containing
+#'        `X` matrices with
+#'        named rows representing subcategories of the energy aggregate (`V`) and
+#'        named columns representing factors contributing to changes in `V` over time.
+#'        Default is "`X`".
+#' @param fillrow a row vector of type `matrix` passed to [Z_byname()].
+#'        (See [Z_byname()] for details.)
+#' @param V the name for the `V` output column (a string).
+#'        Default is "`V`".
+#' @param Z the name for the `Z` output column (a string).
+#'        Default is "`Z`".
+#' @param deltaV the name for the `deltaV` output column (a string).
+#'        Default is "`dV`".
+#' @param D the name for the `D` output column (a string).
+#'        Default is "`D`".
 #'
 #' @return a data frame containing several columns.
 #'
