@@ -9,3 +9,4 @@
 ^README\.html$
 ^codecov\.yml$
 ^\.travis\.yml$
+^\.github$
