@@ -1,10 +1,10 @@
 ---
-title: "Use cases and examples for `LMDIR`"
+title: "Use cases and examples for LMDIR"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{LMDIR use cases and examples}
+  %\VignetteIndexEntry{Use cases and examples for LMDIR}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -58,7 +58,7 @@ The technique was pioneered by B.W. Ang and is described in detail in
 [Ang [-@Ang:2005]](https://doi.org/10.1016/j.enpol.2003.10.010).
 LMDI decomposes an energy aggregate by factors and categories.
 
-[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx) developed a matrix representation
+[Heun and Brockway [-@Heun:2019]](https://doi.org/10.1016/j.apenergy.2019.01.255) developed a matrix representation
 of the LMDI mathematics that works well with the 
 Physical Supply Use Table (PSUT) framework
 developed by [Heun et al. [-@Heun:2018]](https://doi.org/10.1016/j.apenergy.2018.05.109).
@@ -344,7 +344,7 @@ res[1:4, ]$D_cum
 ```
 
 
-## Realistic example (Ghaha)
+## Realistic example (Ghana)
 
 The objective of this analysis is to discern the drivers of changes
 to useful exergy supplied to the Ghanaian economy over time,
@@ -354,7 +354,7 @@ LMDI analysis of the Ghanaian energy conversion chain.
 This analysis also serves to demonstrate the use of the LMDIR package with data 
 from a real energy conversion chain.
 
-We'll use data from [Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx)
+We'll use data from [Heun and Brockway [-@Heun:2019]](https://doi.org/10.1016/j.apenergy.2019.01.255)
 for exergy flows through Ghanaian society.
 The data frame consists of annual $\mat{X}$ matrices for Ghana over the period 1971--2013.
 This data frame is available as `LMDIR::XGH`.
@@ -555,7 +555,7 @@ Finally, we create a graph showing both the total changes ($D_{tot}$) and
 the multiplicative factors that comprise the total change
 ($D_{ex}$, $D_{str}$, $D_{eff}$, and $D_{dil}$).
 
-```{r graph, fig.width = 7, fig.height = 4}
+```{r graph, fig.width = 7, fig.height = 4, fig.retina = 2}
 GHlmdi_forgraphing %>%
   ggplot(mapping = aes(x = Year, y = value, linetype = Factor)) + 
   geom_line() + 
@@ -571,7 +571,7 @@ GHlmdi_forgraphing %>%
 ```
 
 Note that the graph above is the same as Figure 7 of 
-[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx).
+[Heun and Brockway [-@Heun:2019]](https://doi.org/10.1016/j.apenergy.2019.01.255).
 
 
 ## Conclusion

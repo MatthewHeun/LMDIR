@@ -11,8 +11,7 @@ status](https://www.r-pkg.org/badges/version/LMDIR)](https://cran.r-project.org/
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Travis-CI Build
-Status](https://travis-ci.org/MatthewHeun/LMDIR.svg?branch=master)](https://travis-ci.org/MatthewHeun/LMDIR)
+[![R-CMD-check](https://github.com/MatthewHeun/LMDIR/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/LMDIR/actions)
 [![Coverage
 status](https://codecov.io/gh/MatthewHeun/LMDIR/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/LMDIR?branch=master)
 

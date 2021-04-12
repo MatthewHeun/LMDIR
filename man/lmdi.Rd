@@ -30,8 +30,8 @@ named rows representing subcategories of the energy aggregate (\code{V}) and
 named columns representing factors contributing to changes in \code{V} over time.
 Default is "\code{X}".}
 
-\item{fillrow}{a row vector of type \code{matrix} passed to \code{\link{Z_byname}}.
-(See \code{\link{Z_byname}} for details.)}
+\item{fillrow}{a row vector of type \code{matrix} passed to \code{\link[=Z_byname]{Z_byname()}}.
+(See \code{\link[=Z_byname]{Z_byname()}} for details.)}
 
 \item{V}{the name for the \code{V} output column (a string).
 Default is "\code{V}".}

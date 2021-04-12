@@ -51,7 +51,7 @@ a row vector consisting of very small values (\code{1e-10})
 for each factor will be inserted into
 \code{X_0} or \code{X_T}, as appropriate.
 
-Note that the \code{\link{lmdi}} function passes its \code{fillrow} argument, if present,
+Note that the \code{\link[=lmdi]{lmdi()}} function passes its \code{fillrow} argument, if present,
 to \code{Z_byname}.
 
 The nomenclature for this function comes from
