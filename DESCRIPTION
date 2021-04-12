@@ -23,9 +23,10 @@ Imports:
     matsindf,
     rlang
 Suggests:
+    spelling,
     covr,
     ggplot2,
-    knitr, 
+    knitr,
     rmarkdown,
     testthat,
     tidyr

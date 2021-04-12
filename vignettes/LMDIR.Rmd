@@ -66,7 +66,7 @@ This vignette describes
 and provides examples for
 the matrix method for LMDI decomposition analysis. 
 This vignette is a version of Section S3 of the Supplemental Information to 
-[Heun and Brockway [-@Heun:2019]](https://doi.org/xxxx).
+[Heun and Brockway [-@Heun:2019]](https://doi.org/10.1016/j.apenergy.2019.01.255).
 
 
 ## Description of the matrix method for LMDI decomposition analysis
