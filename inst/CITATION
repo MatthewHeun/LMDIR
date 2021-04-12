@@ -8,7 +8,7 @@ citEntry(entry = "Manual",
   url          = "https://github.com/MatthewHeun/LMDIR",
 
   textVersion  =
-  paste("Matthew Kuperus Heun (2020).",
+  paste("Matthew Kuperus Heun (2021).",
         "LMDIR: Log Mean Divisia Index Decomposition in R.",
         "R package version 0.1.13.",
         "https://github.com/MatthewHeun/LMDIR")
