@@ -1,3 +1,9 @@
+---
+title: "Release notes for `LMDIR`"
+output: html_document
+---
+
+
 # LMDIR 0.1.13 (2020-04-12)
 
 * Transition from Travis to GitHub actions for continuous integration testing.
