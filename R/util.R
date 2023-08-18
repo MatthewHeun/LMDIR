@@ -256,7 +256,7 @@ create0Tcolumns <- function(XvV,
 
   # Bind everything together and return it
   cbind(.DF0 %>% dplyr::ungroup(), .DFT %>% dplyr::ungroup()) %>%
-    dplyr::select(dplyr::group_vars(XvV), time_colname, dplyr::everything()) %>%
+    dplyr::select(dplyr::group_vars(XvV), dplyr::all_of(time_colname), dplyr::everything()) %>%
     dplyr::group_by(!!!dplyr::groups(XvV))
 }
 
