@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-Cite all releases with doi [ 10.5281/zenodo.10449393](https://doi.org/ 10.5281/zenodo.10449393), 
+Cite all releases with doi [10.5281/zenodo.10449393](https://doi.org/ 10.5281/zenodo.10449393), 
 which always resolves to the latest release.
 
 
