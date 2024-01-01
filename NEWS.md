@@ -4,7 +4,11 @@ output: html_document
 ---
 
 
-# LMDIR 0.1.14 (2024-01-01)
+Cite all releases with doi [ 10.5281/zenodo.10449393](https://doi.org/ 10.5281/zenodo.10449393), 
+which always resolves to the latest release.
+
+
+# LMDIR 0.1.14 (2024-01-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10449394.svg)](https://doi.org/10.5281/zenodo.10449394)
 
 * First Zenodo release
 * No new tests.
