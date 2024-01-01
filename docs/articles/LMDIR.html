@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">LMDIR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.14</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/LMDIR.html">Get started</a>
 </li>
@@ -55,7 +51,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MatthewHeun/LMDIR/">
+  <a href="https://github.com/MatthewHeun/LMDIR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -70,15 +66,16 @@
 
       
 
-      </header><script src="LMDIR_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Use cases and examples for LMDIR</h1>
-                        <h4 class="author">Matthew Kuperus Heun</h4>
+                        <h4 data-toc-skip class="author">Matthew Kuperus
+Heun</h4>
             
-            <h4 class="date">2021-04-12</h4>
+            <h4 data-toc-skip class="date">2024-01-01</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/LMDIR/blob/master/vignettes/LMDIR.Rmd"><code>vignettes/LMDIR.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MatthewHeun/LMDIR/blob/HEAD/vignettes/LMDIR.Rmd" class="external-link"><code>vignettes/LMDIR.Rmd</code></a></small>
       <div class="hidden name"><code>LMDIR.Rmd</code></div>
 
     </div>
@@ -96,27 +93,57 @@ MathJax.Hub.Config({
       } 
   }
 });
-</script><!-- Establish some helpful LaTeX shortcuts for equations --><div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Log-mean divisia index (LMDI) decomposition analysis is an important technique for understanding causes of changes in an energy composite over time. The technique was pioneered by B.W. Ang and is described in detail in <a href="https://doi.org/10.1016/j.enpol.2003.10.010">Ang <span class="citation">(2005)</span></a>. LMDI decomposes an energy aggregate by factors and categories.</p>
-<p><a href="https://doi.org/10.1016/j.apenergy.2019.01.255">Heun and Brockway <span class="citation">(2019)</span></a> developed a matrix representation of the LMDI mathematics that works well with the Physical Supply Use Table (PSUT) framework developed by <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">(2018)</span></a>. This vignette describes and provides examples for the matrix method for LMDI decomposition analysis. This vignette is a version of Section S3 of the Supplemental Information to <a href="https://doi.org/10.1016/j.apenergy.2019.01.255">Heun and Brockway <span class="citation">(2019)</span></a>.</p>
+</script><!-- Establish some helpful LaTeX shortcuts for equations --><div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Log-mean divisia index (LMDI) decomposition analysis is an important
+technique for understanding causes of changes in an energy composite
+over time. The technique was pioneered by B.W. Ang and is described in
+detail in <a href="https://doi.org/10.1016/j.enpol.2003.10.010" class="external-link">Ang
+<span class="citation">(2005)</span></a>. LMDI decomposes an energy
+aggregate by factors and categories.</p>
+<p><a href="https://doi.org/10.1016/j.apenergy.2019.01.255" class="external-link">Heun and
+Brockway <span class="citation">(2019)</span></a> developed a matrix
+representation of the LMDI mathematics that works well with the Physical
+Supply Use Table (PSUT) framework developed by <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun et al. <span class="citation">(2018)</span></a>. This vignette describes and provides
+examples for the matrix method for LMDI decomposition analysis. This
+vignette is a version of Section S3 of the Supplemental Information to
+<a href="https://doi.org/10.1016/j.apenergy.2019.01.255" class="external-link">Heun and
+Brockway <span class="citation">(2019)</span></a>.</p>
 </div>
-<div id="description-of-the-matrix-method-for-lmdi-decomposition-analysis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description-of-the-matrix-method-for-lmdi-decomposition-analysis" class="anchor"></a>Description of the matrix method for LMDI decomposition analysis</h2>
-<p>The LMDI approach pioneered by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a> and described in detail by <a href="https://doi.org/10.1016/s0306-2619(03)00043-6">Liu and Ang <span class="citation">(2003)</span></a> decomposes an energy aggregate (<span class="math inline">\(V\)</span>) by factors (<span class="math inline">\(x\)</span>) that cause <span class="math inline">\(V\)</span> to change over time. (In this vignette, we adopt the notation of <a href="https://doi.org/10.1016/j.enpol.2003.10.010">Ang <span class="citation">(2005)</span></a>.)</p>
-<p>Noting that at a given time every combination of energy category (<span class="math inline">\(i\)</span>) and decomposition factor (<span class="math inline">\(j\)</span>) has an associated numerical value for the decomposition factor (<span class="math inline">\(x_{ij}\)</span>), the matrix approach to LMDI decomposition analysis begins with formation of an <span class="math inline">\(\mathbf{X}\)</span> matrix for each time of interest. Rows of <span class="math inline">\(\mathbf{X}\)</span> contain energy categories (indexed by <span class="math inline">\(i\)</span>) of the aggregate (<span class="math inline">\(V\)</span>) and columns of <span class="math inline">\(\mathbf{X}\)</span> contain decomposition factors (indexed by <span class="math inline">\(j\)</span>).</p>
-<p>Column vector <span class="math inline">\(\mathbf{v}\)</span> contains the value of each energy category (<span class="math inline">\(v_i\)</span>) and is formed from row products of <span class="math inline">\(\mathbf{X}\)</span>.</p>
+<div class="section level2">
+<h2 id="description-of-the-matrix-method-for-lmdi-decomposition-analysis">Description of the matrix method for LMDI decomposition
+analysis<a class="anchor" aria-label="anchor" href="#description-of-the-matrix-method-for-lmdi-decomposition-analysis"></a>
+</h2>
+<p>The LMDI approach pioneered by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">Ang et al. <span class="citation">(1998)</span></a> and described in detail by <a href="https://doi.org/10.1016/s0306-2619(03)00043-6" class="external-link">Liu and Ang <span class="citation">(2003)</span></a> decomposes an energy aggregate (<span class="math inline">\(V\)</span>) by factors (<span class="math inline">\(x\)</span>) that cause <span class="math inline">\(V\)</span> to change over time. (In this vignette,
+we adopt the notation of <a href="https://doi.org/10.1016/j.enpol.2003.10.010" class="external-link">Ang <span class="citation">(2005)</span></a>.)</p>
+<p>Noting that at a given time every combination of energy category
+(<span class="math inline">\(i\)</span>) and decomposition factor (<span class="math inline">\(j\)</span>) has an associated numerical value for
+the decomposition factor (<span class="math inline">\(x_{ij}\)</span>),
+the matrix approach to LMDI decomposition analysis begins with formation
+of an <span class="math inline">\(\mathbf{X}\)</span> matrix for each
+time of interest. Rows of <span class="math inline">\(\mathbf{X}\)</span> contain energy categories
+(indexed by <span class="math inline">\(i\)</span>) of the aggregate
+(<span class="math inline">\(V\)</span>) and columns of <span class="math inline">\(\mathbf{X}\)</span> contain decomposition factors
+(indexed by <span class="math inline">\(j\)</span>).</p>
+<p>Column vector <span class="math inline">\(\mathbf{v}\)</span>
+contains the value of each energy category (<span class="math inline">\(v_i\)</span>) and is formed from row products of
+<span class="math inline">\(\mathbf{X}\)</span>.</p>
 <p><span class="math display">\[\begin{equation} \label{eq:v}
   v_i = \prod_j x_{ij}
 \end{equation}\]</span></p>
-<p>At any given time, the energy aggregate (<span class="math inline">\(V\)</span>) is obtained by the column sum of elements in the <span class="math inline">\(\mathbf{v}\)</span> vector</p>
+<p>At any given time, the energy aggregate (<span class="math inline">\(V\)</span>) is obtained by the column sum of
+elements in the <span class="math inline">\(\mathbf{v}\)</span>
+vector</p>
 <p><span class="math display">\[\begin{equation} \label{eq:V}
   V = \mathbf{i}^\mathrm{T} \mathbf{v} \; ,
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathbf{i}\)</span> is a column vector of 1’s (an identity vector) of same size as <span class="math inline">\(\mathbf{v}\)</span>.</p>
-<p>Additive (<span class="math inline">\(\Delta V\)</span>) and multiplicative (<span class="math inline">\(D\)</span>) changes in the energy aggregate (<span class="math inline">\(V\)</span>) between two adjacent times, an initial time (superscript <span class="math inline">\(0\)</span>) and a later time (superscript <span class="math inline">\(T\)</span>), are calculated by</p>
+<p>where <span class="math inline">\(\mathbf{i}\)</span> is a column
+vector of 1’s (an identity vector) of same size as <span class="math inline">\(\mathbf{v}\)</span>.</p>
+<p>Additive (<span class="math inline">\(\Delta V\)</span>) and
+multiplicative (<span class="math inline">\(D\)</span>) changes in the
+energy aggregate (<span class="math inline">\(V\)</span>) between two
+adjacent times, an initial time (superscript <span class="math inline">\(0\)</span>) and a later time (superscript <span class="math inline">\(T\)</span>), are calculated by</p>
 <p><span class="math display">\[\begin{equation} \label{eq:deltaV_def}
   \Delta V = V^T - V^0 \; ,
 \end{equation}\]</span></p>
@@ -124,22 +151,34 @@ MathJax.Hub.Config({
 <p><span class="math display">\[\begin{equation} \label{eq:D_def}
   D = \frac{V^T}{V^0} \; .
 \end{equation}\]</span></p>
-<p>A <span class="math inline">\(\mathbf{Z}\)</span> matrix is formed for two adjacent times by</p>
-<p><span class="math display">\[\begin{equation} \label{eq:Z_eqn_element_notation}
-  Z_{ij} = \frac{v_i^T - v_i^0}{\ln \left( \frac{v_i^T}{v_i^0}\right)} 
+<p>A <span class="math inline">\(\mathbf{Z}\)</span> matrix is formed
+for two adjacent times by</p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:Z_eqn_element_notation}
+  Z_{ij} = \frac{v_i^T - v_i^0}{\ln \left( \frac{v_i^T}{v_i^0}\right)}
             \ln \left( \frac{x_{ij}^T}{x_{ij}^0} \right) ,
 \end{equation}\]</span></p>
-<p>with care taken to address the zero-value problem noted by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a> in Table 2 and discussed at length by <a href="https://doi.org/10.1016/j.enpol.2004.11.010">Wood and Lenzen <span class="citation">(2006)</span></a>.</p>
-<p>Given the <span class="math inline">\(\mathbf{Z}\)</span> matrix defined by the equation for <span class="math inline">\(Z_{ij}\)</span> above, a <span class="math inline">\(\Delta \mathbf{v}\)</span> vector is calculated by column sums of <span class="math inline">\(\mathbf{Z}\)</span></p>
+<p>with care taken to address the zero-value problem noted by <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">Ang et al. <span class="citation">(1998)</span></a> in Table 2 and discussed at length by
+<a href="https://doi.org/10.1016/j.enpol.2004.11.010" class="external-link">Wood and Lenzen
+<span class="citation">(2006)</span></a>.</p>
+<p>Given the <span class="math inline">\(\mathbf{Z}\)</span> matrix
+defined by the equation for <span class="math inline">\(Z_{ij}\)</span>
+above, a <span class="math inline">\(\Delta \mathbf{v}\)</span> vector
+is calculated by column sums of <span class="math inline">\(\mathbf{Z}\)</span></p>
 <p><span class="math display">\[\begin{equation} \label{eq:deltaV_eqn}
   \Delta \mathbf{V} = \mathbf{i}^\mathrm{T} \mathbf{Z} \; ,
 \end{equation}\]</span></p>
-<p>where entries in <span class="math inline">\(\Delta \mathbf{V}\)</span> give the additive contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
+<p>where entries in <span class="math inline">\(\Delta
+\mathbf{V}\)</span> give the additive contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to
+changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
 <p>Multiplicative decomposition is obtained with the <span class="math inline">\(\mathbf{D}\)</span> row vector calculated by</p>
 <p><span class="math display">\[\begin{equation} \label{eq:D_eqn}
-  D_j = \exp \left( \frac{\Delta V_j}{\frac{V^T - V^0}{\ln \frac{V^T}{V^0}}} \right) \; ,
+  D_j = \exp \left( \frac{\Delta V_j}{\frac{V^T - V^0}{\ln
+\frac{V^T}{V^0}}} \right) \; ,
 \end{equation}\]</span></p>
-<p>where entries in <span class="math inline">\(\mathbf{D}\)</span> give the multiplicative contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
+<p>where entries in <span class="math inline">\(\mathbf{D}\)</span> give
+the multiplicative contribution of the <span class="math inline">\(j^\mathrm{th}\)</span> decomposition factor to
+changes in <span class="math inline">\(V\)</span> from time <span class="math inline">\(0\)</span> to time <span class="math inline">\(T\)</span>.</p>
 <p>Verification can be performed by</p>
 <p><span class="math display">\[\begin{equation} \label{eq:deltaV_check}
    \Delta \mathbf{V} \mathbf{i} \overset{?}{=} V^T - V^0 \; ,
@@ -148,13 +187,25 @@ MathJax.Hub.Config({
 <p><span class="math display">\[\begin{equation} \label{eq:D_check}
    \prod_j D_j \overset{?}{=} \frac{V^T}{V^0}\; .
 \end{equation}\]</span></p>
-<p>Cumulative changes in <span class="math inline">\(V\)</span> over many time periods can be calculated by cumulative sums of the <span class="math inline">\(\Delta \mathbf{V}\)</span> row vector for additive decomposition and by cumulative products of the <span class="math inline">\(\mathbf{D}\)</span> row vector for multiplicative decomposition.</p>
+<p>Cumulative changes in <span class="math inline">\(V\)</span> over
+many time periods can be calculated by cumulative sums of the <span class="math inline">\(\Delta \mathbf{V}\)</span> row vector for additive
+decomposition and by cumulative products of the <span class="math inline">\(\mathbf{D}\)</span> row vector for multiplicative
+decomposition.</p>
 </div>
-<div id="application-of-the-matrix-method-to-energy-conversion-chain-ecc-analysis" class="section level2">
-<h2 class="hasAnchor">
-<a href="#application-of-the-matrix-method-to-energy-conversion-chain-ecc-analysis" class="anchor"></a>Application of the matrix method to energy conversion chain (ECC) analysis</h2>
-<p>An energy conversion chain (ECC) is a set of energy carriers, energy transformation devices, and energy services within spatial and temporal boundaries of interest. For the purposes of this vignette, an ECC comprises primary, final, and useful energy and exergy flowing through society.</p>
-<p>Following <a href="https://doi.org/10.1016/j.apenergy.2015.05.082">Brockway et al. <span class="citation">(2015)</span></a>, one energy aggregate from an ECC is total useful exergy supplied to the economy (<span class="math inline">\(X_u\)</span>). <span class="math inline">\(X_u\)</span> is comprised of subcategories (<span class="math inline">\(sc\)</span>, Heat, Electric, Mechanical Drive (Petroleum), and Muscle Work) and subsubcategories (<span class="math inline">\(ssc\)</span>, such as KE–Fans and MD–Tractors). The decomposition factors are given in the following table.</p>
+<div class="section level2">
+<h2 id="application-of-the-matrix-method-to-energy-conversion-chain-ecc-analysis">Application of the matrix method to energy conversion chain (ECC)
+analysis<a class="anchor" aria-label="anchor" href="#application-of-the-matrix-method-to-energy-conversion-chain-ecc-analysis"></a>
+</h2>
+<p>An energy conversion chain (ECC) is a set of energy carriers, energy
+transformation devices, and energy services within spatial and temporal
+boundaries of interest. For the purposes of this vignette, an ECC
+comprises primary, final, and useful energy and exergy flowing through
+society.</p>
+<p>Following <a href="https://doi.org/10.1016/j.apenergy.2015.05.082" class="external-link">Brockway et al.
+<span class="citation">(2015)</span></a>, one energy aggregate from an
+ECC is total useful exergy supplied to the economy (<span class="math inline">\(X_u\)</span>). <span class="math inline">\(X_u\)</span> is comprised of subcategories (<span class="math inline">\(sc\)</span>, Heat, Electric, Mechanical Drive
+(Petroleum), and Muscle Work) and subsubcategories (<span class="math inline">\(ssc\)</span>, such as KE–Fans and MD–Tractors).
+The decomposition factors are given in the following table.</p>
 <table class="table">
 <colgroup>
 <col width="10%">
@@ -171,15 +222,18 @@ MathJax.Hub.Config({
 </tr>
 <tr class="even">
 <td align="right"><span class="math inline">\(\phi_{p,sc}\)</span></td>
-<td align="left">Allocation ratio of primary exergy (<span class="math inline">\(p\)</span>) to subcategory (<span class="math inline">\(sc\)</span>) (Heat, Electric, Mechanical drive, Muscle work)</td>
+<td align="left">Allocation ratio of primary exergy (<span class="math inline">\(p\)</span>) to subcategory (<span class="math inline">\(sc\)</span>) (Heat, Electric, Mechanical drive,
+Muscle work)</td>
 </tr>
 <tr class="odd">
 <td align="right"><span class="math inline">\(\phi_{sc,ssc}\)</span></td>
-<td align="left">Allocation ratio of exergy from subcategory (<span class="math inline">\(sc)\)</span> to subsubcategory (<span class="math inline">\(ssc\)</span>) (MD - Diesel trains, Electric lights, etc.)</td>
+<td align="left">Allocation ratio of exergy from subcategory (<span class="math inline">\(sc)\)</span> to subsubcategory (<span class="math inline">\(ssc\)</span>) (MD - Diesel trains, Electric
+lights, etc.)</td>
 </tr>
 <tr class="even">
 <td align="right"><span class="math inline">\(\eta_{ssc}\)</span></td>
-<td align="left">Primary-to-useful thermodynamic efficiency of subsubcategory (<span class="math inline">\(ssc\)</span>)</td>
+<td align="left">Primary-to-useful thermodynamic efficiency of
+subsubcategory (<span class="math inline">\(ssc\)</span>)</td>
 </tr>
 </tbody>
 </table>
@@ -190,613 +244,702 @@ MathJax.Hub.Config({
 <p>and</p>
 <p><span class="math display">\[\begin{equation} \label{eq:X_u_i_eqn}
   X_{u,ssc} = X_{p,tot} \phi_{p,sc} \phi_{sc,ssc} \eta_{ssc}
-      = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}} \frac{X_{u,ssc}}{X_{p,ssc}} \; .
+      = X_{p,tot} \frac{X_{sc}}{X_{p,tot}} \frac{X_{ssc}}{X_{sc}}
+\frac{X_{u,ssc}}{X_{p,ssc}} \; .
 \end{equation}\]</span></p>
-<p>Note that <span class="math inline">\(X_{p,ssc}\)</span> is the embodied primary exergy of the useful exergy produced by the subsubcategory (<span class="math inline">\(X_{u,ssc}\)</span>).</p>
+<p>Note that <span class="math inline">\(X_{p,ssc}\)</span> is the
+embodied primary exergy of the useful exergy produced by the
+subsubcategory (<span class="math inline">\(X_{u,ssc}\)</span>).</p>
 </div>
-<div id="simple-example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simple-example" class="anchor"></a>Simple example</h2>
-<p>To demonstrate the matrix approach to LMDI decomposition analysis, we begin with a simple example that is small enough to allow replication of the results by hand calculations if desired<br>
+<div class="section level2">
+<h2 id="simple-example">Simple example<a class="anchor" aria-label="anchor" href="#simple-example"></a>
+</h2>
+<p>To demonstrate the matrix approach to LMDI decomposition analysis, we
+begin with a simple example that is small enough to allow replication of
+the results by hand calculations if desired<br>
 but sufficient detail to illustrate features of the calculations.</p>
-<p>A data frame of <span class="math inline">\(\mathbf{X}\)</span> matrices is the starting point for a simple example. The example has two fictitious countries (<code>AB</code> and <code>YZ</code>) and covers four years (1971–1974). Countries <code>AB</code> and <code>YZ</code> are identical for the purposes of illustration.</p>
+<p>A data frame of <span class="math inline">\(\mathbf{X}\)</span>
+matrices is the starting point for a simple example. The example has two
+fictitious countries (<code>AB</code> and <code>YZ</code>) and covers
+four years (1971–1974). Countries <code>AB</code> and <code>YZ</code>
+are identical for the purposes of illustration.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/LMDIR">LMDIR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname">matsbyname</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsindf">matsindf</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
-<span class="va">DF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_simple_LMDI.html">create_simple_LMDI</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">DF</span>
-<span class="co">#&gt;   Country Year                 X</span>
-<span class="co">#&gt; 1      AB 1971 1, 4, 10, 5, 2, 3</span>
-<span class="co">#&gt; 2      AB 1972  4, 5, 5, 6, 3, 4</span>
-<span class="co">#&gt; 3      AB 1973  8, 5, 2, 7, 4, 5</span>
-<span class="co">#&gt; 4      AB 1974 10, 6, 1, 8, 5, 6</span>
-<span class="co">#&gt; 5      YZ 1971 1, 4, 10, 5, 2, 3</span>
-<span class="co">#&gt; 6      YZ 1972  4, 5, 5, 6, 3, 4</span>
-<span class="co">#&gt; 7      YZ 1973  8, 5, 2, 7, 4, 5</span>
-<span class="co">#&gt; 8      YZ 1974 10, 6, 1, 8, 5, 6</span></code></pre></div>
-<p>For the remainder of these examples, only the first four rows will be shown. (Rows 5–8 for country <code>YZ</code> are the same as rows 1–4 for country <code>AB</code>.)</p>
-<p>The <code>X</code> column of the data frame contains <span class="math inline">\(\mathbf{X}\)</span> matrices. The <span class="math inline">\(\mathbf{X}\)</span> matrices contain all the information about energy categories and factors. The <span class="math inline">\(\mathbf{X}\)</span> matrices are all that is needed to perform the LMDI analysis.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/LMDIR" class="external-link">LMDIR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsbyname" class="external-link">matsbyname</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MatthewHeun/matsindf" class="external-link">matsindf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span><span class="va">DF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_simple_LMDI.html">create_simple_LMDI</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">DF</span></span>
+<span><span class="co">#&gt;   Country Year                 X</span></span>
+<span><span class="co">#&gt; 1      AB 1971 1, 4, 10, 5, 2, 3</span></span>
+<span><span class="co">#&gt; 2      AB 1972  4, 5, 5, 6, 3, 4</span></span>
+<span><span class="co">#&gt; 3      AB 1973  8, 5, 2, 7, 4, 5</span></span>
+<span><span class="co">#&gt; 4      AB 1974 10, 6, 1, 8, 5, 6</span></span>
+<span><span class="co">#&gt; 5      YZ 1971 1, 4, 10, 5, 2, 3</span></span>
+<span><span class="co">#&gt; 6      YZ 1972  4, 5, 5, 6, 3, 4</span></span>
+<span><span class="co">#&gt; 7      YZ 1973  8, 5, 2, 7, 4, 5</span></span>
+<span><span class="co">#&gt; 8      YZ 1974 10, 6, 1, 8, 5, 6</span></span></code></pre></div>
+<p>For the remainder of these examples, only the first four rows will be
+shown. (Rows 5–8 for country <code>YZ</code> are the same as rows 1–4
+for country <code>AB</code>.)</p>
+<p>The <code>X</code> column of the data frame contains <span class="math inline">\(\mathbf{X}\)</span> matrices. The <span class="math inline">\(\mathbf{X}\)</span> matrices contain all the
+information about energy categories and factors. The <span class="math inline">\(\mathbf{X}\)</span> matrices are all that is
+needed to perform the LMDI analysis.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">DF</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">X</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;             factor 1 factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1        1       10        2</span>
-<span class="co">#&gt; subsubcat 2        4        5        3</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;             factor 1 factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1        4        5        3</span>
-<span class="co">#&gt; subsubcat 2        5        6        4</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;             factor 1 factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1        8        2        4</span>
-<span class="co">#&gt; subsubcat 2        5        7        5</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;             factor 1 factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1       10        1        5</span>
-<span class="co">#&gt; subsubcat 2        6        8        6</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span></code></pre></div>
-<p>To see how the factors affect the aggregate over time, we can perform the LMDI decomposition analysis. But we first group by <code>Country</code> to ensure that each <code>Country</code> will be treated separately. (<code><a href="../reference/lmdi.html">lmdi()</a></code> respects grouping.)</p>
+<code class="sourceCode R"><span><span class="va">DF</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">X</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;             factor 1 factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1        1       10        2</span></span>
+<span><span class="co">#&gt; subsubcat 2        4        5        3</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;             factor 1 factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1        4        5        3</span></span>
+<span><span class="co">#&gt; subsubcat 2        5        6        4</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;             factor 1 factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1        8        2        4</span></span>
+<span><span class="co">#&gt; subsubcat 2        5        7        5</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;             factor 1 factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1       10        1        5</span></span>
+<span><span class="co">#&gt; subsubcat 2        6        8        6</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span></code></pre></div>
+<p>To see how the factors affect the aggregate over time, we can perform
+the LMDI decomposition analysis. But we first group by
+<code>Country</code> to ensure that each <code>Country</code> will be
+treated separately. (<code><a href="../reference/lmdi.html">lmdi()</a></code> respects grouping.)</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">DF</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/lmdi.html">lmdi</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>The result of the call to <code><a href="../reference/lmdi.html">lmdi()</a></code> is <code>DF</code> with additional columns.</p>
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">DF</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/lmdi.html">lmdi</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>The result of the call to <code><a href="../reference/lmdi.html">lmdi()</a></code> is <code>DF</code> with
+additional columns.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 8</span>
-<span class="co">#&gt; Columns: 13</span>
-<span class="co">#&gt; Groups: Country [2]</span>
-<span class="co">#&gt; $ Country    &lt;chr&gt; "AB", "AB", "AB", "AB", "YZ", "YZ", "YZ", "YZ"</span>
-<span class="co">#&gt; $ Year       &lt;dbl&gt; 1971, 1972, 1973, 1974, 1971, 1972, 1973, 1974</span>
-<span class="co">#&gt; $ X          &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;…</span>
-<span class="co">#&gt; $ V          &lt;list&gt; 80, 180, 239, 338, 80, 180, 239, 338</span>
-<span class="co">#&gt; $ Z          &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;…</span>
-<span class="co">#&gt; $ dV_agg     &lt;list&gt; 0, 100, 59, 99, 0, 100, 59, 99</span>
-<span class="co">#&gt; $ D_agg      &lt;list&gt; 1, 2.25, 1.327778, 1.414226, 1, 2.25, 1.327778, 1.414226</span>
-<span class="co">#&gt; $ dV         &lt;list&gt; &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ D          &lt;list&gt; &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ dV_agg_cum &lt;list&gt; 0, 100, 159, 258, 0, 100, 159, 258</span>
-<span class="co">#&gt; $ D_agg_cum  &lt;list&gt; 1, 2.25, 2.9875, 4.225, 1, 2.25, 2.9875, 4.225</span>
-<span class="co">#&gt; $ dV_cum     &lt;list&gt; &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ D_cum      &lt;list&gt; &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span></code></pre></div>
-<p>Each additional column provides results of the LMDI analysis. Both additive and multiplicative results are provided.</p>
-<p>The <code>V</code> column contains aggregates (<span class="math inline">\(V\)</span>), with the first year assigned a value of <code>0</code>.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 8</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
+<span><span class="co">#&gt; Groups: Country [2]</span></span>
+<span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "AB", "AB", "AB", "AB", "YZ", "YZ", "YZ", "YZ"</span></span>
+<span><span class="co">#&gt; $ Year       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1971, 1972, 1973, 1974, 1971, 1972, 1973, 1974</span></span>
+<span><span class="co">#&gt; $ X          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;…</span></span>
+<span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 80, 180, 239, 338, 80, 180, 239, 338</span></span>
+<span><span class="co">#&gt; $ Z          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;…</span></span>
+<span><span class="co">#&gt; $ dV_agg     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 0, 100, 59, 99, 0, 100, 59, 99</span></span>
+<span><span class="co">#&gt; $ D_agg      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 1, 2.25, 1.327778, 1.414226, 1, 2.25, 1.327778, 1.414226</span></span>
+<span><span class="co">#&gt; $ dV         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ D          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ dV_agg_cum <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 0, 100, 159, 258, 0, 100, 159, 258</span></span>
+<span><span class="co">#&gt; $ D_agg_cum  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 1, 2.25, 2.9875, 4.225, 1, 2.25, 2.9875, 4.225</span></span>
+<span><span class="co">#&gt; $ dV_cum     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ D_cum      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;&lt;matrix[3 x 1]&gt;&gt;, &lt;…</span></span></code></pre></div>
+<p>Each additional column provides results of the LMDI analysis. Both
+additive and multiplicative results are provided.</p>
+<p>The <code>V</code> column contains aggregates (<span class="math inline">\(V\)</span>), with the first year assigned a value
+of <code>0</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">$</span><span class="va">V</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1]  80 180 239 338  80 180 239 338</span></code></pre></div>
-<p>The <code>Z</code> column contains <span class="math inline">\(\mathbf{Z}\)</span> matrices, with the first year assigned a value of <code>1</code>.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">V</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  80 180 239 338  80 180 239 338</span></span></code></pre></div>
+<p>The <code>Z</code> column contains <span class="math inline">\(\mathbf{Z}\)</span> matrices, with the first year
+assigned a value of <code>1</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">Z</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;             factor 1 factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1        0        0        0</span>
-<span class="co">#&gt; subsubcat 2        0        0        0</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;             factor 1  factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1 50.47438 -25.23719 14.76281</span>
-<span class="co">#&gt; subsubcat 2 19.31569  15.78206 24.90225</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;             factor 1  factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1 42.96021 -56.79031 17.83010</span>
-<span class="co">#&gt; subsubcat 2  0.00000  22.47129 32.52871</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;             factor 1  factor 2 factor 3</span>
-<span class="co">#&gt; subsubcat 1 12.65498 -39.30996 12.65498</span>
-<span class="co">#&gt; subsubcat 2 41.35566  30.28868 41.35566</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span></code></pre></div>
-<p>Note that calculating the entries in the <span class="math inline">\(\mathbf{Z}\)</span> matrices requires evaluating 8 degenerate cases as shown in Table 2, p. 492 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a>. Evaluation of the 8 degenerate cases is performed by the <code><a href="../reference/Zij.html">Zij()</a></code> function.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">Z</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;             factor 1 factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1        0        0        0</span></span>
+<span><span class="co">#&gt; subsubcat 2        0        0        0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;             factor 1  factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1 50.47438 -25.23719 14.76281</span></span>
+<span><span class="co">#&gt; subsubcat 2 19.31569  15.78206 24.90225</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;             factor 1  factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1 42.96021 -56.79031 17.83010</span></span>
+<span><span class="co">#&gt; subsubcat 2  0.00000  22.47129 32.52871</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;             factor 1  factor 2 factor 3</span></span>
+<span><span class="co">#&gt; subsubcat 1 12.65498 -39.30996 12.65498</span></span>
+<span><span class="co">#&gt; subsubcat 2 41.35566  30.28868 41.35566</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span></code></pre></div>
+<p>Note that calculating the entries in the <span class="math inline">\(\mathbf{Z}\)</span> matrices requires evaluating 8
+degenerate cases as shown in Table 2, p. 492 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">Ang et al. <span class="citation">(1998)</span></a>. Evaluation of the 8 degenerate cases
+is performed by the <code><a href="../reference/Zij.html">Zij()</a></code> function.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Zij</span>
-<span class="co">#&gt; function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,</span>
-<span class="co">#&gt;                 v_0i1 = matsbyname::rowprods_byname(X_0)[i, 1],</span>
-<span class="co">#&gt;                 v_Ti1 = matsbyname::rowprods_byname(X_T)[i, 1],</span>
-<span class="co">#&gt;                 X_0ij = X_0[i, j],</span>
-<span class="co">#&gt;                 X_Tij = X_T[i, j]){</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   # Check the conditions, found in Table 2, p. 492 of</span>
-<span class="co">#&gt;   # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,</span>
-<span class="co">#&gt;   # Factorizing changes in energy and environmental indicators through decomposition,</span>
-<span class="co">#&gt;   # Energy, Volume 23, Number 6, pp. 489-495.</span>
-<span class="co">#&gt;   if (v_0i1 == 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij == 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # Case 1</span>
-<span class="co">#&gt;     return(v_Ti1)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij == 0) {</span>
-<span class="co">#&gt;     # Case 2</span>
-<span class="co">#&gt;     return(-v_0i1)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # Case 3</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # Case 4</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # Case 5</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij == 0 &amp; X_Tij == 0) {</span>
-<span class="co">#&gt;     # Case 6</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij == 0) {</span>
-<span class="co">#&gt;     # Case 7</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij == 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # Case 8</span>
-<span class="co">#&gt;     return(0)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span>
-<span class="co">#&gt;     # This is the non-degenerate case</span>
-<span class="co">#&gt;     return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))</span>
-<span class="co">#&gt;   }</span>
-<span class="co">#&gt;   # We should never get here.</span>
-<span class="co">#&gt;   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")</span>
-<span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7f863095e0e0&gt;</span>
-<span class="co">#&gt; &lt;environment: namespace:LMDIR&gt;</span></code></pre></div>
-<p>The <code>dV_agg</code> column contains year-to-year differences in the aggregate (<span class="math inline">\(V\)</span>).</p>
+<code class="sourceCode R"><span><span class="va">Zij</span></span>
+<span><span class="co">#&gt; function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,</span></span>
+<span><span class="co">#&gt;                 v_0i1 = matsbyname::rowprods_byname(X_0)[i, 1],</span></span>
+<span><span class="co">#&gt;                 v_Ti1 = matsbyname::rowprods_byname(X_T)[i, 1],</span></span>
+<span><span class="co">#&gt;                 X_0ij = X_0[i, j],</span></span>
+<span><span class="co">#&gt;                 X_Tij = X_T[i, j]){</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   # Check the conditions, found in Table 2, p. 492 of</span></span>
+<span><span class="co">#&gt;   # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,</span></span>
+<span><span class="co">#&gt;   # Factorizing changes in energy and environmental indicators through decomposition,</span></span>
+<span><span class="co">#&gt;   # Energy, Volume 23, Number 6, pp. 489-495.</span></span>
+<span><span class="co">#&gt;   if (v_0i1 == 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij == 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # Case 1</span></span>
+<span><span class="co">#&gt;     return(v_Ti1)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij == 0) {</span></span>
+<span><span class="co">#&gt;     # Case 2</span></span>
+<span><span class="co">#&gt;     return(-v_0i1)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # Case 3</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # Case 4</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # Case 5</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij == 0 &amp; X_Tij == 0) {</span></span>
+<span><span class="co">#&gt;     # Case 6</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij &gt; 0 &amp; X_Tij == 0) {</span></span>
+<span><span class="co">#&gt;     # Case 7</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 == 0 &amp; v_Ti1 == 0 &amp; X_0ij == 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # Case 8</span></span>
+<span><span class="co">#&gt;     return(0)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   } else if (v_0i1 &gt; 0 &amp; v_Ti1 &gt; 0 &amp; X_0ij &gt; 0 &amp; X_Tij &gt; 0) {</span></span>
+<span><span class="co">#&gt;     # This is the non-degenerate case</span></span>
+<span><span class="co">#&gt;     return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))</span></span>
+<span><span class="co">#&gt;   }</span></span>
+<span><span class="co">#&gt;   # We should never get here.</span></span>
+<span><span class="co">#&gt;   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")</span></span>
+<span><span class="co">#&gt; }</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x105e04aa0&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: namespace:LMDIR&gt;</span></span></code></pre></div>
+<p>The <code>dV_agg</code> column contains year-to-year differences in
+the aggregate (<span class="math inline">\(V\)</span>).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV_agg</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1]   0 100  59  99</span></code></pre></div>
-<p>The <code>D_agg</code> column contains year-to-year ratios of the aggregate (<span class="math inline">\(V\)</span>).</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV_agg</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]   0 100  59  99</span></span></code></pre></div>
+<p>The <code>D_agg</code> column contains year-to-year ratios of the
+aggregate (<span class="math inline">\(V\)</span>).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">$</span><span class="va">D_agg</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1.000000 2.250000 1.327778 1.414226 1.000000 2.250000 1.327778 1.414226</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">D_agg</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1.000000 2.250000 1.327778 1.414226 1.000000 2.250000 1.327778 1.414226</span></span></code></pre></div>
 <p>The <code>dV</code> column contains <span class="math inline">\(\mathbf{\Delta V}\)</span> vectors.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1         0</span>
-<span class="co">#&gt; factor 2         0</span>
-<span class="co">#&gt; factor 3         0</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 69.790066</span>
-<span class="co">#&gt; factor 2 -9.455126</span>
-<span class="co">#&gt; factor 3 39.665060</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1  42.96021</span>
-<span class="co">#&gt; factor 2 -34.31903</span>
-<span class="co">#&gt; factor 3  50.35881</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 54.010642</span>
-<span class="co">#&gt; factor 2 -9.021285</span>
-<span class="co">#&gt; factor 3 54.010642</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1         0</span></span>
+<span><span class="co">#&gt; factor 2         0</span></span>
+<span><span class="co">#&gt; factor 3         0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 69.790066</span></span>
+<span><span class="co">#&gt; factor 2 -9.455126</span></span>
+<span><span class="co">#&gt; factor 3 39.665060</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1  42.96021</span></span>
+<span><span class="co">#&gt; factor 2 -34.31903</span></span>
+<span><span class="co">#&gt; factor 3  50.35881</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 54.010642</span></span>
+<span><span class="co">#&gt; factor 2 -9.021285</span></span>
+<span><span class="co">#&gt; factor 3 54.010642</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span></code></pre></div>
 <p>The <code>D</code> column contains <span class="math inline">\(\mathbf{D}\)</span> vectors.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">D</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1         1</span>
-<span class="co">#&gt; factor 2         1</span>
-<span class="co">#&gt; factor 3         1</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 1.7611178</span>
-<span class="co">#&gt; factor 2 0.9261913</span>
-<span class="co">#&gt; factor 3 1.3794101</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 1.2292846</span>
-<span class="co">#&gt; factor 2 0.8479702</span>
-<span class="co">#&gt; factor 3 1.2737739</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 1.2081402</span>
-<span class="co">#&gt; factor 2 0.9689115</span>
-<span class="co">#&gt; factor 3 1.2081402</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span></code></pre></div>
-<p>The remaining columns have the <code>_cum</code> suffix and represent cumulative values. The <code>dV_agg_cum</code> column gives cumulative differences in the aggregate (<span class="math inline">\(V\)</span>) relative to the first time.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">D</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1         1</span></span>
+<span><span class="co">#&gt; factor 2         1</span></span>
+<span><span class="co">#&gt; factor 3         1</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 1.7611178</span></span>
+<span><span class="co">#&gt; factor 2 0.9261913</span></span>
+<span><span class="co">#&gt; factor 3 1.3794101</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 1.2292846</span></span>
+<span><span class="co">#&gt; factor 2 0.8479702</span></span>
+<span><span class="co">#&gt; factor 3 1.2737739</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 1.2081402</span></span>
+<span><span class="co">#&gt; factor 2 0.9689115</span></span>
+<span><span class="co">#&gt; factor 3 1.2081402</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span></code></pre></div>
+<p>The remaining columns have the <code>_cum</code> suffix and represent
+cumulative values. The <code>dV_agg_cum</code> column gives cumulative
+differences in the aggregate (<span class="math inline">\(V\)</span>)
+relative to the first time.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">$</span><span class="va">dV_agg_cum</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1]   0 100 159 258   0 100 159 258</span></code></pre></div>
-<p>The <code>D_agg_cum</code> column gives cumulative ratios of the aggregate (<span class="math inline">\(V\)</span>) relative to the first time.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">dV_agg_cum</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]   0 100 159 258   0 100 159 258</span></span></code></pre></div>
+<p>The <code>D_agg_cum</code> column gives cumulative ratios of the
+aggregate (<span class="math inline">\(V\)</span>) relative to the first
+time.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">$</span><span class="va">D_agg_cum</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1.0000 2.2500 2.9875 4.2250 1.0000 2.2500 2.9875 4.2250</span></code></pre></div>
-<p>The <code>dV_cum</code> column gives the cumulative differences in the <span class="math inline">\(\mathbf{\Delta V}\)</span> vectors relative to the first time.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">$</span><span class="va">D_agg_cum</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1.0000 2.2500 2.9875 4.2250 1.0000 2.2500 2.9875 4.2250</span></span></code></pre></div>
+<p>The <code>dV_cum</code> column gives the cumulative differences in
+the <span class="math inline">\(\mathbf{\Delta V}\)</span> vectors
+relative to the first time.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV_cum</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1         0</span>
-<span class="co">#&gt; factor 2         0</span>
-<span class="co">#&gt; factor 3         0</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 69.790066</span>
-<span class="co">#&gt; factor 2 -9.455126</span>
-<span class="co">#&gt; factor 3 39.665060</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 112.75028</span>
-<span class="co">#&gt; factor 2 -43.77415</span>
-<span class="co">#&gt; factor 3  90.02387</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 166.76092</span>
-<span class="co">#&gt; factor 2 -52.79544</span>
-<span class="co">#&gt; factor 3 144.03451</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span></code></pre></div>
-<p>The <code>D_cum</code> column gives the cumulative ratios of the <span class="math inline">\(\mathbf{D}\)</span> vectors relative to the first time.</p>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">dV_cum</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1         0</span></span>
+<span><span class="co">#&gt; factor 2         0</span></span>
+<span><span class="co">#&gt; factor 3         0</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 69.790066</span></span>
+<span><span class="co">#&gt; factor 2 -9.455126</span></span>
+<span><span class="co">#&gt; factor 3 39.665060</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 112.75028</span></span>
+<span><span class="co">#&gt; factor 2 -43.77415</span></span>
+<span><span class="co">#&gt; factor 3  90.02387</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 166.76092</span></span>
+<span><span class="co">#&gt; factor 2 -52.79544</span></span>
+<span><span class="co">#&gt; factor 3 144.03451</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span></code></pre></div>
+<p>The <code>D_cum</code> column gives the cumulative ratios of the
+<span class="math inline">\(\mathbf{D}\)</span> vectors relative to the
+first time.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">D_cum</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1         1</span>
-<span class="co">#&gt; factor 2         1</span>
-<span class="co">#&gt; factor 3         1</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 1.7611178</span>
-<span class="co">#&gt; factor 2 0.9261913</span>
-<span class="co">#&gt; factor 3 1.3794101</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 2.1649150</span>
-<span class="co">#&gt; factor 2 0.7853827</span>
-<span class="co">#&gt; factor 3 1.7570566</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt;          subsubcat</span>
-<span class="co">#&gt; factor 1 2.6155209</span>
-<span class="co">#&gt; factor 2 0.7609663</span>
-<span class="co">#&gt; factor 3 2.1227708</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "subsubcat"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">$</span><span class="va">D_cum</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1         1</span></span>
+<span><span class="co">#&gt; factor 2         1</span></span>
+<span><span class="co">#&gt; factor 3         1</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 1.7611178</span></span>
+<span><span class="co">#&gt; factor 2 0.9261913</span></span>
+<span><span class="co">#&gt; factor 3 1.3794101</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[3]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 2.1649150</span></span>
+<span><span class="co">#&gt; factor 2 0.7853827</span></span>
+<span><span class="co">#&gt; factor 3 1.7570566</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[4]]</span></span>
+<span><span class="co">#&gt;          subsubcat</span></span>
+<span><span class="co">#&gt; factor 1 2.6155209</span></span>
+<span><span class="co">#&gt; factor 2 0.7609663</span></span>
+<span><span class="co">#&gt; factor 3 2.1227708</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "subsubcat"</span></span></code></pre></div>
 </div>
-<div id="realistic-example-ghana" class="section level2">
-<h2 class="hasAnchor">
-<a href="#realistic-example-ghana" class="anchor"></a>Realistic example (Ghana)</h2>
-<p>The objective of this analysis is to discern the drivers of changes to useful exergy supplied to the Ghanaian economy over time, expressed in multiplicative form. To achieve this objective, we will perform and report results of an LMDI analysis of the Ghanaian energy conversion chain. This analysis also serves to demonstrate the use of the LMDIR package with data from a real energy conversion chain.</p>
-<p>We’ll use data from <a href="https://doi.org/10.1016/j.apenergy.2019.01.255">Heun and Brockway <span class="citation">(2019)</span></a> for exergy flows through Ghanaian society. The data frame consists of annual <span class="math inline">\(\mathbf{X}\)</span> matrices for Ghana over the period 1971–2013. This data frame is available as <code><a href="../reference/XGH.html">LMDIR::XGH</a></code>.</p>
+<div class="section level2">
+<h2 id="realistic-example-ghana">Realistic example (Ghana)<a class="anchor" aria-label="anchor" href="#realistic-example-ghana"></a>
+</h2>
+<p>The objective of this analysis is to discern the drivers of changes
+to useful exergy supplied to the Ghanaian economy over time, expressed
+in multiplicative form. To achieve this objective, we will perform and
+report results of an LMDI analysis of the Ghanaian energy conversion
+chain. This analysis also serves to demonstrate the use of the LMDIR
+package with data from a real energy conversion chain.</p>
+<p>We’ll use data from <a href="https://doi.org/10.1016/j.apenergy.2019.01.255" class="external-link">Heun and Brockway
+<span class="citation">(2019)</span></a> for exergy flows through
+Ghanaian society. The data frame consists of annual <span class="math inline">\(\mathbf{X}\)</span> matrices for Ghana over the
+period 1971–2013. This data frame is available as
+<code><a href="../reference/XGH.html">LMDIR::XGH</a></code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">XGH</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 43</span>
-<span class="co">#&gt; Columns: 3</span>
-<span class="co">#&gt; $ Country &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "G…</span>
-<span class="co">#&gt; $ Year    &lt;dbl&gt; 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 19…</span>
-<span class="co">#&gt; $ X       &lt;list&gt; &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;…</span></code></pre></div>
-<p>Each <span class="math inline">\(\mathbf{X}\)</span> matrix contains useful exergy subsubcategories (in rows) and factors (in columns) as shown below for Ghana for 2003 and 2004.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">XGH</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 43</span></span>
+<span><span class="co">#&gt; Columns: 3</span></span>
+<span><span class="co">#&gt; $ Country <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "G…</span></span>
+<span><span class="co">#&gt; $ Year    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 19…</span></span>
+<span><span class="co">#&gt; $ X       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;…</span></span></code></pre></div>
+<p>Each <span class="math inline">\(\mathbf{X}\)</span> matrix contains
+useful exergy subsubcategories (in rows) and factors (in columns) as
+shown below for Ghana for 2003 and 2004.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">prettifyXZ</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">XZ</span><span class="op">)</span><span class="op">{</span>
-  <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">XZ</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sort_rows_cols.html">sort_rows_cols</a></span><span class="op">(</span>roworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-      <span class="co"># Heat categories (phi_i = 0.622)</span>
-      <span class="st">"HTH.600.C - Electric heaters"</span>, <span class="st">"MTH.100.C - Charcoal stoves"</span>,
-      <span class="st">"MTH.100.C - Kerosene stoves"</span>, <span class="st">"MTH.100.C - LPG stoves"</span>,
-      <span class="st">"MTH.100.C - Wood stoves"</span>,
-      <span class="co"># Electricity categories (phi_i = 0.020)</span>
-      <span class="st">"KE - Fans"</span>, <span class="st">"Light - Electric lights"</span>,
-      <span class="st">"Light - Televisions"</span>, <span class="st">"LTH.-10.C - Refrigerators"</span>,
-      <span class="st">"MD - Electric motors"</span>, <span class="st">"MD - Other appliances"</span>,
-      <span class="st">"MTH.100.C - Electric heaters"</span>, <span class="st">"MTH.200.C - Irons"</span>,
-      <span class="st">"MTH.200.C - Electric heaters"</span>,
-      <span class="co"># Liquid petroleum categories (phi_i = 0.131)</span>
-      <span class="st">"MD - Boat engines"</span>, <span class="st">"MD - Diesel cars"</span>,
-      <span class="st">"MD - Diesel trains"</span>, <span class="st">"MD - Industry static diesel engines"</span>,
-      <span class="st">"MD - Petrol cars"</span>, <span class="st">"MD - Tractors"</span>,
-      <span class="co"># Food and feed categories (phi_i = 0.226)</span>
-      <span class="st">"MD - Draught animals"</span>, <span class="st">"MD - Manual laborers"</span><span class="op">)</span>,
-      colorder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"EXp.ktoe"</span>, <span class="st">"phi_i"</span>, <span class="st">"phi_ij"</span>, <span class="st">"eta_ij"</span><span class="op">)</span><span class="op">)</span>
-  <span class="va">out</span><span class="op">[</span> , <span class="st">"EXp.ktoe"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"EXp.ktoe"</span><span class="op">]</span>, <span class="fl">1</span><span class="op">)</span>
-  <span class="va">out</span><span class="op">[</span> , <span class="st">"phi_i"</span><span class="op">]</span>    <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"phi_i"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span>
-  <span class="va">out</span><span class="op">[</span> , <span class="st">"phi_ij"</span><span class="op">]</span>   <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"phi_ij"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span>
-  <span class="va">out</span><span class="op">[</span> , <span class="st">"eta_ij"</span><span class="op">]</span>   <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"eta_ij"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
-<span class="op">}</span>
-<span class="va">XGH</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2003</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span>
-<span class="co">#&gt; HTH.600.C - Electric heaters          7911.4 0.519  0.005  0.343</span>
-<span class="co">#&gt; MTH.100.C - Charcoal stoves           7911.4 0.519  0.328  0.015</span>
-<span class="co">#&gt; MTH.100.C - Kerosene stoves           7911.4 0.519  0.031  0.064</span>
-<span class="co">#&gt; MTH.100.C - LPG stoves                7911.4 0.519  0.015  0.085</span>
-<span class="co">#&gt; MTH.100.C - Wood stoves               7911.4 0.519  0.622  0.024</span>
-<span class="co">#&gt; KE - Fans                             7911.4 0.081  0.035  0.069</span>
-<span class="co">#&gt; Light - Electric lights               7911.4 0.081  0.211  0.023</span>
-<span class="co">#&gt; Light - Televisions                   7911.4 0.081  0.039  0.001</span>
-<span class="co">#&gt; LTH.-10.C - Refrigerators             7911.4 0.081  0.212  0.026</span>
-<span class="co">#&gt; MD - Electric motors                  7911.4 0.081  0.359  0.487</span>
-<span class="co">#&gt; MD - Other appliances                 7911.4 0.081  0.015  0.487</span>
-<span class="co">#&gt; MTH.100.C - Electric heaters          7911.4 0.081  0.090  0.105</span>
-<span class="co">#&gt; MTH.200.C - Irons                     7911.4 0.081  0.016  0.222</span>
-<span class="co">#&gt; MTH.200.C - Electric heaters          7911.4 0.081  0.024  0.181</span>
-<span class="co">#&gt; MD - Boat engines                     7911.4 0.188  0.050  0.141</span>
-<span class="co">#&gt; MD - Diesel cars                      7911.4 0.188  0.345  0.123</span>
-<span class="co">#&gt; MD - Diesel trains                    7911.4 0.188  0.024  0.162</span>
-<span class="co">#&gt; MD - Industry static diesel engines   7911.4 0.188  0.192  0.261</span>
-<span class="co">#&gt; MD - Petrol cars                      7911.4 0.188  0.368  0.160</span>
-<span class="co">#&gt; MD - Tractors                         7911.4 0.188  0.020  0.062</span>
-<span class="co">#&gt; MD - Draught animals                  7911.4 0.212  0.789  0.006</span>
-<span class="co">#&gt; MD - Manual laborers                  7911.4 0.212  0.211  0.018</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "category"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span>
-<span class="va">XGH</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span>
-<span class="co">#&gt; MTH.100.C - Charcoal stoves           7964.8 0.499  0.350  0.015</span>
-<span class="co">#&gt; MTH.100.C - Kerosene stoves           7964.8 0.499  0.035  0.059</span>
-<span class="co">#&gt; MTH.100.C - LPG stoves                7964.8 0.499  0.020  0.077</span>
-<span class="co">#&gt; MTH.100.C - Wood stoves               7964.8 0.499  0.595  0.024</span>
-<span class="co">#&gt; KE - Fans                             7964.8 0.059  0.036  0.096</span>
-<span class="co">#&gt; Light - Electric lights               7964.8 0.059  0.210  0.032</span>
-<span class="co">#&gt; Light - Televisions                   7964.8 0.059  0.040  0.002</span>
-<span class="co">#&gt; LTH.-10.C - Refrigerators             7964.8 0.059  0.222  0.036</span>
-<span class="co">#&gt; MD - Electric motors                  7964.8 0.059  0.350  0.680</span>
-<span class="co">#&gt; MD - Other appliances                 7964.8 0.059  0.015  0.680</span>
-<span class="co">#&gt; MTH.100.C - Electric heaters          7964.8 0.059  0.088  0.146</span>
-<span class="co">#&gt; MTH.200.C - Irons                     7964.8 0.059  0.016  0.309</span>
-<span class="co">#&gt; MTH.200.C - Electric heaters          7964.8 0.059  0.024  0.230</span>
-<span class="co">#&gt; MD - Boat engines                     7964.8 0.227  0.047  0.137</span>
-<span class="co">#&gt; MD - Diesel cars                      7964.8 0.227  0.338  0.123</span>
-<span class="co">#&gt; MD - Diesel trains                    7964.8 0.227  0.024  0.157</span>
-<span class="co">#&gt; MD - Industry static diesel engines   7964.8 0.227  0.185  0.246</span>
-<span class="co">#&gt; MD - Petrol cars                      7964.8 0.227  0.387  0.152</span>
-<span class="co">#&gt; MD - Tractors                         7964.8 0.227  0.020  0.061</span>
-<span class="co">#&gt; MD - Draught animals                  7964.8 0.215  0.787  0.006</span>
-<span class="co">#&gt; MD - Manual laborers                  7964.8 0.215  0.213  0.018</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "category"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span></code></pre></div>
-<p>Note that row and column ordering is provided for readability. The ordered rows show identical values of <span class="math inline">\(\phi_i\)</span> for allocation to the subcategories of Heat, Electricity, Mechanical drive (fueled by petroleum), and Muscle work (fueled by food and feed). Column order follows flows of energy and exergy through the economy, from primary stage to allocation to subcategories through allocation to subsubcategories and, finally, to a primary-to-useful efficiency for each task. All unique <span class="math inline">\(\phi_i\)</span> values sum to 1. (Specifically for 2003, 0.519 + 0.081 + 0.188 + 0.212 = 1.) Within each subcategory, <span class="math inline">\(\phi_{ij}\)</span> values sum to 1. (E.g., for Mechanical drive fueled by food and feed, 0.789 + 0.211 = 1)</p>
-<div id="perform-the-lmdi-decomposition-analysis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#perform-the-lmdi-decomposition-analysis" class="anchor"></a>Perform the LMDI decomposition analysis</h3>
-<p>To perform LMDI decomposition analysis, we use the <code><a href="../reference/lmdi.html">lmdi()</a></code> function after grouping on metadata variables (in this case, only <code>Country</code>).</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fillrowX</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">1</span>, ncol <span class="op">=</span> <span class="fl">4</span>,
-                   dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"row"</span>, 
-                                   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"EXp.ktoe"</span>, <span class="st">"phi_i"</span>, <span class="st">"phi_ij"</span>, <span class="st">"eta_ij"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="va">GHlmdi</span> <span class="op">&lt;-</span> <span class="va">XGH</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/lmdi.html">lmdi</a></span><span class="op">(</span>fillrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">fillrowX</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">GHlmdi</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 43</span>
-<span class="co">#&gt; Columns: 13</span>
-<span class="co">#&gt; Groups: Country [1]</span>
-<span class="co">#&gt; $ Country    &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH",…</span>
-<span class="co">#&gt; $ Year       &lt;dbl&gt; 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980,…</span>
-<span class="co">#&gt; $ X          &lt;list&gt; &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;…</span>
-<span class="co">#&gt; $ V          &lt;list&gt; 259.04, 281.4059, 309.6553, 318.3589, 319.1577, 329.2552, …</span>
-<span class="co">#&gt; $ Z          &lt;list&gt; &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;…</span>
-<span class="co">#&gt; $ dV_agg     &lt;list&gt; 0, 22.36586, 28.24945, 8.703568, 0.7987694, 10.09758, 13.8…</span>
-<span class="co">#&gt; $ D_agg      &lt;list&gt; 1, 1.086341, 1.100387, 1.028107, 1.002509, 1.031638, 1.041…</span>
-<span class="co">#&gt; $ dV         &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ D          &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ dV_agg_cum &lt;list&gt; 0, 22.36586, 50.61531, 59.31888, 60.11765, 70.21522, 84.03…</span>
-<span class="co">#&gt; $ D_agg_cum  &lt;list&gt; 1, 1.086341, 1.195396, 1.228995, 1.232079, 1.271059, 1.324…</span>
-<span class="co">#&gt; $ dV_cum     &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ D_cum      &lt;list&gt; &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span></code></pre></div>
-<p>(The need for and values in <code>fillrowX</code> are described below.)</p>
-</div>
-<div id="a-note-about-special-cases-for-calculating-entires-in-mathbfz" class="section level3">
-<h3 class="hasAnchor">
-<a href="#a-note-about-special-cases-for-calculating-entires-in-mathbfz" class="anchor"></a>A note about special cases for calculating entires in <span class="math inline">\(\mathbf{Z}\)</span>
+<code class="sourceCode R"><span><span class="va">prettifyXZ</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">XZ</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">XZ</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/sort_rows_cols.html" class="external-link">sort_rows_cols</a></span><span class="op">(</span>roworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="co"># Heat categories (phi_i = 0.622)</span></span>
+<span>      <span class="st">"HTH.600.C - Electric heaters"</span>, <span class="st">"MTH.100.C - Charcoal stoves"</span>,</span>
+<span>      <span class="st">"MTH.100.C - Kerosene stoves"</span>, <span class="st">"MTH.100.C - LPG stoves"</span>,</span>
+<span>      <span class="st">"MTH.100.C - Wood stoves"</span>,</span>
+<span>      <span class="co"># Electricity categories (phi_i = 0.020)</span></span>
+<span>      <span class="st">"KE - Fans"</span>, <span class="st">"Light - Electric lights"</span>,</span>
+<span>      <span class="st">"Light - Televisions"</span>, <span class="st">"LTH.-10.C - Refrigerators"</span>,</span>
+<span>      <span class="st">"MD - Electric motors"</span>, <span class="st">"MD - Other appliances"</span>,</span>
+<span>      <span class="st">"MTH.100.C - Electric heaters"</span>, <span class="st">"MTH.200.C - Irons"</span>,</span>
+<span>      <span class="st">"MTH.200.C - Electric heaters"</span>,</span>
+<span>      <span class="co"># Liquid petroleum categories (phi_i = 0.131)</span></span>
+<span>      <span class="st">"MD - Boat engines"</span>, <span class="st">"MD - Diesel cars"</span>,</span>
+<span>      <span class="st">"MD - Diesel trains"</span>, <span class="st">"MD - Industry static diesel engines"</span>,</span>
+<span>      <span class="st">"MD - Petrol cars"</span>, <span class="st">"MD - Tractors"</span>,</span>
+<span>      <span class="co"># Food and feed categories (phi_i = 0.226)</span></span>
+<span>      <span class="st">"MD - Draught animals"</span>, <span class="st">"MD - Manual laborers"</span><span class="op">)</span>,</span>
+<span>      colorder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EXp.ktoe"</span>, <span class="st">"phi_i"</span>, <span class="st">"phi_ij"</span>, <span class="st">"eta_ij"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">out</span><span class="op">[</span> , <span class="st">"EXp.ktoe"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"EXp.ktoe"</span><span class="op">]</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  <span class="va">out</span><span class="op">[</span> , <span class="st">"phi_i"</span><span class="op">]</span>    <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"phi_i"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="va">out</span><span class="op">[</span> , <span class="st">"phi_ij"</span><span class="op">]</span>   <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"phi_ij"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="va">out</span><span class="op">[</span> , <span class="st">"eta_ij"</span><span class="op">]</span>   <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">out</span><span class="op">[</span> , <span class="st">"eta_ij"</span><span class="op">]</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">XGH</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2003</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span></span>
+<span><span class="co">#&gt; HTH.600.C - Electric heaters          7911.4 0.519  0.005  0.343</span></span>
+<span><span class="co">#&gt; MTH.100.C - Charcoal stoves           7911.4 0.519  0.328  0.015</span></span>
+<span><span class="co">#&gt; MTH.100.C - Kerosene stoves           7911.4 0.519  0.031  0.064</span></span>
+<span><span class="co">#&gt; MTH.100.C - LPG stoves                7911.4 0.519  0.015  0.085</span></span>
+<span><span class="co">#&gt; MTH.100.C - Wood stoves               7911.4 0.519  0.622  0.024</span></span>
+<span><span class="co">#&gt; KE - Fans                             7911.4 0.081  0.035  0.069</span></span>
+<span><span class="co">#&gt; Light - Electric lights               7911.4 0.081  0.211  0.023</span></span>
+<span><span class="co">#&gt; Light - Televisions                   7911.4 0.081  0.039  0.001</span></span>
+<span><span class="co">#&gt; LTH.-10.C - Refrigerators             7911.4 0.081  0.212  0.026</span></span>
+<span><span class="co">#&gt; MD - Electric motors                  7911.4 0.081  0.359  0.487</span></span>
+<span><span class="co">#&gt; MD - Other appliances                 7911.4 0.081  0.015  0.487</span></span>
+<span><span class="co">#&gt; MTH.100.C - Electric heaters          7911.4 0.081  0.090  0.105</span></span>
+<span><span class="co">#&gt; MTH.200.C - Irons                     7911.4 0.081  0.016  0.222</span></span>
+<span><span class="co">#&gt; MTH.200.C - Electric heaters          7911.4 0.081  0.024  0.181</span></span>
+<span><span class="co">#&gt; MD - Boat engines                     7911.4 0.188  0.050  0.141</span></span>
+<span><span class="co">#&gt; MD - Diesel cars                      7911.4 0.188  0.345  0.123</span></span>
+<span><span class="co">#&gt; MD - Diesel trains                    7911.4 0.188  0.024  0.162</span></span>
+<span><span class="co">#&gt; MD - Industry static diesel engines   7911.4 0.188  0.192  0.261</span></span>
+<span><span class="co">#&gt; MD - Petrol cars                      7911.4 0.188  0.368  0.160</span></span>
+<span><span class="co">#&gt; MD - Tractors                         7911.4 0.188  0.020  0.062</span></span>
+<span><span class="co">#&gt; MD - Draught animals                  7911.4 0.212  0.789  0.006</span></span>
+<span><span class="co">#&gt; MD - Manual laborers                  7911.4 0.212  0.211  0.018</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "category"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span>
+<span><span class="va">XGH</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span></span>
+<span><span class="co">#&gt; MTH.100.C - Charcoal stoves           7964.8 0.499  0.350  0.015</span></span>
+<span><span class="co">#&gt; MTH.100.C - Kerosene stoves           7964.8 0.499  0.035  0.059</span></span>
+<span><span class="co">#&gt; MTH.100.C - LPG stoves                7964.8 0.499  0.020  0.077</span></span>
+<span><span class="co">#&gt; MTH.100.C - Wood stoves               7964.8 0.499  0.595  0.024</span></span>
+<span><span class="co">#&gt; KE - Fans                             7964.8 0.059  0.036  0.096</span></span>
+<span><span class="co">#&gt; Light - Electric lights               7964.8 0.059  0.210  0.032</span></span>
+<span><span class="co">#&gt; Light - Televisions                   7964.8 0.059  0.040  0.002</span></span>
+<span><span class="co">#&gt; LTH.-10.C - Refrigerators             7964.8 0.059  0.222  0.036</span></span>
+<span><span class="co">#&gt; MD - Electric motors                  7964.8 0.059  0.350  0.680</span></span>
+<span><span class="co">#&gt; MD - Other appliances                 7964.8 0.059  0.015  0.680</span></span>
+<span><span class="co">#&gt; MTH.100.C - Electric heaters          7964.8 0.059  0.088  0.146</span></span>
+<span><span class="co">#&gt; MTH.200.C - Irons                     7964.8 0.059  0.016  0.309</span></span>
+<span><span class="co">#&gt; MTH.200.C - Electric heaters          7964.8 0.059  0.024  0.230</span></span>
+<span><span class="co">#&gt; MD - Boat engines                     7964.8 0.227  0.047  0.137</span></span>
+<span><span class="co">#&gt; MD - Diesel cars                      7964.8 0.227  0.338  0.123</span></span>
+<span><span class="co">#&gt; MD - Diesel trains                    7964.8 0.227  0.024  0.157</span></span>
+<span><span class="co">#&gt; MD - Industry static diesel engines   7964.8 0.227  0.185  0.246</span></span>
+<span><span class="co">#&gt; MD - Petrol cars                      7964.8 0.227  0.387  0.152</span></span>
+<span><span class="co">#&gt; MD - Tractors                         7964.8 0.227  0.020  0.061</span></span>
+<span><span class="co">#&gt; MD - Draught animals                  7964.8 0.215  0.787  0.006</span></span>
+<span><span class="co">#&gt; MD - Manual laborers                  7964.8 0.215  0.213  0.018</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "category"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span></code></pre></div>
+<p>Note that row and column ordering is provided for readability. The
+ordered rows show identical values of <span class="math inline">\(\phi_i\)</span> for allocation to the
+subcategories of Heat, Electricity, Mechanical drive (fueled by
+petroleum), and Muscle work (fueled by food and feed). Column order
+follows flows of energy and exergy through the economy, from primary
+stage to allocation to subcategories through allocation to
+subsubcategories and, finally, to a primary-to-useful efficiency for
+each task. All unique <span class="math inline">\(\phi_i\)</span> values
+sum to 1. (Specifically for 2003, 0.519 + 0.081 + 0.188 + 0.212 = 1.)
+Within each subcategory, <span class="math inline">\(\phi_{ij}\)</span>
+values sum to 1. (E.g., for Mechanical drive fueled by food and feed,
+0.789 + 0.211 = 1)</p>
+<div class="section level3">
+<h3 id="perform-the-lmdi-decomposition-analysis">Perform the LMDI decomposition analysis<a class="anchor" aria-label="anchor" href="#perform-the-lmdi-decomposition-analysis"></a>
 </h3>
-<p>When a category of useful exergy is present in one year but absent in an adjacent year, the corresponding row in <span class="math inline">\(\mathbf{X}^0\)</span> or <span class="math inline">\(\mathbf{X}^T\)</span> is missing compared to the other. That happened in Ghana between 2003 and 2004; in 2003, VALCO’s aluminum smelters were operating, but in 2004 they were not. Thus, we treat the <code>HTH.600.C - Electric heaters</code> row specially in 2004.</p>
-<p>For 2004, we insert a row for <code>HTH.600.C - Electric Heaters</code> and fill it with positive numbers for primary exergy (<span class="math inline">\(X_{p,tot}\)</span> or <code>EXp,ktoe</code>), allocation from primary exergy to subcategory (<span class="math inline">\(\phi_{p,sc}\)</span> or <code>phi_i</code>), and thermodynamic efficiency (<span class="math inline">\(\eta_{ssc}\)</span> or <code>eta_ij</code>). (The fill values are irrelevant to the calculated result, so long as they are positive numbers.) We set the allocation from subcategory to subsubcategory (<span class="math inline">\(\phi_{sc,ssc}\)</span> or <code>phi_ij</code>) to <code>0</code>. This approach reflects the reality that despite the fact that there is no useful exergy of this type in 2004, we still have total primary exergy (<span class="math inline">\(X_{p,tot}\)</span>), there is still an allocation of primary exergy to the subcategory <code>Heat</code> (<span class="math inline">\(\phi_{p,sc} \neq 0\)</span>), and if there were electric heaters making <code>HTH.600.C - Electric heaters</code> in this year, they would have done so with a non-zero thermodynamic efficiency (<span class="math inline">\(\eta_{ssc}\)</span>).</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">XGH</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/sum_byname.html">sum_byname</a></span><span class="op">(</span><span class="va">fillrowX</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span>
-<span class="co">#&gt; MTH.100.C - Charcoal stoves           7964.8 0.499  0.350  0.015</span>
-<span class="co">#&gt; MTH.100.C - Kerosene stoves           7964.8 0.499  0.035  0.059</span>
-<span class="co">#&gt; MTH.100.C - LPG stoves                7964.8 0.499  0.020  0.077</span>
-<span class="co">#&gt; MTH.100.C - Wood stoves               7964.8 0.499  0.595  0.024</span>
-<span class="co">#&gt; KE - Fans                             7964.8 0.059  0.036  0.096</span>
-<span class="co">#&gt; Light - Electric lights               7964.8 0.059  0.210  0.032</span>
-<span class="co">#&gt; Light - Televisions                   7964.8 0.059  0.040  0.002</span>
-<span class="co">#&gt; LTH.-10.C - Refrigerators             7964.8 0.059  0.222  0.036</span>
-<span class="co">#&gt; MD - Electric motors                  7964.8 0.059  0.350  0.680</span>
-<span class="co">#&gt; MD - Other appliances                 7964.8 0.059  0.015  0.680</span>
-<span class="co">#&gt; MTH.100.C - Electric heaters          7964.8 0.059  0.088  0.146</span>
-<span class="co">#&gt; MTH.200.C - Irons                     7964.8 0.059  0.016  0.309</span>
-<span class="co">#&gt; MTH.200.C - Electric heaters          7964.8 0.059  0.024  0.230</span>
-<span class="co">#&gt; MD - Boat engines                     7964.8 0.227  0.047  0.137</span>
-<span class="co">#&gt; MD - Diesel cars                      7964.8 0.227  0.338  0.123</span>
-<span class="co">#&gt; MD - Diesel trains                    7964.8 0.227  0.024  0.157</span>
-<span class="co">#&gt; MD - Industry static diesel engines   7964.8 0.227  0.185  0.246</span>
-<span class="co">#&gt; MD - Petrol cars                      7964.8 0.227  0.387  0.152</span>
-<span class="co">#&gt; MD - Tractors                         7964.8 0.227  0.020  0.061</span>
-<span class="co">#&gt; MD - Draught animals                  7964.8 0.215  0.787  0.006</span>
-<span class="co">#&gt; MD - Manual laborers                  7964.8 0.215  0.213  0.018</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "category"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span></code></pre></div>
-<p><code>fillrowX</code> triggers special calculation of <span class="math inline">\(\mathbf{Z}\)</span> values for 2004. When<br><span class="math inline">\(X_{p,tot} &gt; 0\)</span>, <span class="math inline">\(\phi_{p,sc} &gt; 0\)</span>, <span class="math inline">\(\eta_{ssc} &gt; 0\)</span>, and <span class="math inline">\(\phi_{sc,ssc} = 0\)</span>, we employ Table 2, Row 2 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a> to calculate <code>Z[HTH.600.C - Electric heaters, phi_ij] = -6.416</code>, as shown below. The other values on the row are <code>0.0</code>. (If this example were switched in time such that the smelters were not used in 2003 but turned  in 2004, we would employ Table 2, Row 1 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">Ang et al. <span class="citation">(1998)</span></a>.)</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">GHlmdi</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"Z"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt;                                     EXp.ktoe   phi_i phi_ij eta_ij</span>
-<span class="co">#&gt; HTH.600.C - Electric heaters             0.0   0.000 -6.416  0.000</span>
-<span class="co">#&gt; MTH.100.C - Charcoal stoves              0.1  -0.790  1.360 -0.131</span>
-<span class="co">#&gt; MTH.100.C - Kerosene stoves              0.1  -0.311  1.053 -0.726</span>
-<span class="co">#&gt; MTH.100.C - LPG stoves                   0.0  -0.220  1.595 -0.600</span>
-<span class="co">#&gt; MTH.100.C - Wood stoves                  0.4  -2.304 -2.660  0.000</span>
-<span class="co">#&gt; KE - Fans                                0.0  -0.499  0.039  0.532</span>
-<span class="co">#&gt; Light - Electric lights                  0.0  -0.983 -0.017  1.066</span>
-<span class="co">#&gt; Light - Televisions                      0.0  -0.009  0.001  0.011</span>
-<span class="co">#&gt; LTH.-10.C - Refrigerators                0.0  -1.148  0.163  1.248</span>
-<span class="co">#&gt; MD - Electric motors                     0.8 -35.316 -2.905 37.624</span>
-<span class="co">#&gt; MD - Other appliances                    0.0  -1.477  0.114  1.574</span>
-<span class="co">#&gt; MTH.100.C - Electric heaters             0.0  -1.904 -0.133  2.018</span>
-<span class="co">#&gt; MTH.200.C - Irons                        0.0  -0.717  0.055  0.755</span>
-<span class="co">#&gt; MTH.200.C - Electric heaters             0.0  -0.844  0.004  0.643</span>
-<span class="co">#&gt; MD - Boat engines                        0.1   2.083 -0.858 -0.352</span>
-<span class="co">#&gt; MD - Diesel cars                         0.5  13.033 -1.465 -0.320</span>
-<span class="co">#&gt; MD - Diesel trains                       0.0   1.175 -0.152 -0.222</span>
-<span class="co">#&gt; MD - Industry static diesel engines      0.5  14.775 -3.050 -4.605</span>
-<span class="co">#&gt; MD - Petrol cars                         0.7  18.268  5.045 -4.713</span>
-<span class="co">#&gt; MD - Tractors                            0.0   0.383 -0.075 -0.009</span>
-<span class="co">#&gt; MD - Draught animals                     0.1   0.091 -0.018 -0.037</span>
-<span class="co">#&gt; MD - Manual laborers                     0.0   0.073  0.055 -0.038</span>
-<span class="co">#&gt; attr(,"rowtype")</span>
-<span class="co">#&gt; [1] "category"</span>
-<span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "factor"</span></code></pre></div>
+<p>To perform LMDI decomposition analysis, we use the
+<code><a href="../reference/lmdi.html">lmdi()</a></code> function after grouping on metadata variables (in
+this case, only <code>Country</code>).</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fillrowX</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">1</span>, ncol <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>                   dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"row"</span>, </span>
+<span>                                   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"EXp.ktoe"</span>, <span class="st">"phi_i"</span>, <span class="st">"phi_ij"</span>, <span class="st">"eta_ij"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">GHlmdi</span> <span class="op">&lt;-</span> <span class="va">XGH</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/lmdi.html">lmdi</a></span><span class="op">(</span>fillrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fillrowX</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">GHlmdi</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 43</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
+<span><span class="co">#&gt; Groups: Country [1]</span></span>
+<span><span class="co">#&gt; $ Country    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH",…</span></span>
+<span><span class="co">#&gt; $ Year       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980,…</span></span>
+<span><span class="co">#&gt; $ X          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;…</span></span>
+<span><span class="co">#&gt; $ V          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 259.04, 281.4059, 309.6553, 318.3589, 319.1577, 329.2552, …</span></span>
+<span><span class="co">#&gt; $ Z          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;, &lt;&lt;matrix[22 x 4]&gt;&gt;…</span></span>
+<span><span class="co">#&gt; $ dV_agg     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 0, 22.36586, 28.24945, 8.703568, 0.7987694, 10.09758, 13.8…</span></span>
+<span><span class="co">#&gt; $ D_agg      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 1, 1.086341, 1.100387, 1.028107, 1.002509, 1.031638, 1.041…</span></span>
+<span><span class="co">#&gt; $ dV         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ D          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ dV_agg_cum <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 0, 22.36586, 50.61531, 59.31888, 60.11765, 70.21522, 84.03…</span></span>
+<span><span class="co">#&gt; $ D_agg_cum  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> 1, 1.086341, 1.195396, 1.228995, 1.232079, 1.271059, 1.324…</span></span>
+<span><span class="co">#&gt; $ dV_cum     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span></span>
+<span><span class="co">#&gt; $ D_cum      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;, &lt;…</span></span></code></pre></div>
+<p>(The need for and values in <code>fillrowX</code> are described
+below.)</p>
 </div>
-<div id="presentation-of-results" class="section level3">
-<h3 class="hasAnchor">
-<a href="#presentation-of-results" class="anchor"></a>Presentation of results</h3>
-<p>The <code>GHlmdi</code> object contains everything needed to present the results. The focus here is on the ratioed aggregate (<code>D_agg_cum</code>) and disaggregate (<code>D_cum</code>) factors that affect changes in useful exergy delivered to the economy. So we first need to expand the data from matrices to tidy format and select the desired columns.</p>
+<div class="section level3">
+<h3 id="a-note-about-special-cases-for-calculating-entires-in-mathbfz">A note about special cases for calculating entires in <span class="math inline">\(\mathbf{Z}\)</span><a class="anchor" aria-label="anchor" href="#a-note-about-special-cases-for-calculating-entires-in-mathbfz"></a>
+</h3>
+<p>When a category of useful exergy is present in one year but absent in
+an adjacent year, the corresponding row in <span class="math inline">\(\mathbf{X}^0\)</span> or <span class="math inline">\(\mathbf{X}^T\)</span> is missing compared to the
+other. That happened in Ghana between 2003 and 2004; in 2003, VALCO’s
+aluminum smelters were operating, but in 2004 they were not. Thus, we
+treat the <code>HTH.600.C - Electric heaters</code> row specially in
+2004.</p>
+<p>For 2004, we insert a row for
+<code>HTH.600.C - Electric Heaters</code> and fill it with positive
+numbers for primary exergy (<span class="math inline">\(X_{p,tot}\)</span> or <code>EXp,ktoe</code>),
+allocation from primary exergy to subcategory (<span class="math inline">\(\phi_{p,sc}\)</span> or <code>phi_i</code>), and
+thermodynamic efficiency (<span class="math inline">\(\eta_{ssc}\)</span> or <code>eta_ij</code>). (The
+fill values are irrelevant to the calculated result, so long as they are
+positive numbers.) We set the allocation from subcategory to
+subsubcategory (<span class="math inline">\(\phi_{sc,ssc}\)</span> or
+<code>phi_ij</code>) to <code>0</code>. This approach reflects the
+reality that despite the fact that there is no useful exergy of this
+type in 2004, we still have total primary exergy (<span class="math inline">\(X_{p,tot}\)</span>), there is still an allocation
+of primary exergy to the subcategory <code>Heat</code> (<span class="math inline">\(\phi_{p,sc} \neq 0\)</span>), and if there were
+electric heaters making <code>HTH.600.C - Electric heaters</code> in
+this year, they would have done so with a non-zero thermodynamic
+efficiency (<span class="math inline">\(\eta_{ssc}\)</span>).</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">XGH</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"X"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://matthewheun.github.io/matsbyname/reference/sum_byname.html" class="external-link">sum_byname</a></span><span class="op">(</span><span class="va">fillrowX</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                     EXp.ktoe phi_i phi_ij eta_ij</span></span>
+<span><span class="co">#&gt; MTH.100.C - Charcoal stoves           7964.8 0.499  0.350  0.015</span></span>
+<span><span class="co">#&gt; MTH.100.C - Kerosene stoves           7964.8 0.499  0.035  0.059</span></span>
+<span><span class="co">#&gt; MTH.100.C - LPG stoves                7964.8 0.499  0.020  0.077</span></span>
+<span><span class="co">#&gt; MTH.100.C - Wood stoves               7964.8 0.499  0.595  0.024</span></span>
+<span><span class="co">#&gt; KE - Fans                             7964.8 0.059  0.036  0.096</span></span>
+<span><span class="co">#&gt; Light - Electric lights               7964.8 0.059  0.210  0.032</span></span>
+<span><span class="co">#&gt; Light - Televisions                   7964.8 0.059  0.040  0.002</span></span>
+<span><span class="co">#&gt; LTH.-10.C - Refrigerators             7964.8 0.059  0.222  0.036</span></span>
+<span><span class="co">#&gt; MD - Electric motors                  7964.8 0.059  0.350  0.680</span></span>
+<span><span class="co">#&gt; MD - Other appliances                 7964.8 0.059  0.015  0.680</span></span>
+<span><span class="co">#&gt; MTH.100.C - Electric heaters          7964.8 0.059  0.088  0.146</span></span>
+<span><span class="co">#&gt; MTH.200.C - Irons                     7964.8 0.059  0.016  0.309</span></span>
+<span><span class="co">#&gt; MTH.200.C - Electric heaters          7964.8 0.059  0.024  0.230</span></span>
+<span><span class="co">#&gt; MD - Boat engines                     7964.8 0.227  0.047  0.137</span></span>
+<span><span class="co">#&gt; MD - Diesel cars                      7964.8 0.227  0.338  0.123</span></span>
+<span><span class="co">#&gt; MD - Diesel trains                    7964.8 0.227  0.024  0.157</span></span>
+<span><span class="co">#&gt; MD - Industry static diesel engines   7964.8 0.227  0.185  0.246</span></span>
+<span><span class="co">#&gt; MD - Petrol cars                      7964.8 0.227  0.387  0.152</span></span>
+<span><span class="co">#&gt; MD - Tractors                         7964.8 0.227  0.020  0.061</span></span>
+<span><span class="co">#&gt; MD - Draught animals                  7964.8 0.215  0.787  0.006</span></span>
+<span><span class="co">#&gt; MD - Manual laborers                  7964.8 0.215  0.213  0.018</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "category"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span></code></pre></div>
+<p><code>fillrowX</code> triggers special calculation of <span class="math inline">\(\mathbf{Z}\)</span> values for 2004. When<br><span class="math inline">\(X_{p,tot} &gt; 0\)</span>, <span class="math inline">\(\phi_{p,sc} &gt; 0\)</span>, <span class="math inline">\(\eta_{ssc} &gt; 0\)</span>, and <span class="math inline">\(\phi_{sc,ssc} = 0\)</span>, we employ Table 2, Row
+2 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">Ang et al.
+<span class="citation">(1998)</span></a> to calculate
+<code>Z[HTH.600.C - Electric heaters, phi_ij] = -6.416</code>, as shown
+below. The other values on the row are <code>0.0</code>. (If this
+example were switched in time such that the smelters were not used in
+2003 but turned in 2004, we would employ Table 2, Row 1 of <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">Ang et al. <span class="citation">(1998)</span></a>.)</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">GHlmdi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2004</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="st">"Z"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">extract2</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prettifyXZ</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                     EXp.ktoe   phi_i phi_ij eta_ij</span></span>
+<span><span class="co">#&gt; HTH.600.C - Electric heaters             0.0   0.000 -6.416  0.000</span></span>
+<span><span class="co">#&gt; MTH.100.C - Charcoal stoves              0.1  -0.790  1.360 -0.131</span></span>
+<span><span class="co">#&gt; MTH.100.C - Kerosene stoves              0.1  -0.311  1.053 -0.726</span></span>
+<span><span class="co">#&gt; MTH.100.C - LPG stoves                   0.0  -0.220  1.595 -0.600</span></span>
+<span><span class="co">#&gt; MTH.100.C - Wood stoves                  0.4  -2.304 -2.660  0.000</span></span>
+<span><span class="co">#&gt; KE - Fans                                0.0  -0.499  0.039  0.532</span></span>
+<span><span class="co">#&gt; Light - Electric lights                  0.0  -0.983 -0.017  1.066</span></span>
+<span><span class="co">#&gt; Light - Televisions                      0.0  -0.009  0.001  0.011</span></span>
+<span><span class="co">#&gt; LTH.-10.C - Refrigerators                0.0  -1.148  0.163  1.248</span></span>
+<span><span class="co">#&gt; MD - Electric motors                     0.8 -35.316 -2.905 37.624</span></span>
+<span><span class="co">#&gt; MD - Other appliances                    0.0  -1.477  0.114  1.574</span></span>
+<span><span class="co">#&gt; MTH.100.C - Electric heaters             0.0  -1.904 -0.133  2.018</span></span>
+<span><span class="co">#&gt; MTH.200.C - Irons                        0.0  -0.717  0.055  0.755</span></span>
+<span><span class="co">#&gt; MTH.200.C - Electric heaters             0.0  -0.844  0.004  0.643</span></span>
+<span><span class="co">#&gt; MD - Boat engines                        0.1   2.083 -0.858 -0.352</span></span>
+<span><span class="co">#&gt; MD - Diesel cars                         0.5  13.033 -1.465 -0.320</span></span>
+<span><span class="co">#&gt; MD - Diesel trains                       0.0   1.175 -0.152 -0.222</span></span>
+<span><span class="co">#&gt; MD - Industry static diesel engines      0.5  14.775 -3.050 -4.605</span></span>
+<span><span class="co">#&gt; MD - Petrol cars                         0.7  18.268  5.045 -4.713</span></span>
+<span><span class="co">#&gt; MD - Tractors                            0.0   0.383 -0.075 -0.009</span></span>
+<span><span class="co">#&gt; MD - Draught animals                     0.1   0.091 -0.018 -0.037</span></span>
+<span><span class="co">#&gt; MD - Manual laborers                     0.0   0.073  0.055 -0.038</span></span>
+<span><span class="co">#&gt; attr(,"rowtype")</span></span>
+<span><span class="co">#&gt; [1] "category"</span></span>
+<span><span class="co">#&gt; attr(,"coltype")</span></span>
+<span><span class="co">#&gt; [1] "factor"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="presentation-of-results">Presentation of results<a class="anchor" aria-label="anchor" href="#presentation-of-results"></a>
+</h3>
+<p>The <code>GHlmdi</code> object contains everything needed to present
+the results. The focus here is on the ratioed aggregate
+(<code>D_agg_cum</code>) and disaggregate (<code>D_cum</code>) factors
+that affect changes in useful exergy delivered to the economy. So we
+first need to expand the data from matrices to tidy format and select
+the desired columns.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">GHlmdi_tidy</span> <span class="op">&lt;-</span> <span class="va">GHlmdi</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">D_agg_cum</span>, <span class="va">D_cum</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matnames</span>, value <span class="op">=</span> <span class="va">matvals</span>, <span class="op">-</span><span class="va">Country</span>, <span class="op">-</span><span class="va">Year</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/matsindf/man/expand_to_tidy.html">expand_to_tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">colnames</span>, <span class="op">-</span><span class="va">rowtypes</span>, <span class="op">-</span><span class="va">coltypes</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">GHlmdi_tidy</span>, <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 10 x 5</span>
-<span class="co">#&gt;    Country  Year matnames  rownames matvals</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 GH       1971 D_agg_cum &lt;NA&gt;       1    </span>
-<span class="co">#&gt;  2 GH       1971 D_cum     eta_ij     1    </span>
-<span class="co">#&gt;  3 GH       1971 D_cum     EXp.ktoe   1    </span>
-<span class="co">#&gt;  4 GH       1971 D_cum     phi_i      1    </span>
-<span class="co">#&gt;  5 GH       1971 D_cum     phi_ij     1    </span>
-<span class="co">#&gt;  6 GH       1972 D_agg_cum &lt;NA&gt;       1.09 </span>
-<span class="co">#&gt;  7 GH       1972 D_cum     eta_ij     0.999</span>
-<span class="co">#&gt;  8 GH       1972 D_cum     EXp.ktoe   1.05 </span>
-<span class="co">#&gt;  9 GH       1972 D_cum     phi_i      1.01 </span>
-<span class="co">#&gt; 10 GH       1972 D_cum     phi_ij     1.03</span></code></pre></div>
-<p>Next, we map the values of <code>matnames</code> and <code>rownames</code> to variable names appropriate for graphing, according to the table below.</p>
+<code class="sourceCode R"><span><span class="va">GHlmdi_tidy</span> <span class="op">&lt;-</span> <span class="va">GHlmdi</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">D_agg_cum</span>, <span class="va">D_cum</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html" class="external-link">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matnames</span>, value <span class="op">=</span> <span class="va">matvals</span>, <span class="op">-</span><span class="va">Country</span>, <span class="op">-</span><span class="va">Year</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://matthewheun.github.io/matsindf/reference/expand_to_tidy.html" class="external-link">expand_to_tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">colnames</span>, <span class="op">-</span><span class="va">rowtypes</span>, <span class="op">-</span><span class="va">coltypes</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GHlmdi_tidy</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 5</span></span></span>
+<span><span class="co">#&gt;    Country  Year matnames  rownames matvals</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> GH       <span style="text-decoration: underline;">1</span>971 D_agg_cum <span style="color: #BB0000;">NA</span>         1    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> GH       <span style="text-decoration: underline;">1</span>971 D_cum     eta_ij     1    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> GH       <span style="text-decoration: underline;">1</span>971 D_cum     EXp.ktoe   1    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> GH       <span style="text-decoration: underline;">1</span>971 D_cum     phi_i      1    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> GH       <span style="text-decoration: underline;">1</span>971 D_cum     phi_ij     1    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GH       <span style="text-decoration: underline;">1</span>972 D_agg_cum <span style="color: #BB0000;">NA</span>         1.09 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GH       <span style="text-decoration: underline;">1</span>972 D_cum     eta_ij     0.999</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GH       <span style="text-decoration: underline;">1</span>972 D_cum     EXp.ktoe   1.05 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GH       <span style="text-decoration: underline;">1</span>972 D_cum     phi_i      1.01 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GH       <span style="text-decoration: underline;">1</span>972 D_cum     phi_ij     1.03</span></span></code></pre></div>
+<p>Next, we map the values of <code>matnames</code> and
+<code>rownames</code> to variable names appropriate for graphing,
+according to the table below.</p>
 <table class="table">
 <colgroup>
 <col width="9%">
@@ -825,102 +968,129 @@ but sufficient detail to illustrate features of the calculations.</p>
 <td align="right">D<sub>str</sub>
 </td>
 <td align="center"><span class="math inline">\(\phi_{p,sc}\)</span></td>
-<td align="left">Allocation of primary exergy (<span class="math inline">\(p\)</span>) to subcategory (<span class="math inline">\(sc\)</span>) (Heat, Electric, Mechanical drive, Muscle work) or main class structural change</td>
+<td align="left">Allocation of primary exergy (<span class="math inline">\(p\)</span>) to subcategory (<span class="math inline">\(sc\)</span>) (Heat, Electric, Mechanical drive,
+Muscle work) or main class structural change</td>
 </tr>
 <tr class="even">
 <td align="right">D<sub>eff</sub>
 </td>
 <td align="center"><span class="math inline">\(\eta_{ssc}\)</span></td>
-<td align="left">Primary-to-useful thermodynamic efficiency of subsubcategory (<span class="math inline">\(ssc\)</span>)</td>
+<td align="left">Primary-to-useful thermodynamic efficiency of
+subsubcategory (<span class="math inline">\(ssc\)</span>)</td>
 </tr>
 <tr class="odd">
 <td align="right">D<sub>dil</sub>
 </td>
 <td align="center"><span class="math inline">\(\phi_{sc,ssc}\)</span></td>
-<td align="left">Allocation ratio of exergy from subcategory (<span class="math inline">\(sc)\)</span> to subsubcategory (<span class="math inline">\(ssc\)</span>) (MD - Diesel trains, Electric lights, etc.) or subclass structural change</td>
+<td align="left">Allocation ratio of exergy from subcategory (<span class="math inline">\(sc)\)</span> to subsubcategory (<span class="math inline">\(ssc\)</span>) (MD - Diesel trains, Electric
+lights, etc.) or subclass structural change</td>
 </tr>
 </tbody>
 </table>
-<p>We also set the levels of the <code>Factor</code>s, and thereby the order in which they will appear in the legend of the graph. We choose an order that reflects the vertical positioning of the lines on the graph.</p>
+<p>We also set the levels of the <code>Factor</code>s, and thereby the
+order in which they will appear in the legend of the graph. We choose an
+order that reflects the vertical positioning of the lines on the
+graph.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">GHlmdi_forgraphing</span> <span class="op">&lt;-</span> <span class="va">GHlmdi_tidy</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
-    Factor <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
-      <span class="va">matnames</span> <span class="op">==</span> <span class="st">"D_agg_cum"</span> <span class="op">~</span> <span class="st">"D_tot"</span>, 
-      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"EXp.ktoe"</span> <span class="op">~</span> <span class="st">"D_ex"</span>,
-      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"eta_ij"</span> <span class="op">~</span> <span class="st">"D_eff"</span>, 
-      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"phi_i"</span>  <span class="op">~</span> <span class="st">"D_str"</span>, 
-      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"phi_ij"</span> <span class="op">~</span> <span class="st">"D_dil"</span> 
-    <span class="op">)</span>, 
-    Factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">Factor</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"D_tot"</span>, <span class="st">"D_ex"</span>, <span class="st">"D_str"</span>, <span class="st">"D_eff"</span>, <span class="st">"D_dil"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>
-    value <span class="op">=</span> <span class="va">matvals</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rownames</span>, <span class="op">-</span><span class="va">matnames</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Factor</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">GHlmdi_forgraphing</span>, <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 10 x 4</span>
-<span class="co">#&gt; # Groups:   Country, Factor [5]</span>
-<span class="co">#&gt;    Country  Year value Factor</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; </span>
-<span class="co">#&gt;  1 GH       1971 1     D_tot </span>
-<span class="co">#&gt;  2 GH       1971 1     D_eff </span>
-<span class="co">#&gt;  3 GH       1971 1     D_ex  </span>
-<span class="co">#&gt;  4 GH       1971 1     D_str </span>
-<span class="co">#&gt;  5 GH       1971 1     D_dil </span>
-<span class="co">#&gt;  6 GH       1972 1.09  D_tot </span>
-<span class="co">#&gt;  7 GH       1972 0.999 D_eff </span>
-<span class="co">#&gt;  8 GH       1972 1.05  D_ex  </span>
-<span class="co">#&gt;  9 GH       1972 1.01  D_str </span>
-<span class="co">#&gt; 10 GH       1972 1.03  D_dil</span></code></pre></div>
-<p>Finally, we create a graph showing both the total changes (<span class="math inline">\(D_{tot}\)</span>) and the multiplicative factors that comprise the total change (<span class="math inline">\(D_{ex}\)</span>, <span class="math inline">\(D_{str}\)</span>, <span class="math inline">\(D_{eff}\)</span>, and <span class="math inline">\(D_{dil}\)</span>).</p>
+<code class="sourceCode R"><span><span class="va">GHlmdi_forgraphing</span> <span class="op">&lt;-</span> <span class="va">GHlmdi_tidy</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Factor <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">matnames</span> <span class="op">==</span> <span class="st">"D_agg_cum"</span> <span class="op">~</span> <span class="st">"D_tot"</span>, </span>
+<span>      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"EXp.ktoe"</span> <span class="op">~</span> <span class="st">"D_ex"</span>,</span>
+<span>      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"eta_ij"</span> <span class="op">~</span> <span class="st">"D_eff"</span>, </span>
+<span>      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"phi_i"</span>  <span class="op">~</span> <span class="st">"D_str"</span>, </span>
+<span>      <span class="va">rownames</span> <span class="op">==</span> <span class="st">"phi_ij"</span> <span class="op">~</span> <span class="st">"D_dil"</span> </span>
+<span>    <span class="op">)</span>, </span>
+<span>    Factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Factor</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D_tot"</span>, <span class="st">"D_ex"</span>, <span class="st">"D_str"</span>, <span class="st">"D_eff"</span>, <span class="st">"D_dil"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>    value <span class="op">=</span> <span class="va">matvals</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">rownames</span>, <span class="op">-</span><span class="va">matnames</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Factor</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GHlmdi_forgraphing</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Groups:   Country, Factor [5]</span></span></span>
+<span><span class="co">#&gt;    Country  Year value Factor</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> GH       <span style="text-decoration: underline;">1</span>971 1     D_tot </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> GH       <span style="text-decoration: underline;">1</span>971 1     D_eff </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> GH       <span style="text-decoration: underline;">1</span>971 1     D_ex  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> GH       <span style="text-decoration: underline;">1</span>971 1     D_str </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> GH       <span style="text-decoration: underline;">1</span>971 1     D_dil </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GH       <span style="text-decoration: underline;">1</span>972 1.09  D_tot </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GH       <span style="text-decoration: underline;">1</span>972 0.999 D_eff </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GH       <span style="text-decoration: underline;">1</span>972 1.05  D_ex  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GH       <span style="text-decoration: underline;">1</span>972 1.01  D_str </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GH       <span style="text-decoration: underline;">1</span>972 1.03  D_dil</span></span></code></pre></div>
+<p>Finally, we create a graph showing both the total changes (<span class="math inline">\(D_{tot}\)</span>) and the multiplicative factors
+that comprise the total change (<span class="math inline">\(D_{ex}\)</span>, <span class="math inline">\(D_{str}\)</span>, <span class="math inline">\(D_{eff}\)</span>, and <span class="math inline">\(D_{dil}\)</span>).</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">GHlmdi_forgraphing</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span>, y <span class="op">=</span> <span class="va">value</span>, linetype <span class="op">=</span> <span class="va">Factor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">1</span>, colour <span class="op">=</span> <span class="st">"gray50"</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Cumulative changes relative to 1971 [-]"</span>, linetype <span class="op">=</span> <span class="cn">NULL</span>, colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_linetype_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"D_tot"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D_ex"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"D_str"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"D_dil"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"D_eff"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,
-                        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"D_tot"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">tot</span><span class="op">]</span><span class="op">)</span>, 
-                                   <span class="st">"D_ex"</span>  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">ex</span><span class="op">]</span><span class="op">)</span>, 
-                                   <span class="st">"D_str"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">str</span><span class="op">]</span><span class="op">)</span>, 
-                                   <span class="st">"D_dil"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">dil</span><span class="op">]</span><span class="op">)</span>, 
-                                   <span class="st">"D_eff"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">eff</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_classic</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">GHlmdi_forgraphing</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span>, y <span class="op">=</span> <span class="va">value</span>, linetype <span class="op">=</span> <span class="va">Factor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">1</span>, colour <span class="op">=</span> <span class="st">"gray50"</span>, linewidth <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="st">"Cumulative changes relative to 1971 [-]"</span>, linetype <span class="op">=</span> <span class="cn">NULL</span>, colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_linetype_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D_tot"</span> <span class="op">=</span> <span class="fl">1</span>, <span class="st">"D_ex"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"D_str"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"D_dil"</span> <span class="op">=</span> <span class="fl">6</span>, <span class="st">"D_eff"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
+<span>                        labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"D_tot"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">tot</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>                                   <span class="st">"D_ex"</span>  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">ex</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>                                   <span class="st">"D_str"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">str</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>                                   <span class="st">"D_dil"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">dil</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>                                   <span class="st">"D_eff"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">D</span><span class="op">[</span><span class="va">eff</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="LMDIR_files/figure-html/graph-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Note that the graph above is the same as Figure 7 of <a href="https://doi.org/10.1016/j.apenergy.2019.01.255">Heun and Brockway <span class="citation">(2019)</span></a>.</p>
+<p>Note that the graph above is the same as Figure 7 of <a href="https://doi.org/10.1016/j.apenergy.2019.01.255" class="external-link">Heun and Brockway
+<span class="citation">(2019)</span></a>.</p>
 </div>
 </div>
-<div id="conclusion" class="section level2">
-<h2 class="hasAnchor">
-<a href="#conclusion" class="anchor"></a>Conclusion</h2>
-<p>The <code>LMDIR</code> package provides a convenient and powerful capability for log-mean divisia index decomposition analysis of energy conversion chains expressed as Physical Supply Use Table (PSUT) matrices.</p>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>The <code>LMDIR</code> package provides a convenient and powerful
+capability for log-mean divisia index decomposition analysis of energy
+conversion chains expressed as Physical Supply Use Table (PSUT)
+matrices.</p>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Ang:2005" class="csl-entry">
-Ang, B. W. 2005. <span>“The <span>LMDI</span> Approach to Decomposition Analysis: A Practical Guide.”</span> <em>Energy Policy</em> 33: 867–71. <a href="https://doi.org/10.1016/j.enpol.2003.10.010">https://doi.org/10.1016/j.enpol.2003.10.010</a>.
+Ang, B. W. 2005. <span>“The <span>LMDI</span> Approach to Decomposition
+Analysis: A Practical Guide.”</span> <em>Energy Policy</em> 33: 867–71.
+<a href="https://doi.org/10.1016/j.enpol.2003.10.010" class="external-link">https://doi.org/10.1016/j.enpol.2003.10.010</a>.
 </div>
 <div id="ref-Ang:1998" class="csl-entry">
-Ang, B. W., F. Q. Zhang, and Ki-Hong Choi. 1998. <span>“Factorizing Changes in Energy and Environmental Indicators Through Decomposition.”</span> <em>Energy</em> 23 (6): 489–95. <a href="https://doi.org/10.1016/s0360-5442(98)00016-4">https://doi.org/10.1016/s0360-5442(98)00016-4</a>.
+Ang, B. W., F. Q. Zhang, and Ki-Hong Choi. 1998. <span>“Factorizing
+Changes in Energy and Environmental Indicators Through
+Decomposition.”</span> <em>Energy</em> 23 (6): 489–95. <a href="https://doi.org/10.1016/s0360-5442(98)00016-4" class="external-link">https://doi.org/10.1016/s0360-5442(98)00016-4</a>.
 </div>
 <div id="ref-Brockway:2015aa" class="csl-entry">
-Brockway, Paul E., Julia K. Steinberger, John R. Barrett, and Timothy J. Foxon. 2015. <span>“Understanding <span>C</span>hina’s Past and Future Energy Demand: An Exergy Efficiency and Decomposition Analysis.”</span> <em>Applied Energy</em> 155: 892–903. <a href="https://doi.org/10.1016/j.apenergy.2015.05.082">https://doi.org/10.1016/j.apenergy.2015.05.082</a>.
+Brockway, Paul E., Julia K. Steinberger, John R. Barrett, and Timothy J.
+Foxon. 2015. <span>“Understanding <span>C</span>hina’s Past and Future
+Energy Demand: An Exergy Efficiency and Decomposition Analysis.”</span>
+<em>Applied Energy</em> 155: 892–903. <a href="https://doi.org/10.1016/j.apenergy.2015.05.082" class="external-link">https://doi.org/10.1016/j.apenergy.2015.05.082</a>.
 </div>
 <div id="ref-Heun:2019" class="csl-entry">
-Heun, Matthew Kuperus, and Paul E. Brockway. 2019. <span>“Meeting 2030 Primary Energy and Economic Growth Goals: Mission Impossible?”</span> <em>Applied Energy</em> 251 (February): 1–24. <a href="https://doi.org/10.1016/j.apenergy.2019.01.255">https://doi.org/10.1016/j.apenergy.2019.01.255</a>.
+Heun, Matthew Kuperus, and Paul E. Brockway. 2019. <span>“Meeting 2030
+Primary Energy and Economic Growth Goals: Mission Impossible?”</span>
+<em>Applied Energy</em> 251 (February): 1–24. <a href="https://doi.org/10.1016/j.apenergy.2019.01.255" class="external-link">https://doi.org/10.1016/j.apenergy.2019.01.255</a>.
 </div>
 <div id="ref-Heun:2018" class="csl-entry">
-Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A
+Physical Supply-Use Table Framework for Energy Analysis on the Energy
+Conversion Chain.”</span> <em>Applied Energy</em> 226 (September):
+1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
 </div>
 <div id="ref-Liu:2003" class="csl-entry">
-Liu, F. L., and B. W. Ang. 2003. <span>“Eight Methods for Decomposing the Aggregate Energy-Intensity of Industry.”</span> <em>Applied Energy</em> 76 (1-3): 15–23. <a href="https://doi.org/10.1016/s0306-2619(03)00043-6">https://doi.org/10.1016/s0306-2619(03)00043-6</a>.
+Liu, F. L., and B. W. Ang. 2003. <span>“Eight Methods for Decomposing
+the Aggregate Energy-Intensity of Industry.”</span> <em>Applied
+Energy</em> 76 (1-3): 15–23. <a href="https://doi.org/10.1016/s0306-2619(03)00043-6" class="external-link">https://doi.org/10.1016/s0306-2619(03)00043-6</a>.
 </div>
 <div id="ref-Wood:2006" class="csl-entry">
-Wood, Richard, and Manfred Lenzen. 2006. <span>“Zero-Value Problems of the Logarithmic Mean Divisia Index Decomposition Method.”</span> <em>Energy Policy</em> 34 (12): 1326–31. <a href="https://doi.org/10.1016/j.enpol.2004.11.010">https://doi.org/10.1016/j.enpol.2004.11.010</a>.
+Wood, Richard, and Manfred Lenzen. 2006. <span>“Zero-Value Problems of
+the Logarithmic Mean Divisia Index Decomposition Method.”</span>
+<em>Energy Policy</em> 34 (12): 1326–31. <a href="https://doi.org/10.1016/j.enpol.2004.11.010" class="external-link">https://doi.org/10.1016/j.enpol.2004.11.010</a>.
 </div>
 </div>
 </div>
@@ -937,11 +1107,13 @@ Wood, Richard, and Manfred Lenzen. 2006. <span>“Zero-Value Problems of the Log
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p></p>
+<p>Developed by Matthew Heun.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -949,6 +1121,8 @@ Wood, Richard, and Manfred Lenzen. 2006. <span>“Zero-Value Problems of the Log
 
   
 
+
+  
 
   </body>
 </html>

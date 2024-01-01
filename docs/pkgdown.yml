@@ -1,7 +1,7 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1
+pandoc: 3.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   LMDIR: LMDIR.html
-last_built: 2021-04-12T23:22Z
+last_built: 2024-01-01T17:26Z
 
