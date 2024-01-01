@@ -4,12 +4,12 @@ citEntry(entry = "Manual",
   title        = "LMDIR: Log Mean Divisia Index Decomposition in R",
   author       = personList(as.person("Matthew Kuperus Heun")),
   year         = "2021",
-  note         = "R package version 0.1.13",
+  note         = "R package version 0.1.14",
   url          = "https://github.com/MatthewHeun/LMDIR",
 
   textVersion  =
-  paste("Matthew Kuperus Heun (2021).",
+  paste("Matthew Kuperus Heun (2024).",
         "LMDIR: Log Mean Divisia Index Decomposition in R.",
-        "R package version 0.1.13.",
+        "R package version 0.1.14.",
         "https://github.com/MatthewHeun/LMDIR")
 )

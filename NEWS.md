@@ -3,11 +3,8 @@ title: "Release notes for `LMDIR`"
 output: html_document
 ---
 
-Cite all releases with doi [10.5281/zenodo.6409759](https://doi.org/10.5281/zenodo.6409759), 
-which always resolves to the latest release.
 
-
-# LMDIR 0.1.13 (2024-01-01)
+# LMDIR 0.1.14 (2024-01-01)
 
 * First Zenodo release
 * No new tests.
