@@ -1,8 +1,3 @@
-# Contains tests for the util functions in the LMDIR package.
-
-###########################################################
-context("Utilities")
-###########################################################
 
 test_that("Zij works as expected", {
   # Set up
@@ -123,20 +118,12 @@ test_that("Z_byname works as expected", {
 })
 
 
-###########################################################
-context("Group error")
-###########################################################
-
 test_that("errors are given when grouping errors are present", {
   # Verify that grouping on time fails.
   expect_error(create_simple_LMDI() %>% dplyr::group_by(Country, Year) %>% lmdi(),
                "'Year' is a grouping variable, but you can't group on time in argument .lmdidata of collapse_to_matrices.")
 })
 
-
-###########################################################
-context("Preserve grouping")
-###########################################################
 
 test_that("Preserving grouping works as expected", {
   res <- create_simple_LMDI() %>%
@@ -148,10 +135,6 @@ test_that("Preserving grouping works as expected", {
   expect_equal(group_vars(res), c("Country", "groupingcol"))
 })
 
-
-###########################################################
-context("First row 0s and 1s")
-###########################################################
 
 test_that("First row contains 0s and 1s", {
   res <- create_simple_LMDI() %>%
@@ -173,10 +156,6 @@ test_that("First row contains 0s and 1s", {
   expect_equal(res$D_cum[[1]], D0)
 })
 
-
-###########################################################
-context("Fillrow")
-###########################################################
 
 test_that("fillrow option works as expected on Z_byname", {
   # Create X_0 and X_T matrices that have different rows.
@@ -239,7 +218,7 @@ test_that("fillrow option works as expected on Z_byname", {
                tolerance = 1e-6)
 
   expect_equal(res1$D_agg[[1]], 1)
-  expect_equal(res1$D_agg[[2]], 0.213582281)
+  expect_equal(res1$D_agg[[2]], 0.2135822730663597)
   expect_equal(res1$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
                  matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res1$D[[2]], matrix(c(0.588433187, 0.804912278, 0.612844653, 0.7358158),
@@ -260,7 +239,7 @@ test_that("fillrow option works as expected on Z_byname", {
                tolerance = 1e-6)
 
   expect_equal(res2$D_agg[[1]], 1)
-  expect_equal(res2$D_agg[[2]], 0.213582281)
+  expect_equal(res2$D_agg[[2]], 0.2135822730663597)
   expect_equal(res2$D[[1]], matrix(1, nrow = 4, ncol = 1, dimnames = list(dn[[2]], "categories")) %>%
                  matsbyname::setrowtype("factors") %>% matsbyname::setcoltype("categories"))
   expect_equal(res2$D[[2]], matrix(c(1.002733012, 1.146589093, 0.889606884, 0.208820902),

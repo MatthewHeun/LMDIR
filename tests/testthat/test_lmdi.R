@@ -1,8 +1,3 @@
-# Contains tests for the LMDIR package.
-
-###########################################################
-context("Linear LMDI")
-###########################################################
 
 test_that("linear LMDI works as expected", {
   res <- create_simple_LMDI() %>%
@@ -39,10 +34,6 @@ test_that("linear LMDI works as expected", {
 })
 
 
-###########################################################
-context("Multiplicative LMDI")
-###########################################################
-
 test_that("multiplicative LMDI works as expected", {
   res <- create_simple_LMDI() %>%
     dplyr::group_by(Country) %>%
@@ -78,10 +69,6 @@ test_that("multiplicative LMDI works as expected", {
   expect_equal(res$D_cum[[4]], matsbyname::hadamardproduct_byname(res$D_cum[[3]], res$D[[4]]))
 })
 
-
-###########################################################
-context("In a data frame with custom fillrow")
-###########################################################
 
 test_that("LMDI works as expected with a custom fillrow", {
   simple_lmdi <- create_simple_LMDI() %>%
