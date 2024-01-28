@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.10449393](https://doi.org/10.5281/zen
 which always resolves to the latest release.
 
 
+* Now running tests in parallel.
+* Upgrade to testthat v3.
+
+
 # LMDIR 0.1.14 (2024-01-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10449394.svg)](https://doi.org/10.5281/zenodo.10449394)
 
 * First Zenodo release
