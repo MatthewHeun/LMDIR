@@ -7,8 +7,8 @@ Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Maintainer: Matthew Heun <matthew.heun@me.com>
 Description: An implementation of log-mean divisia index decomposition analysis in R (LMDIR) based on 
-             the paper B.W. Ang. The LMDI approach to decomposition analysis: A practical guide. 
-             Energy Policy, 33:867-871, 2005.
+             the paper B.W. Ang. LMDI decomposition approach: A guide for implementation. 
+             Energy Policy, 86:233-238, 2015.
 License: MIT + file LICENSE
 Language: en-US
 Encoding: UTF-8
@@ -33,7 +33,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    tidyr
+    tidyr,
+    purrr
 VignetteBuilder: 
     knitr
 URL: https://matthewheun.github.io/LMDIR

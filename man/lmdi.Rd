@@ -9,6 +9,7 @@ lmdi(
   time = "Year",
   X = "X",
   fillrow = NULL,
+  weights = c("LMDI-I", "LMDI-II"),
   V = "V",
   Z = "Z",
   deltaV = "dV",
@@ -33,6 +34,9 @@ Default is "\code{X}".}
 \item{fillrow}{a row vector of type \code{matrix} passed to \code{\link[=Z_byname]{Z_byname()}}.
 (See \code{\link[=Z_byname]{Z_byname()}} for details.)}
 
+\item{weights}{the name of the weights type chosen for the LMDI calculations.
+\code{weights} should be one of "LMDI-I" or "LMDI-II". Default is "LMDI-I".}
+
 \item{V}{the name for the \code{V} output column (a string).
 Default is "\code{V}".}
 
@@ -46,8 +50,14 @@ Default is "\code{dV}".}
 Default is "\code{D}".}
 }
 \value{
-a data frame containing several columns.
+a data frame containing several columns, including:
+* \code{Z}: The decomposed Z matrix.
+* \code{dV}: The additive change in V calculated from Z.
+* \code{D}: The multiplicative changes in V calculated from Z.
+* \code{dV_agg} and \code{D_agg}; The aggregate changes.
+* \code{dV_cum} and \code{D_cum}: The cumulative sums and products.
 }
 \description{
 Performs log-mean divisia index decomposition analysis on a suitably-formatted data frame.
+The results are provided for two weight types, LMDI-I and LMDI-II, suffixed with \verb{_I} and \verb{_II}.
 }

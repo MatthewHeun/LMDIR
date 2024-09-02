@@ -48,13 +48,16 @@
 #' @param X_T an `X` matrix for final time `T`
 #' @param fillrow a row vector of type `matrix` with column names identical
 #'                to `X_0` and `X_T`. (See details.)
+#' @param weights the name of the weights type chosen for the LMDI calculations.
+#'        `weights` should be one of "LMDI-I" or "LMDI-II". Default is "LMDI-I".
 #'
-#' @return A `Z` matrix.
+#' @return A `Z` list of matrices for LMDI-I and LMDI-II weights.
 #'
 #' @export
 #'
-Z_byname <- function(X_0, X_T, fillrow = NULL){
+Z_byname <- function(X_0, X_T, fillrow = NULL, weights = c("LMDI-I", "LMDI-II")){
   fillrow <- matsbyname::prep_vector_arg(X_0, vector_arg = fillrow)
+  weights <- match.arg(weights, choices = c("LMDI-I", "LMDI-II"))
   Z_func <- function(X_0, X_T, fillrow = NULL){
     # At this point, X_0 and X_T are single matrices.
     # We need to take control of completing and sorting X_0 and X_T matrices here, because
@@ -66,7 +69,7 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
       # Factorizing changes in energy and environmental indicators through decomposition,
       # Energy, Volume 23, Number 6, pp. 489-495.
       fillrow <- matrix(1e-10, nrow = 1, ncol = ncol(X_0),
-                         dimnames = list("row", colnames(X_0))) %>%
+                        dimnames = list("row", colnames(X_0))) %>%
         matsbyname::setrowtype(matsbyname::rowtype(X_0)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0))
     }
     # Complete the matrices relative to one another, using fillrow.
@@ -86,17 +89,18 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
     Z <- matrix(nrow = nrow(X_0_comp_sort), ncol = ncol(X_0_comp_sort)) %>%
       matsbyname::setrownames_byname(rownames(X_0_comp_sort)) %>% matsbyname::setcolnames_byname(colnames(X_0_comp_sort)) %>%
       matsbyname::setrowtype(matsbyname::rowtype(X_0_comp_sort)) %>% matsbyname::setcoltype(matsbyname::coltype(X_0_comp_sort))
+
     # Use an old-fashioned for loop to fill all elements of the Z matrix
     for (i in 1:nrow(Z)) {
       for (j in 1:ncol(Z)) {
-        Z[i, j] <- Zij(i = i, j = j, X_0 = X_0_comp_sort, X_T = X_T_comp_sort)
+        Z[i, j] <- Zij(i = i, j = j, X_0 = X_0_comp_sort, X_T = X_T_comp_sort, weights = weights)
       }
     }
     return(Z)
   }
 
   matsbyname::binaryapply_byname(Z_func, a = X_0, b = X_T,
-                     .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
+                                 .FUNdots = list(fillrow = fillrow), match_type = "all", .organize = FALSE)
 }
 
 #' Calculate element `Z_i,j`
@@ -112,26 +116,41 @@ Z_byname <- function(X_0, X_T, fillrow = NULL){
 #'
 #' Arguments `i`, `j`, `X_0`, and `X_T` are optional.
 #' If they are not specified,
-#' arguments `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij`
+#' arguments `v_0`, `v_T`, `V_0`, `V_T`, `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij`
 #' must be given.
 #'
 #' @param i optional row index for `X_0` and `X_T`.
 #' @param j optional column index for `X_0` and `X_T`.
 #' @param X_0 optional sub-sector by factor matrix for time 0.
 #' @param X_T optional sub-sector by factor matrix for time T.
-#' @param v_0i1 the i,1th element of the `v_0` column vector. (v_0 is formed from the row products of the `X_0` matrix.)
-#' @param v_Ti1 the i,1th element of the `v_T` column vector. (v_T is formed from the row products of the `X_T` matrix.)
+#' @param weights the name of the weights type chosen for the LMDI calculations.
+#'        `weights` should be one of "LMDI-I" or "LMDI-II". Default is "LMDI-I".
+#' @param v_0 the column vector formed from the row products of the `X_0` matrix (only necessary for LMDI-II weights).
+#' @param v_T the column vector formed from the row products of the `X_T` matrix (only necessary for LMDI-II weights).
+#' @param V_0 the column sum of the `v_0` column vector (only necessary for LMDI-II weights).
+#' @param V_T the column sum of the `v_T` column vector (only necessary for LMDI-II weights).
+#' @param v_0i1 the i,1th element of the `v_0` column vector.
+#' @param v_Ti1 the i,1th element of the `v_T` column vector.
 #' @param X_0ij the i,jth element of the `X_0` matrix
 #' @param X_Tij the i,jth element of the `X_T` matrix
 #'
-#' @return the Z value corresponding to the `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij` values
+#' @return the `Z_I_ij` the LMDI-I value corresponding to the `v_0i1`, `v_Ti1`, `X_0ij`, and `X_Tij` values and the
+#' `Z_II_ij` the LMDI-II Z value corresponding to the `v_0`, `v_T`, `V_0`, `V_T`, `v_0i1`, `v_Ti1`, `X_0ij`, and
+#' `V_Tij` values for row `i` and column `j`.
 #'
 #' @export
 Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
+                weights = c("LMDI-I", "LMDI-II"),
+                v_0 = matsbyname::rowprods_byname(X_0)[, 1],
+                v_T = matsbyname::rowprods_byname(X_T)[, 1],
+                V_0 = matsbyname::colsums_byname(matsbyname::rowprods_byname(X_0))[, 1],
+                V_T = matsbyname::colsums_byname(matsbyname::rowprods_byname(X_T))[, 1],
                 v_0i1 = matsbyname::rowprods_byname(X_0)[i, 1],
                 v_Ti1 = matsbyname::rowprods_byname(X_T)[i, 1],
                 X_0ij = X_0[i, j],
                 X_Tij = X_T[i, j]){
+
+  weights <- match.arg(weights, choices = c("LMDI-I", "LMDI-II"))
 
   # Check the conditions, found in Table 2, p. 492 of
   # B.W. Ang and F.Q. Zhang and Ki-Hong Choi, 1998,
@@ -171,7 +190,16 @@ Zij <- function(i = NULL, j = NULL, X_0 = NULL, X_T = NULL,
 
   } else if (v_0i1 > 0 & v_Ti1 > 0 & X_0ij > 0 & X_Tij > 0) {
     # This is the non-degenerate case
-    return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
+    if (weights == "LMDI-I") {
+      return(matsbyname::logmean(v_Ti1, v_0i1) * log(X_Tij / X_0ij))
+    } else {
+      return(
+        matsbyname::logmean((v_Ti1/V_T), (v_0i1/V_0)) *
+          matsbyname::logmean(V_T, V_0) /
+          sum(
+            matsbyname::logarithmicmean_byname((v_T/as.numeric(V_T)), (v_0/as.numeric(V_0)))) *
+          log(X_Tij / X_0ij)
+      )}
   }
   # We should never get here.
   stop("Unknown conditions for v_0i1, v_Ti1, X_0ij, and X_Tij in Zij")
